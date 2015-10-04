@@ -14,6 +14,7 @@
 ActiveRecord::Schema.define(version: 0) do
 
   create_table "input_projects", force: :cascade do |t|
+    t.integer  "crawl_status_id",    limit: 4,     default: 0,     null: false
     t.integer  "github_item_id",     limit: 4,                     null: false
     t.integer  "name",               limit: 4,                     null: false
     t.integer  "full_name",          limit: 4,                     null: false

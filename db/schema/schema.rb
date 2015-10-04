@@ -1,6 +1,7 @@
 create_table "input_projects", collate: "utf8_bin", comment: "入力元_プロジェクト_基本情報" do |t|
   t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
 
+  t.int :crawl_status_id, default: 0, comment: "収集ステータス"
   t.int :github_item_id, comment: "Github Item ID"
   t.int :name
   t.int :full_name
