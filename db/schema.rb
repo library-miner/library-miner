@@ -13,4 +13,29 @@
 
 ActiveRecord::Schema.define(version: 0) do
 
+  create_table "input_projects", force: :cascade do |t|
+    t.integer  "github_item_id",     limit: 4,                     null: false
+    t.integer  "name",               limit: 4,                     null: false
+    t.integer  "full_name",          limit: 4,                     null: false
+    t.integer  "owner_id",           limit: 4,                     null: false
+    t.string   "owner_login_name",   limit: 255,                   null: false
+    t.string   "owner_type",         limit: 30,                    null: false
+    t.string   "github_url",         limit: 255,                   null: false
+    t.boolean  "is_fork",                          default: false, null: false
+    t.text     "github_description", limit: 65535
+    t.datetime "github_created_at",                                null: false
+    t.datetime "github_updated_at",                                null: false
+    t.datetime "github_pushed_at",                                 null: false
+    t.text     "homepage",           limit: 65535
+    t.integer  "size",               limit: 4,     default: 0,     null: false
+    t.integer  "stargazers_count",   limit: 4,     default: 0,     null: false
+    t.integer  "watchers_count",     limit: 4,     default: 0,     null: false
+    t.integer  "fork_count",         limit: 4,     default: 0,     null: false
+    t.integer  "open_issue_count",   limit: 4,     default: 0,     null: false
+    t.string   "github_score",       limit: 255,   default: "",    null: false
+    t.string   "language",           limit: 255,   default: "",    null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+  end
+
 end
