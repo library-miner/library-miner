@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>LibraryMiner</title>
+  <title>Library Miner</title>
+
+  <link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
+
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body class="layout-top-nav skin-black" data-controller="<%= params[:controller] %>" data-action="<%= params[:action] %>">
 
+<div class="wrapper">
+<%= render 'shared/header' %>
+
+<div class="content-wrapper">
+<div class="container container-full">
 <%= yield %>
+</div><!-- /.container -->
+</div><!-- /.content-wrapper -->
+
+</div>
 
 </body>
 </html>
