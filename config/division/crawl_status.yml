@@ -1,9 +1,9 @@
-- id: 1
+- id: 0
   type: waiting
   name: 未処理
-- id: 2
+- id: 1
   type: in_progress
   name: 収集中
-- id: 3
+- id: 2
   type: done
   name: 収集済
