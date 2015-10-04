@@ -45,7 +45,7 @@ group :development do
   gem 'capistrano-rails', require: false
   gem 'capistrano-rbenv', require: false
   gem 'capistrano-bundler', require: false
-  gem 'capistrano-maintenance', github: "capistrano/maintenance", require: false
+  gem 'capistrano-maintenance', github: 'capistrano/maintenance', require: false
 end
 
 group :test do

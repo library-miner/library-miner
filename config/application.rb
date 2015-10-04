@@ -23,6 +23,5 @@ module LibraryMiner
       g.jbuilder false
       g.template_engine :erb
     end
-
   end
 end
