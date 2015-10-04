@@ -1,0 +1,39 @@
+// -------------------------------------------------
+// 共通系
+// -------------------------------------------------
+
+// 管理画面の幅は100%
+.container-full {
+  width: 100%;
+}
+
+// テーブルはヘッダをわかりやすく
+.table thead tr {
+  background-color: #eaeaea;
+  padding: 0;
+  margin: 0;
+}
+
+.table thead th {
+  border-color: #eaeaea !important;
+}
+
+
+// -------------------------------------------------
+// 微調整タグ
+// -------------------------------------------------
+.mt-5 {
+   margin-top: 5px;
+}
+.mt-10 {
+   margin-top: 10px;
+}
+.mr-5 {
+  margin-right: 5px;
+}
+.mr-10 {
+  margin-right: 10px;
+}
+.padr-10 {
+   padding-right: 10px;
+}
