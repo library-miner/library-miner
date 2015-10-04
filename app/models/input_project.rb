@@ -29,4 +29,18 @@
 #
 
 class InputProject < ActiveRecord::Base
+  extend ActiveHash::Associations::ActiveRecordExtensions
+
+  # Relations
+  belongs_to_active_hash :crawl_status
+
+  # Validations
+
+  # Scopes
+
+  # Delegates
+
+  # Class Methods
+
+  # Methods
 end
