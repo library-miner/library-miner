@@ -13,6 +13,29 @@
 
 ActiveRecord::Schema.define(version: 0) do
 
+  create_table "input_branches", force: :cascade do |t|
+    t.integer  "input_project_id", limit: 4,   null: false
+    t.string   "name",             limit: 255, null: false
+    t.string   "sha",              limit: 255, null: false
+    t.string   "url",              limit: 255, null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "input_branches", ["input_project_id"], name: "input_branches_input_project_id_fk", using: :btree
+
+  create_table "input_contents", force: :cascade do |t|
+    t.integer  "input_project_id", limit: 4,     null: false
+    t.string   "path",             limit: 255,   null: false
+    t.string   "sha",              limit: 255,   null: false
+    t.string   "url",              limit: 255,   null: false
+    t.text     "content",          limit: 65535, null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "input_contents", ["input_project_id"], name: "input_contents_input_project_id_fk", using: :btree
+
   create_table "input_projects", force: :cascade do |t|
     t.integer  "crawl_status_id",    limit: 4,     default: 0,     null: false
     t.integer  "github_item_id",     limit: 4,                     null: false
@@ -39,4 +62,31 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at",                                       null: false
   end
 
+  create_table "input_trees", force: :cascade do |t|
+    t.integer  "input_project_id", limit: 4,   null: false
+    t.string   "path",             limit: 255, null: false
+    t.string   "type",             limit: 255, null: false
+    t.string   "sha",              limit: 255, null: false
+    t.string   "url",              limit: 255, null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "input_trees", ["input_project_id"], name: "input_trees_input_project_id_fk", using: :btree
+
+  create_table "input_weekly_commit_count", force: :cascade do |t|
+    t.integer  "input_project_id", limit: 4, null: false
+    t.integer  "index",            limit: 4, null: false
+    t.integer  "all_count",        limit: 4, null: false
+    t.integer  "owner_count",      limit: 4, null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "input_weekly_commit_count", ["input_project_id"], name: "input_weekly_commit_count_input_project_id_fk", using: :btree
+
+  add_foreign_key "input_branches", "input_projects", name: "input_branches_input_project_id_fk"
+  add_foreign_key "input_contents", "input_projects", name: "input_contents_input_project_id_fk"
+  add_foreign_key "input_trees", "input_projects", name: "input_trees_input_project_id_fk"
+  add_foreign_key "input_weekly_commit_count", "input_projects", name: "input_weekly_commit_count_input_project_id_fk"
 end
