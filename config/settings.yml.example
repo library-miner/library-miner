@@ -1,6 +1,7 @@
 defaults: &defaults
 
 development:
+  github_crawl_token: ''
   <<: *defaults
 
 test:
