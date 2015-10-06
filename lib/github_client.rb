@@ -14,7 +14,7 @@ class GithubClient
            "created:\"#{from_date}..#{to_date}\"&sort=#{sort}"
     Rails.logger.info("GithubClient Access to #{path}")
 
-    GithubSearchRepositoryResponse.parse(get_request_to(path, page: page))
+    GithubSearchRepositoryResponse.parse(get_request_to(path, page: page), page)
   end
 
   private
