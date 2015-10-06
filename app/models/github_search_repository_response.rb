@@ -8,17 +8,17 @@ class GithubSearchRepositoryResponse
   )
 
   def self.parse(response)
-    self.new.tap do |r|
+    new.tap do |r|
       body = JSON.parse(response.body)
       header = response.headers
 
       r.is_success = response.success?
-      r.is_incomplete_results = body["incomplete_results"]
-      r.items = body["items"]
-      r.total_count = body["total_count"].to_i
-      r.rate_limit = header["x-ratelimit-limit"].to_i
-      r.rate_limit_remaining = header["x-ratelimit-remaining"].to_i
-      r.rate_limit_reset = header["x-ratelimit-reset"]
+      r.is_incomplete_results = body['incomplete_results']
+      r.items = body['items']
+      r.total_count = body['total_count'].to_i
+      r.rate_limit = header['x-ratelimit-limit'].to_i
+      r.rate_limit_remaining = header['x-ratelimit-remaining'].to_i
+      r.rate_limit_reset = header['x-ratelimit-reset']
     end
   end
 end
