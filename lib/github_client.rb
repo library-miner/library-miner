@@ -12,9 +12,7 @@ class GithubClient
            "created:\"#{from_date}..#{to_date}\"&sort=#{sort}"
     Rails.logger.info("GithubClient Access to #{path}")
 
-    response = get_request_to(path)
-    # TODO: レスポンスをさらにラッピング
-    [response.success?, JSON.parse(response.body), response.headers]
+    GithubSearchRepositoryResponse.parse(get_request_to(path))
   end
 
   private
