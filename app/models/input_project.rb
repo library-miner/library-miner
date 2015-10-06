@@ -35,6 +35,8 @@ class InputProject < ActiveRecord::Base
   belongs_to_active_hash :crawl_status
   has_many :input_branches
   has_many :input_trees
+  has_many :input_contents
+  has_many :input_weekly_commit_counts
 
   # Validations
 
