@@ -74,7 +74,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_index "input_trees", ["input_project_id"], name: "input_trees_input_project_id_fk", using: :btree
 
-  create_table "input_weekly_commit_count", force: :cascade do |t|
+  create_table "input_weekly_commit_counts", force: :cascade do |t|
     t.integer  "input_project_id", limit: 4, null: false
     t.integer  "index",            limit: 4, null: false
     t.integer  "all_count",        limit: 4, null: false
@@ -83,10 +83,10 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at",                 null: false
   end
 
-  add_index "input_weekly_commit_count", ["input_project_id"], name: "input_weekly_commit_count_input_project_id_fk", using: :btree
+  add_index "input_weekly_commit_counts", ["input_project_id"], name: "input_weekly_commit_counts_input_project_id_fk", using: :btree
 
   add_foreign_key "input_branches", "input_projects", name: "input_branches_input_project_id_fk"
   add_foreign_key "input_contents", "input_projects", name: "input_contents_input_project_id_fk"
   add_foreign_key "input_trees", "input_projects", name: "input_trees_input_project_id_fk"
-  add_foreign_key "input_weekly_commit_count", "input_projects", name: "input_weekly_commit_count_input_project_id_fk"
+  add_foreign_key "input_weekly_commit_counts", "input_projects", name: "input_weekly_commit_counts_input_project_id_fk"
 end

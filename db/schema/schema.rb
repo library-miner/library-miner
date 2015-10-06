@@ -68,7 +68,7 @@ create_table "input_contents", collate: "utf8_bin", comment: "入力元_プロ�
   t.datetime :updated_at
 end
 
-create_table "input_weekly_commit_count", collate: "utf8_bin", comment: "入力元_プロジェクト_週間コミット数" do |t|
+create_table "input_weekly_commit_counts", collate: "utf8_bin", comment: "入力元_プロジェクト_週間コミット数" do |t|
   t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
   t.int :input_project_id, comment: "Input project id"
 

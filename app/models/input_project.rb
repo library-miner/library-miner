@@ -33,6 +33,8 @@ class InputProject < ActiveRecord::Base
 
   # Relations
   belongs_to_active_hash :crawl_status
+  has_many :input_branches
+  has_many :input_trees
 
   # Validations
 
