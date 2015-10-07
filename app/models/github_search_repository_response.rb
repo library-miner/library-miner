@@ -15,7 +15,7 @@ class GithubSearchRepositoryResponse
 
       r.is_success = response.success?
       r.is_incomplete_results = body['incomplete_results']
-      r.items = body['items'].map { |v| HashObject.new(v) }
+      r.items = body['items'].map { |v| HashObject.new(v) } if body['items'].present?
       r.total_count = body['total_count'].to_i
       r.rate_limit = header['x-ratelimit-limit'].to_i
       r.rate_limit_remaining = header['x-ratelimit-remaining'].to_i

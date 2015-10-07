@@ -2,7 +2,12 @@ class GithubClient
   GITHUB_API_BASE_URL = 'https://api.github.com'
   SEARCH_REPOSITORY_URL = '/search/repositories'
 
+  # search_repository 1ページあたりに取得可能な最大件数
   GITHUB_SEARCH_REPOSITORY_MAX_PER = 100
+  # search_repository 一度に取得可能な最大件数
+  GITHUB_SEARCH_REPOSITORY_MAX_TOTAL_COUNT = 1000
+  # search_repository 最大ページ数
+  GITHUB_SEARCH_REPOSITORY_MAX_PAGE_COUNT = 1000 / 100
 
   def initialize(token)
     @token = token
@@ -12,7 +17,7 @@ class GithubClient
   def search_repositories_by_created_at(from_date, to_date, page: 1, language: 'ruby', sort: 'stars')
     path = "#{SEARCH_REPOSITORY_URL}?q=language:#{language} "\
            "created:\"#{from_date}..#{to_date}\"&sort=#{sort}"
-    Rails.logger.info("GithubClient Access to #{path}")
+    Rails.logger.info("GithubClient Access to #{path} - page: #{page}")
 
     GithubSearchRepositoryResponse.parse(get_request_to(path, page: page), page)
   end
