@@ -6,9 +6,36 @@ class GithubProjectCrawler < Base
   queue_as :github_project_crawler
 
   def perform(date_from, date_to)
+    language = "ruby"
+
     (date_from .. date_to).each do |target_date|
-      # TODO: データ保存
-      fetch_projects_created_at(target_date, "ruby")
+      results = fetch_projects_created_at(target_date, language)
+      results.each do |result|
+        pj = InputProject.find_or_initialize_by(github_item_id: result.id)
+        pj.attributes = {
+          crawl_status: CrawlStatus::WAITING,
+          name: result.name,
+          full_name: result.full_name,
+          owner_id: result.owner.id,
+          owner_login_name: result.owner.login,
+          owner_type: result.owner.type,
+          github_url: result.html_url,
+          is_fork: result.fork,
+          github_description: result.description,
+          github_created_at: result.created_at,
+          github_updated_at: result.updated_at,
+          github_pushed_at: result.pushed_at,
+          homepage: result.homepage,
+          size: result.size,
+          stargazers_count: result.stargazers_count,
+          watchers_count: result.watchers_count,
+          fork_count: result.forks_count,
+          open_issue_count: result.open_issues_count,
+          github_score: result.score,
+          language: result.language || language
+        }
+        pj.save!
+      end
     end
   end
 
