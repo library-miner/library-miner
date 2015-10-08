@@ -3,8 +3,8 @@ create_table 'input_projects', collate: 'utf8_bin', comment: '入力元_プロ�
 
   t.int :crawl_status_id, default: 0, comment: '収集ステータス'
   t.bigint :github_item_id, comment: 'Github Item ID'
-  t.int :name
-  t.int :full_name
+  t.varchar :name
+  t.varchar :full_name
   t.bigint :owner_id
   t.varchar :owner_login_name
   t.varchar :owner_type, limit: 30
