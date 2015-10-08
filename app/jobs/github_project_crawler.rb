@@ -6,9 +6,36 @@ class GithubProjectCrawler < Base
   queue_as :github_project_crawler
 
   def perform(date_from, date_to)
+    language = "ruby"
+
     (date_from .. date_to).each do |target_date|
-      # TODO: データ保存
-      fetch_projects_created_at(target_date, "ruby")
+      results = fetch_projects_created_at(target_date, language)
+      results.each do |result|
+        pj = InputProject.find_or_initialize_by(github_item_id: result.id)
+        pj.attributes = {
+          crawl_status: CrawlStatus::WAITING,
+          name: result.name,
+          full_name: result.full_name,
+          owner_id: result.owner.id,
+          owner_login_name: result.owner.login,
+          owner_type: result.owner.type,
+          github_url: result.html_url,
+          is_fork: result.fork,
+          github_description: result.description,
+          github_created_at: result.created_at,
+          github_updated_at: result.updated_at,
+          github_pushed_at: result.pushed_at,
+          homepage: result.homepage,
+          size: result.size,
+          stargazers_count: result.stargazers_count,
+          watchers_count: result.watchers_count,
+          fork_count: result.forks_count,
+          open_issue_count: result.open_issues_count,
+          github_score: result.score,
+          language: result.language || language
+        }
+        pj.save!
+      end
     end
   end
 
@@ -26,7 +53,7 @@ class GithubProjectCrawler < Base
   # ただし取得した結果データ件数が1000件以上だった場合は、
   # 時刻をさらに分割して検索をかける
   def fetch_projects_created_between(time_from, time_to, language)
-    Rails.logger.info("FETCH FROM #{time_from} - #{time_to}")
+    Rails.logger.info("fetch from #{time_from} - #{time_to}")
     is_success, results = fetch_projects_with_rate_limit(time_from, time_to, language)
     if is_success
       results
@@ -49,10 +76,14 @@ class GithubProjectCrawler < Base
     results = []
     is_success = true
     client = GithubClient.new(Settings.github_crawl_token)
+    retry_count = 0
+    total_count = nil
 
-    # FIXME: 10ページ目まであるとは限らないので以下修正
     (1..GithubClient::GITHUB_SEARCH_REPOSITORY_MAX_PAGE_COUNT).each do |page|
       next unless is_success
+
+      next if total_count.present? &&
+        total_count <= ((page - 1) * GithubClient::GITHUB_SEARCH_REPOSITORY_MAX_PER)
 
       res = client.search_repositories_by_created_at(
         time_from.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -60,11 +91,14 @@ class GithubProjectCrawler < Base
         language: language,
         page: page
       )
+      total_count ||= res.total_count
+      Rails.logger.info("fetch #{time_from}-#{time_to}(page: #{page}, total: #{total_count})" \
+                        " and results #{res.items.size}")
       if res.total_count > GithubClient::GITHUB_SEARCH_REPOSITORY_MAX_TOTAL_COUNT
         is_success = false
         next
       end
-      if res.rate_limit_remaining <= 0
+      if res.rate_limit_remaining <= 1
         # rate limit解除時間まで待つ 3秒ほど余裕を持たせる
         till_time = Time.at(res.rate_limit_reset.to_i)
         Rails.logger.info("Rate limit exceeded. Waiting until #{till_time}")
@@ -72,7 +106,19 @@ class GithubProjectCrawler < Base
         sleep_time = 3 if sleep_time <= 0
         sleep sleep_time
       end
-      results << res.items
+
+      if res.items.size == 0
+        Rails.logger.info("fetch failed. Retry(retry count: #{retry_count})")
+        if retry_count >= 5
+          fail "Retry Limit."
+        else
+          retry_count = retry_count + 1
+          redo
+        end
+      else
+        retry_count = 0
+        results << res.items
+      end
     end
 
     [true, results.flatten]

@@ -5,8 +5,8 @@
 #  id                 :integer          not null, primary key
 #  crawl_status_id    :integer          default(0), not null
 #  github_item_id     :integer          not null
-#  name               :integer          not null
-#  full_name          :integer          not null
+#  name               :string(255)      not null
+#  full_name          :string(255)      not null
 #  owner_id           :integer          not null
 #  owner_login_name   :string(255)      not null
 #  owner_type         :string(30)       not null

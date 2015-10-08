@@ -2,10 +2,10 @@ create_table 'input_projects', collate: 'utf8_bin', comment: '入力元_プロ�
   t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
 
   t.int :crawl_status_id, default: 0, comment: '収集ステータス'
-  t.int :github_item_id, comment: 'Github Item ID'
-  t.int :name
-  t.int :full_name
-  t.int :owner_id
+  t.bigint :github_item_id, comment: 'Github Item ID'
+  t.varchar :name
+  t.varchar :full_name
+  t.bigint :owner_id
   t.varchar :owner_login_name
   t.varchar :owner_type, limit: 30
   t.varchar :github_url
@@ -15,11 +15,11 @@ create_table 'input_projects', collate: 'utf8_bin', comment: '入力元_プロ�
   t.datetime :github_updated_at
   t.datetime :github_pushed_at
   t.text :homepage, null: true
-  t.int :size, default: 0
-  t.int :stargazers_count, default: 0, comment: 'スター数'
-  t.int :watchers_count, default: 0, comment: 'ウォッチャー数'
-  t.int :fork_count, default: 0, comment: 'フォーク数'
-  t.int :open_issue_count, default: 0, comment: 'イシュー数'
+  t.bigint :size, default: 0
+  t.bigint :stargazers_count, default: 0, comment: 'スター数'
+  t.bigint :watchers_count, default: 0, comment: 'ウォッチャー数'
+  t.bigint :fork_count, default: 0, comment: 'フォーク数'
+  t.bigint :open_issue_count, default: 0, comment: 'イシュー数'
   t.varchar :github_score, default: '', comment: 'Github上のスコア'
   t.varchar :language, default: ''
 
