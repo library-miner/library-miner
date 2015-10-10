@@ -45,9 +45,9 @@ class GithubProjectDetailCrawler < Base
     results[0].each do |result|
       # binding.pry
       pj = InputTag.new(
-        name: result.path,
-        sha: result.sha,
-        url: result.url,
+        name: result.name,
+        sha: result.commit.sha,
+        url: result.commit.url,
         input_project_id: target_id
       )
       pj.save!
