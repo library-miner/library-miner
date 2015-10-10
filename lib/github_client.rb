@@ -39,7 +39,6 @@ class GithubClient
     GithubRepositoryResponse.parse(get_request_to(path, page: page), page)
   end
 
-
   private
 
   def build_api_connection

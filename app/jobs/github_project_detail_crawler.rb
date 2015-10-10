@@ -7,16 +7,15 @@ class GithubProjectDetailCrawler < Base
   queue_as :github_project_detail_crawler
 
   def perform(max_count)
-
     targets = InputProject.get_project_detail_crawl_target(max_count)
     targets.each do |target|
-      #ツリー情報
+      # ツリー情報
       tree_results = fetch_projects_detail_trees_by_project_id(target.github_item_id)
-      save_project_detail_trees(target.id,tree_results)
+      save_project_detail_trees(target.id, tree_results)
 
-      #タグ情報
+      # タグ情報
       tag_results = fetch_projects_detail_tags_by_project_id(target.github_item_id)
-      save_project_detail_tags(target.id,tag_results)
+      save_project_detail_tags(target.id, tag_results)
 
       target.attributes = {
         crawl_status: CrawlStatus::DONE
@@ -25,9 +24,9 @@ class GithubProjectDetailCrawler < Base
     end
   end
 
-  #private
-  #ツリー情報格納
-  def save_project_detail_trees(target_id,results)
+  # private
+  # ツリー情報格納
+  def save_project_detail_trees(target_id, results)
     InputBranch.where(input_project_id: target_id).delete_all
     results[0].each do |result|
       pj = InputBranch.new(
@@ -40,11 +39,11 @@ class GithubProjectDetailCrawler < Base
     end
   end
 
-  #タグ情報格納
-  def save_project_detail_tags(target_id,results)
+  # タグ情報格納
+  def save_project_detail_tags(target_id, results)
     InputTag.where(input_project_id: target_id).delete_all
     results[0].each do |result|
-      #binding.pry
+      # binding.pry
       pj = InputTag.new(
         name: result.path,
         sha: result.sha,
@@ -55,12 +54,11 @@ class GithubProjectDetailCrawler < Base
     end
   end
 
-
   # 指定したプロジェクトIDよりリポジトリ詳細情報(ツリー)取得
   def fetch_projects_detail_trees_by_project_id(project_id)
     Rails.logger.info("fetch project detail trees #{project_id}")
 
-    p = proc { |page|
+    p = proc do |page|
       client = GithubClient.new(Settings.github_crawl_token)
       res = client.get_repositories_trees_by_project_id(
         project_id,
@@ -68,7 +66,7 @@ class GithubProjectDetailCrawler < Base
       )
       Rails.logger.info("fetch project #{project_id} (page: #{page})")
       res
-    }
+    end
 
     results = fetch_projects_detail_with_rate_limit(
       p
@@ -79,7 +77,7 @@ class GithubProjectDetailCrawler < Base
   def fetch_projects_detail_tags_by_project_id(project_id)
     Rails.logger.info("fetch project detail tags #{project_id}")
 
-    p = proc { |page|
+    p = proc do |page|
       client = GithubClient.new(Settings.github_crawl_token)
       res = client.get_repositories_tags_by_project_id(
         project_id,
@@ -87,7 +85,7 @@ class GithubProjectDetailCrawler < Base
       )
       Rails.logger.info("fetch project #{project_id} (page: #{page})")
       res
-    }
+    end
 
     results = fetch_projects_detail_with_rate_limit(
       p
@@ -116,9 +114,9 @@ class GithubProjectDetailCrawler < Base
       unless res.is_success
         Rails.logger.info("fetch failed. Retry(retry count: #{retry_count})")
         if retry_count >= 5
-          fail "Retry Limit."
+          fail 'Retry Limit.'
         else
-          retry_count = retry_count + 1
+          retry_count += 1
           redo
         end
       else
