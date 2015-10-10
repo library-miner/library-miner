@@ -62,6 +62,17 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at",                                       null: false
   end
 
+  create_table "input_tags", force: :cascade do |t|
+    t.integer  "input_project_id", limit: 4,   null: false
+    t.string   "name",             limit: 255, null: false
+    t.string   "sha",              limit: 255, null: false
+    t.string   "url",              limit: 255, null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "input_tags", ["input_project_id"], name: "input_tags_input_project_id_fk", using: :btree
+
   create_table "input_trees", force: :cascade do |t|
     t.integer  "input_project_id", limit: 4,   null: false
     t.string   "path",             limit: 255, null: false
@@ -87,6 +98,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_foreign_key "input_branches", "input_projects", name: "input_branches_input_project_id_fk"
   add_foreign_key "input_contents", "input_projects", name: "input_contents_input_project_id_fk"
+  add_foreign_key "input_tags", "input_projects", name: "input_tags_input_project_id_fk"
   add_foreign_key "input_trees", "input_projects", name: "input_trees_input_project_id_fk"
   add_foreign_key "input_weekly_commit_counts", "input_projects", name: "input_weekly_commit_counts_input_project_id_fk"
 end

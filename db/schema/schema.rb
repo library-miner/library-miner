@@ -40,6 +40,19 @@ create_table 'input_branches', collate: 'utf8_bin', comment: '入力元_プロ�
   t.datetime :updated_at
 end
 
+create_table 'input_tags', collate: 'utf8_bin', comment: '入力元_プロジェクト_タグ' do |t|
+  t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
+  t.int :input_project_id, comment: 'Input project id'
+
+  t.varchar :name, comment: 'タグ名'
+  t.varchar :sha
+  t.varchar :url
+  t.foreign_key 'input_project_id', reference: 'input_projects', reference_column: 'id'
+
+  t.datetime :created_at
+  t.datetime :updated_at
+end
+
 create_table 'input_trees', collate: 'utf8_bin', comment: '入力元_プロジェクト_ツリー' do |t|
   t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
   t.int :input_project_id, comment: 'Input project id'
