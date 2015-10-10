@@ -47,4 +47,21 @@ class InputProject < ActiveRecord::Base
   # Class Methods
 
   # Methods
+
+  # 未処理の情報を取得
+  # 取得上限の指定が必要
+  # 別クローラが同じプロジェクトを解析しない考慮あり
+  def self.get_project_detail_crawl_target(max_count)
+    targets = InputProject.where(crawl_status: CrawlStatus::WAITING)
+    .order(:updated_at)
+    .limit(max_count)
+
+    targets.each do |target|
+      target.crawl_status = CrawlStatus::IN_PROGRESS
+      target.save!
+    end
+
+    InputProject.where(crawl_status: CrawlStatus::IN_PROGRESS)
+  end
+
 end
