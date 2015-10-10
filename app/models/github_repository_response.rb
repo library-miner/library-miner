@@ -23,7 +23,7 @@ class GithubRepositoryResponse
       links = header['Link']
       r.has_next_page = false
       if links.present?
-        r.has_next = links.split(",")[0].split(";")[1].include?("next")
+        r.has_next_page = links.split(",")[0].split(";")[1].include?("next")
       end
     end
   end

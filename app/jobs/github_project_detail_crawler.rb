@@ -11,15 +11,21 @@ class GithubProjectDetailCrawler < Base
     targets = InputProject.get_project_detail_crawl_target(max_count)
     targets.each do |target|
       results = fetch_projects_detail_by_project_id(target.github_item_id)
-      results.each do |result|
-        pj = InputBranch.find_or_initialize_by(input_project_id: target.id)
-        pj.attributes = {
+      InputBranch.where(input_project_id: target.id).delete_all
+      results[0].each do |result|
+        #binding.pry
+        pj = InputBranch.new(
           name: result.name,
           sha: result.commit.sha,
-          url: result.commit.url
-        }
+          url: result.commit.url,
+          input_project_id: target.id
+        )
         pj.save!
       end
+      target.attributes = {
+        crawl_status: CrawlStatus::DONE
+      }
+      target.save!
     end
   end
 
@@ -30,7 +36,7 @@ class GithubProjectDetailCrawler < Base
     Rails.logger.info("fetch project detail #{project_id}")
     results = fetch_projects_detail_with_rate_limit(
       project_id
-    ).flatten
+    )
   end
 
   # API制限,リトライを考慮してデータ取得　
