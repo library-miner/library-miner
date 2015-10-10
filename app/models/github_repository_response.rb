@@ -1,4 +1,4 @@
-class GithubBranchRepositoryResponse
+class GithubRepositoryResponse
   include ActiveModel::Model
   include ActiveModel::Validations::Callbacks
 
@@ -14,7 +14,7 @@ class GithubBranchRepositoryResponse
       header = response.headers
 
       r.is_success = response.success?
-      r.items = body['items'].map { |v| HashObject.new(v) }
+      r.items = body.map { |v| HashObject.new(v) }
       r.rate_limit = header['x-ratelimit-limit'].to_i
       r.rate_limit_remaining = header['x-ratelimit-remaining'].to_i
       r.rate_limit_reset = header['x-ratelimit-reset']
