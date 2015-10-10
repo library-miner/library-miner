@@ -10,13 +10,13 @@ class GithubProjectDetailCrawler < Base
 
     targets = InputProject.get_project_detail_crawl_target(max_count)
     targets.each do |target|
-      results = fetch_branches(target.full_name)
+      results = fetch_projects_detail_by_project_id(target.github_item_id)
       results.each do |result|
-        pj = InputBranch.find_or_initialize_by(input_project_id: target.input_project_id)
+        pj = InputBranch.find_or_initialize_by(input_project_id: target.id)
         pj.attributes = {
           name: result.name,
-          sha: result.sha,
-          url: result.url
+          sha: result.commit.sha,
+          url: result.commit.url
         }
         pj.save!
       end
@@ -28,9 +28,9 @@ class GithubProjectDetailCrawler < Base
   # 指定したプロジェクトIDよりリポジトリ詳細情報取得
   def fetch_projects_detail_by_project_id(project_id)
     Rails.logger.info("fetch project detail #{project_id}")
-    fetch_projects_detail_with_rate_limit(
+    results = fetch_projects_detail_with_rate_limit(
       project_id
-    )
+    ).flatten
   end
 
   # API制限,リトライを考慮してデータ取得　
@@ -77,7 +77,7 @@ class GithubProjectDetailCrawler < Base
         end
       end
     end while has_next_page
-
-    [true, results.flatten]
+    
+    results
   end
 end
