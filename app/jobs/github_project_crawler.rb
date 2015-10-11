@@ -6,9 +6,9 @@ class GithubProjectCrawler < Base
   queue_as :github_project_crawler
 
   def perform(date_from, date_to)
-    language = "ruby"
+    language = 'ruby'
 
-    (date_from .. date_to).each do |target_date|
+    (date_from..date_to).each do |target_date|
       results = fetch_projects_created_at(target_date, language)
       results.each do |result|
         pj = InputProject.find_or_initialize_by(github_item_id: result.id)
@@ -83,11 +83,11 @@ class GithubProjectCrawler < Base
       next unless is_success
 
       next if total_count.present? &&
-        total_count <= ((page - 1) * GithubClient::GITHUB_SEARCH_REPOSITORY_MAX_PER)
+              total_count <= ((page - 1) * GithubClient::GITHUB_SEARCH_REPOSITORY_MAX_PER)
 
       res = client.search_repositories_by_created_at(
-        time_from.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        time_to.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        time_from.strftime('%Y-%m-%dT%H:%M:%SZ'),
+        time_to.strftime('%Y-%m-%dT%H:%M:%SZ'),
         language: language,
         page: page
       )
@@ -110,9 +110,9 @@ class GithubProjectCrawler < Base
       if res.items.size == 0
         Rails.logger.info("fetch failed. Retry(retry count: #{retry_count})")
         if retry_count >= 5
-          fail "Retry Limit."
+          fail 'Retry Limit.'
         else
-          retry_count = retry_count + 1
+          retry_count += 1
           redo
         end
       else
