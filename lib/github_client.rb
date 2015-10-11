@@ -4,6 +4,7 @@ class GithubClient
   REPOSITORY_URL = '/repositories'
   BRANCHES_URL = '/branches'
   TAGS_URL = '/tags'
+  TREES_URL = '/git/trees'
 
   # search_repository 1ページあたりに取得可能な最大件数
   GITHUB_SEARCH_REPOSITORY_MAX_PER = 100
@@ -25,7 +26,7 @@ class GithubClient
     GithubSearchRepositoryResponse.parse(get_request_to(path, page: page), page)
   end
 
-  def get_repositories_trees_by_project_id(project_id, page: 1)
+  def get_repositories_branches_by_project_id(project_id, page: 1)
     path = "#{REPOSITORY_URL}/#{project_id}#{BRANCHES_URL}"
     Rails.logger.info("GithubClient Access to #{path} - page: #{page}")
 
@@ -38,6 +39,14 @@ class GithubClient
 
     GithubRepositoryResponse.parse(get_request_to(path, page: page), page)
   end
+
+  def get_repositories_trees_by_project_id_and_sha(project_id, sha, page: 1)
+    path = "#{REPOSITORY_URL}/#{project_id}#{TREES_URL}/#{sha}"
+    Rails.logger.info("GithubClient Access to #{path} - page: #{page}")
+
+    GithubRepositoryResponse.parse(get_request_to(path, page: page), page)
+  end
+
 
   private
 

@@ -14,7 +14,20 @@ class GithubRepositoryResponse
       header = response.headers
 
       r.is_success = response.success?
-      r.items = body.map { |v| HashObject.new(v) }
+      check_body_hash_array_is_string =
+        body[0].nil? && body != [] ? true : false
+      r.items =
+        if check_body_hash_array_is_string && body['tree'].present?
+          body['tree'].map { |v| HashObject.new(v) }
+        elsif check_body_hash_array_is_string && body['message'].present?
+          # コミットファイル0件時 Not Found と返される際の対応
+          if body['message'] == "Not Found"
+            r.is_success = true
+          end
+          []
+        else
+          body.map { |v| HashObject.new(v) }
+        end
       r.rate_limit = header['x-ratelimit-limit'].to_i
       r.rate_limit_remaining = header['x-ratelimit-remaining'].to_i
       r.rate_limit_reset = header['x-ratelimit-reset']

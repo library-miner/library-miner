@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 0) do
   create_table "input_trees", force: :cascade do |t|
     t.integer  "input_project_id", limit: 4,   null: false
     t.string   "path",             limit: 255, null: false
-    t.string   "type",             limit: 255, null: false
+    t.string   "file_type",        limit: 255, null: false
     t.string   "sha",              limit: 255, null: false
     t.string   "url",              limit: 255, null: false
     t.datetime "created_at",                   null: false
