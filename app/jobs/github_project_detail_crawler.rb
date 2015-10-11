@@ -17,7 +17,17 @@ class GithubProjectDetailCrawler < Base
       tag_results = fetch_projects_detail_tags_by_project_id(target.github_item_id)
       save_project_detail_tags(target.id, tag_results)
 
-      # 
+      # ツリー情報から解析対象のファイル取得
+      tree_results = fetch_projects_detail_trees_by_project_id_and_sha(
+        target.github_item_id,
+        InputBranch.where(
+          input_project_id: target.id,
+          name: 'master'
+        ).first
+        .try(:sha)
+      )
+      save_project_detail_trees_only_analyze_file(tree_results)
+
       target.attributes = {
         crawl_status: CrawlStatus::DONE
       }
@@ -29,7 +39,7 @@ class GithubProjectDetailCrawler < Base
   # ブランチ情報格納
   def save_project_detail_branches(target_id, results)
     InputBranch.where(input_project_id: target_id).delete_all
-    results[0].each do |result|
+    results.each do |result|
       pj = InputBranch.new(
         name: result.name,
         sha: result.commit.sha,
@@ -43,8 +53,7 @@ class GithubProjectDetailCrawler < Base
   # タグ情報格納
   def save_project_detail_tags(target_id, results)
     InputTag.where(input_project_id: target_id).delete_all
-    results[0].each do |result|
-      # binding.pry
+    results.each do |result|
       pj = InputTag.new(
         name: result.name,
         sha: result.commit.sha,
@@ -71,7 +80,7 @@ class GithubProjectDetailCrawler < Base
 
     results = fetch_projects_detail_with_rate_limit(
       p
-    )
+    ).flatten
   end
 
   # 指定したプロジェクトIDよりリポジトリ詳細情報(タグ)取得
@@ -90,7 +99,27 @@ class GithubProjectDetailCrawler < Base
 
     results = fetch_projects_detail_with_rate_limit(
       p
-    )
+    ).flatten
+  end
+
+  # 指定したプロジェクトIDとSHAよりリポジトリ詳細情報(ツリー)取得
+  def fetch_projects_detail_trees_by_project_id_and_sha(project_id, sha)
+    Rails.logger.info("fetch project detail trees #{project_id} #{sha}")
+
+    p = proc do |page|
+      client = GithubClient.new(Settings.github_crawl_token)
+      res = client.get_repositories_trees_by_project_id_and_sha(
+        project_id,
+        sha,
+        page: page
+      )
+      Rails.logger.info("fetch project #{project_id} #{sha} (page: #{page})")
+      res
+    end
+
+    results = fetch_projects_detail_with_rate_limit(
+      p
+    ).flatten
   end
 
   # API制限,リトライを考慮してデータ取得　
