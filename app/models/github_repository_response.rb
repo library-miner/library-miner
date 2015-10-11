@@ -19,6 +19,12 @@ class GithubRepositoryResponse
       r.items =
         if check_body_hash_array_is_string && body['tree'].present?
           body['tree'].map { |v| HashObject.new(v) }
+        elsif check_body_hash_array_is_string && body['message'].present?
+          # コミットファイル0件時 Not Found と返される際の対応
+          if body['message'] == "Not Found"
+            r.is_success = true
+          end
+          []
         else
           body.map { |v| HashObject.new(v) }
         end
