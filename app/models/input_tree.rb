@@ -5,7 +5,7 @@
 #  id               :integer          not null, primary key
 #  input_project_id :integer          not null
 #  path             :string(255)      not null
-#  type             :string(255)      not null
+#  file_type        :string(255)      not null
 #  sha              :string(255)      not null
 #  url              :string(255)      not null
 #  created_at       :datetime         not null

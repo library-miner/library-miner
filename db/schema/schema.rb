@@ -58,7 +58,7 @@ create_table 'input_trees', collate: 'utf8_bin', comment: '入力元_プロジ�
   t.int :input_project_id, comment: 'Input project id'
 
   t.varchar :path, comment: 'ファイルパス'
-  t.varchar :type, comment: 'ファイルタイプ'
+  t.varchar :file_type, comment: 'ファイルタイプ'
   t.varchar :sha
   t.varchar :url
   t.foreign_key 'input_project_id', reference: 'input_projects', reference_column: 'id'

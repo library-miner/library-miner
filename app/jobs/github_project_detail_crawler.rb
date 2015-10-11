@@ -70,7 +70,7 @@ class GithubProjectDetailCrawler < Base
     results.each do |result|
       pj = InputTree.new(
         path: result.path,
-        type: result.type,
+        file_type: result.type,
         sha: result.sha,
         url: result.url,
         input_project_id: target_id
