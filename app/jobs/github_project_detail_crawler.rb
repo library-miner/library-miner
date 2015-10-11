@@ -9,14 +9,15 @@ class GithubProjectDetailCrawler < Base
   def perform(max_count)
     targets = InputProject.get_project_detail_crawl_target(max_count)
     targets.each do |target|
-      # ツリー情報
-      tree_results = fetch_projects_detail_trees_by_project_id(target.github_item_id)
-      save_project_detail_trees(target.id, tree_results)
+      # ブランチ情報
+      tree_results = fetch_projects_detail_branches_by_project_id(target.github_item_id)
+      save_project_detail_branches(target.id, tree_results)
 
       # タグ情報
       tag_results = fetch_projects_detail_tags_by_project_id(target.github_item_id)
       save_project_detail_tags(target.id, tag_results)
 
+      # 
       target.attributes = {
         crawl_status: CrawlStatus::DONE
       }
@@ -25,8 +26,8 @@ class GithubProjectDetailCrawler < Base
   end
 
   # private
-  # ツリー情報格納
-  def save_project_detail_trees(target_id, results)
+  # ブランチ情報格納
+  def save_project_detail_branches(target_id, results)
     InputBranch.where(input_project_id: target_id).delete_all
     results[0].each do |result|
       pj = InputBranch.new(
@@ -54,13 +55,13 @@ class GithubProjectDetailCrawler < Base
     end
   end
 
-  # 指定したプロジェクトIDよりリポジトリ詳細情報(ツリー)取得
-  def fetch_projects_detail_trees_by_project_id(project_id)
-    Rails.logger.info("fetch project detail trees #{project_id}")
+  # 指定したプロジェクトIDよりリポジトリ詳細情報(ブランチ)取得
+  def fetch_projects_detail_branches_by_project_id(project_id)
+    Rails.logger.info("fetch project detail branches #{project_id}")
 
     p = proc do |page|
       client = GithubClient.new(Settings.github_crawl_token)
-      res = client.get_repositories_trees_by_project_id(
+      res = client.get_repositories_branches_by_project_id(
         project_id,
         page: page
       )
