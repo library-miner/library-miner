@@ -25,4 +25,20 @@ class InputTree < ActiveRecord::Base
   # Class Methods
 
   # Methods
+  # ファイル解析対象であるか判定
+  def self.is_analize_target?(file_name)
+    is_target = false
+
+    # Gemfile
+    if file_name == "Gemfile"
+      is_target = true
+    end
+
+    # gemspec
+    if file_name.downcase =~ /.gemspec$/
+      is_target = true
+    end
+
+    is_target
+  end
 end
