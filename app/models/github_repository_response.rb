@@ -40,4 +40,18 @@ class GithubRepositoryResponse
       end
     end
   end
+
+  def self.parse_blob(response)
+    new.tap do |r|
+      body = response.body
+      header = response.headers
+
+      r.is_success = response.success?
+      r.items = body
+      r.rate_limit = header['x-ratelimit-limit'].to_i
+      r.rate_limit_remaining = header['x-ratelimit-remaining'].to_i
+      r.rate_limit_reset = header['x-ratelimit-reset']
+    end
+  end
+
 end

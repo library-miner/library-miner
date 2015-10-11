@@ -5,6 +5,7 @@ class GithubClient
   BRANCHES_URL = '/branches'
   TAGS_URL = '/tags'
   TREES_URL = '/git/trees'
+  BLOBS_URL = '/git/blobs'
 
   # search_repository 1ページあたりに取得可能な最大件数
   GITHUB_SEARCH_REPOSITORY_MAX_PER = 100
@@ -47,6 +48,13 @@ class GithubClient
     GithubRepositoryResponse.parse(get_request_to(path, page: page), page)
   end
 
+  def get_repositories_contents_by_project_id_and_sha(project_id, sha, page: 1)
+    path = "#{REPOSITORY_URL}/#{project_id}#{BLOBS_URL}/#{sha}"
+    Rails.logger.info("GithubClient Access to #{path} - page: #{page}")
+
+    GithubRepositoryResponse.parse_blob(get_request_blob_to(path))
+  end
+
 
   private
 
@@ -64,4 +72,14 @@ class GithubClient
       req.headers['Authorization'] = "token #{Settings.github_crawl_token}"
     end
   end
+
+  def get_request_blob_to(path)
+    conn = build_api_connection
+    conn.get do |req|
+      req.url path
+      req.headers['Accept'] = "application/vnd.github.v3.raw+json"
+      req.headers['Authorization'] = "token #{Settings.github_crawl_token}"
+    end
+  end
+
 end
