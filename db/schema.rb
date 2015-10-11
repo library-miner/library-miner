@@ -28,7 +28,6 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "input_project_id", limit: 4,     null: false
     t.string   "path",             limit: 255,   null: false
     t.string   "sha",              limit: 255,   null: false
-    t.string   "url",              limit: 255,   null: false
     t.text     "content",          limit: 65535, null: false
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
@@ -77,8 +76,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "input_project_id", limit: 4,   null: false
     t.string   "path",             limit: 255, null: false
     t.string   "file_type",        limit: 255, null: false
-    t.string   "sha",              limit: 255
-    t.integer  "source",           limit: 4,   null: false
+    t.string   "sha",              limit: 255, null: false
+    t.string   "url",              limit: 255, null: false
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
   end
