@@ -26,7 +26,7 @@ class GithubProjectDetailCrawler < Base
         ).first
         .try(:sha)
       )
-      save_project_detail_trees_only_analyze_file(tree_results)
+      save_project_detail_trees_only_analyze_file(target.id, tree_results)
 
       target.attributes = {
         crawl_status: CrawlStatus::DONE
@@ -58,6 +58,21 @@ class GithubProjectDetailCrawler < Base
         name: result.name,
         sha: result.commit.sha,
         url: result.commit.url,
+        input_project_id: target_id
+      )
+      pj.save!
+    end
+  end
+
+  # ツリー情報格納
+  def save_project_detail_trees_only_analyze_file(target_id, results)
+    InputTree.where(input_project_id: target_id).delete_all
+    results.each do |result|
+      pj = InputTree.new(
+        path: result.path,
+        type: result.type,
+        sha: result.sha,
+        url: result.url,
         input_project_id: target_id
       )
       pj.save!

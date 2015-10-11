@@ -14,7 +14,8 @@ class GithubRepositoryResponse
       header = response.headers
 
       r.is_success = response.success?
-      check_body_hash_array_is_string = body[0].nil? ? true : false
+      check_body_hash_array_is_string =
+        body[0].nil? && body != [] ? true : false
       r.items =
         if check_body_hash_array_is_string && body['tree'].present?
           body['tree'].map { |v| HashObject.new(v) }
