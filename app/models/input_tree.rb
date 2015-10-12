@@ -41,4 +41,8 @@ class InputTree < ActiveRecord::Base
   def self.is_gemfile?(file_name)
     file_name == 'Gemfile'
   end
+
+  def self.is_gemspec?(file_name)
+    file_name.downcase =~ /.gemspec$/
+  end
 end
