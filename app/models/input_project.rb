@@ -52,9 +52,10 @@ class InputProject < ActiveRecord::Base
   # 取得上限の指定が必要
   # 別クローラが同じプロジェクトを解析しない考慮あり
   def self.get_project_detail_crawl_target(max_count)
-    targets = InputProject.where(crawl_status: CrawlStatus::WAITING)
-              .order(:updated_at)
-              .limit(max_count)
+    targets = InputProject
+      .where(crawl_status: CrawlStatus::WAITING)
+      .order(:updated_at)
+      .limit(max_count)
 
     targets.each do |target|
       target.crawl_status = CrawlStatus::IN_PROGRESS
