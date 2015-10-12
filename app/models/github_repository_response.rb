@@ -21,9 +21,7 @@ class GithubRepositoryResponse
           body['tree'].map { |v| HashObject.new(v) }
         elsif check_body_hash_array_is_string && body['message'].present?
           # コミットファイル0件時 Not Found と返される際の対応
-          if body['message'] == "Not Found"
-            r.is_success = true
-          end
+          r.is_success = true if body['message'] == 'Not Found'
           []
         else
           body.map { |v| HashObject.new(v) }
@@ -53,5 +51,4 @@ class GithubRepositoryResponse
       r.rate_limit_reset = header['x-ratelimit-reset']
     end
   end
-
 end

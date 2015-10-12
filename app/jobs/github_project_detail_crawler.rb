@@ -6,6 +6,11 @@
 class GithubProjectDetailCrawler < Base
   queue_as :github_project_detail_crawler
 
+  # リトライ時の待ち時間
+  RETRY_WAIT_TIME = 1
+  # WEEKLY コミット取得の際の待ち時間
+  WEEKLY_COMMIT_COUNT_WAIT_TIME = 3
+
   def perform(max_count)
     targets = InputProject.get_project_detail_crawl_target(max_count)
     targets.each do |target|
@@ -27,6 +32,10 @@ class GithubProjectDetailCrawler < Base
         .try(:sha)
       )
       save_project_detail_trees_only_analyze_file(target.id, tree_results)
+
+      # 週間コミット情報
+      weekly_commit_results = fetch_projects_detail_weekly_commit_counts_by_project_id(target.github_item_id)
+      save_project_detail_weekly_commit_counts(target.id, weekly_commit_results)
 
       # コンテンツ
       is_success = fetch_and_save_project_detail_contents(target.id)
@@ -86,6 +95,23 @@ class GithubProjectDetailCrawler < Base
         )
         pj.save!
       end
+    end
+  end
+
+  # 週間コミット数格納
+  def save_project_detail_weekly_commit_counts(target_id, results)
+    results.each do |result|
+      pj = InputWeeklyCommitCount.find_or_initialize_by(
+        input_project_id: target_id,
+        index: result[:index]
+      )
+      pj.attributes = {
+        index: result[:index],
+        all_count: result[:all],
+        owner_count: result[:owner],
+        input_project_id: target_id
+      }
+      pj.save!
     end
   end
 
@@ -179,6 +205,27 @@ class GithubProjectDetailCrawler < Base
     )
   end
 
+  # 指定したプロジェクトIDよりリポジトリ詳細情報(週間コミット数)取得
+  def fetch_projects_detail_weekly_commit_counts_by_project_id(project_id)
+    Rails.logger.info("fetch project detail contents #{project_id}")
+
+    p = proc do |page|
+      client = GithubClient.new(Settings.github_crawl_token)
+      # 失敗率が高いため少し待ってから取得する
+      sleep WEEKLY_COMMIT_COUNT_WAIT_TIME
+      res = client.get_repositories_weekly_commit_counts_by_project_id(
+        project_id,
+        page: page
+      )
+      Rails.logger.info("fetch project #{project_id} (page: #{page})")
+      res
+    end
+
+    results = fetch_projects_detail_with_rate_limit(
+      p
+    ).flatten
+  end
+
   # 指定したプロジェクトの主キーを元に解析対象のリポジトリ詳細情報(コンテンツ)取得と格納
   def fetch_and_save_project_detail_contents(input_project_id)
     is_success = true
@@ -234,6 +281,8 @@ class GithubProjectDetailCrawler < Base
           fail 'Retry Limit.'
         else
           retry_count += 1
+          # Retry する場合 少し待つ
+          sleep RETRY_WAIT_TIME
           redo
         end
       else
