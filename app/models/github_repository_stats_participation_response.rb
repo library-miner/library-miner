@@ -28,7 +28,7 @@ class GithubRepositoryStatsParticipationResponse
                     end
       r.items = []
       all_count.each_with_index do |all, i|
-        r.items << { index: i, all: all, owner: owner_count[i]}
+        r.items << { index: i, all: all, owner: owner_count[i] }
       end
       r.rate_limit = header['x-ratelimit-limit'].to_i
       r.rate_limit_remaining = header['x-ratelimit-remaining'].to_i
