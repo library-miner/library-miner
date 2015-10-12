@@ -31,22 +31,32 @@
 class InputProject < ActiveRecord::Base
   extend ActiveHash::Associations::ActiveRecordExtensions
 
+  COPYABLE_ATTRIBUTES = %i(
+    github_item_id name full_name owner_id owner_login_name owner_type
+    github_url is_fork github_description github_created_at
+    github_updated_at github_pushed_at homepage
+    size stargazers_count watchers_count fork_count open_issue_count
+    github_score language
+  )
+
   # Relations
   belongs_to_active_hash :crawl_status
-  has_many :input_branches
-  has_many :input_trees
-  has_many :input_contents
-  has_many :input_weekly_commit_counts
+  has_many :input_branches, dependent: :destroy
+  has_many :input_trees, dependent: :destroy
+  has_many :input_contents, dependent: :destroy
+  has_many :input_tags, dependent: :destroy
+  has_many :input_weekly_commit_counts, dependent: :destroy
 
   # Validations
 
   # Scopes
+  scope :crawled, -> do
+    where(crawl_status_id: CrawlStatus::DONE.id)
+  end
 
   # Delegates
 
   # Class Methods
-
-  # Methods
 
   # 未処理の情報を取得
   # 取得上限の指定が必要
@@ -63,5 +73,13 @@ class InputProject < ActiveRecord::Base
     end
 
     InputProject.where(crawl_status: CrawlStatus::IN_PROGRESS)
+  end
+
+
+  # Methods
+
+  # TODO: FIXME なんかまずそう Gemfileは本当に一つ?
+  def gemfile
+    self.input_contents.find_by(path: "Gemfile")
   end
 end
