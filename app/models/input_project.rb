@@ -46,6 +46,7 @@ class InputProject < ActiveRecord::Base
   has_many :input_contents, dependent: :destroy
   has_many :input_tags, dependent: :destroy
   has_many :input_weekly_commit_counts, dependent: :destroy
+  has_many :input_dependency_libraries, dependent: :destroy
 
   # Validations
 
