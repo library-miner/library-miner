@@ -42,6 +42,9 @@ class InputProject < ActiveRecord::Base
   # Validations
 
   # Scopes
+  scope :crawled, -> do
+    where(crawl_status_id: CrawlStatus::DONE.id)
+  end
 
   # Delegates
 
