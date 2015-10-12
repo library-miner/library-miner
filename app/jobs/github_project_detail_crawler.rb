@@ -127,6 +127,21 @@ class GithubProjectDetailCrawler < Base
     pj.save!
   end
 
+  # ライブラリ情報格納
+  def save_library_information(target_id, base_information)
+      pj = InputLibrary.find_or_initialize_by(
+        name: base_information[:name]
+      )
+      pj.attributes = {
+        name: base_information[:name],
+        version: base_information[:version],
+        source_code_uri: base_information[:source_code_uri],
+        input_project_id: target_id
+      }
+      pj.save!
+  end
+
+
   # 依存ライブラリ情報格納
   def save_project_detail_dependency_libraries(target_id, libraries)
     InputDependencyLibrary.where(input_project_id: target_id).delete_all
@@ -263,9 +278,15 @@ class GithubProjectDetailCrawler < Base
             content
           )
         elsif InputTree.is_gemspec?(target.path)
-          Rails.logger.info("fetch project libraries information from rubygems"\
+          Rails.logger.info("fetch project libraries information from rubygems "\
                             "#{project_information.github_item_id} #{target.path}")
-          dependency_libraries = fetch_projects_detail_from_ruby_gem(project_information.name)
+          library_information,dependency_libraries = fetch_projects_detail_from_ruby_gem(
+            project_information.name
+          )
+          save_library_information(
+            input_project_id,
+            library_information
+          )
           save_project_detail_dependency_libraries(
             input_project_id,
             dependency_libraries
@@ -346,11 +367,12 @@ class GithubProjectDetailCrawler < Base
         end
       else
         retry_count = 0
+        base_information = res.base_information
         results << res.items
       end
     end while !res.is_success
 
-    results.flatten
+    [base_information,results.flatten]
   end
 
 end

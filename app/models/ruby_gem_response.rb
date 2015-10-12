@@ -3,7 +3,7 @@ class RubyGemResponse
   include ActiveModel::Validations::Callbacks
 
   attr_accessor *%i(
-    is_success items
+    is_success items base_information
   )
 
   def self.parse(response)
@@ -11,6 +11,26 @@ class RubyGemResponse
       body = JSON.parse(response.body)
       header = response.headers
       r.is_success = response.success?
+      name = if body['name'].present?
+                 body['name']
+               else
+                 ""
+               end
+      version = if body['version'].present?
+                 body['version']
+               else
+                 ""
+               end
+      source_code_uri = if body['source_code_uri'].present?
+                 body['source_code_uri']
+               else
+                 ""
+               end
+      r.base_information = {
+        name: name,
+        version: version,
+        source_code_uri: source_code_uri
+      }
       r.items = if body['dependencies']['runtime'].present?
                   body['dependencies']['runtime'].map { |v| HashObject.new(v) }
                 else
