@@ -31,6 +31,7 @@ class ProjectAnalyzer < Base
 
         ActiveRecord::Base.transaction do
           source_project.create_dependency_projects(gemfiles.map(&:name))
+          # TODO: dependencies ライブラリもProjectとして保存する(is_incomplete = trueとする)
           # TODO: SourceProjectを解析済みにする
           source_project.save!
         end
