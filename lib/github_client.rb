@@ -55,7 +55,6 @@ class GithubClient
     GithubRepositoryResponse.parse_blob(get_request_blob_to(path))
   end
 
-
   private
 
   def build_api_connection
@@ -77,9 +76,8 @@ class GithubClient
     conn = build_api_connection
     conn.get do |req|
       req.url path
-      req.headers['Accept'] = "application/vnd.github.v3.raw+json"
+      req.headers['Accept'] = 'application/vnd.github.v3.raw+json'
       req.headers['Authorization'] = "token #{Settings.github_crawl_token}"
     end
   end
-
 end

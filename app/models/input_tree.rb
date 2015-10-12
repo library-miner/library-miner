@@ -30,19 +30,15 @@ class InputTree < ActiveRecord::Base
     is_target = false
 
     # Gemfile
-    if file_name == "Gemfile"
-      is_target = true
-    end
+    is_target = true if file_name == 'Gemfile'
 
     # gemspec
-    if file_name.downcase =~ /.gemspec$/
-      is_target = true
-    end
+    is_target = true if file_name.downcase =~ /.gemspec$/
 
     is_target
   end
 
   def self.is_gemfile?(file_name)
-    file_name == "Gemfile"
+    file_name == 'Gemfile'
   end
 end
