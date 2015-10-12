@@ -33,10 +33,11 @@ class InputProject < ActiveRecord::Base
 
   # Relations
   belongs_to_active_hash :crawl_status
-  has_many :input_branches
-  has_many :input_trees
-  has_many :input_contents
-  has_many :input_weekly_commit_counts
+  has_many :input_branches, dependent: :destroy
+  has_many :input_trees, dependent: :destroy
+  has_many :input_contents, dependent: :destroy
+  has_many :input_tags, dependent: :destroy
+  has_many :input_weekly_commit_counts, dependent: :destroy
 
   # Validations
 
