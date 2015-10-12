@@ -35,6 +35,16 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_index "input_contents", ["input_project_id"], name: "input_contents_input_project_id_fk", using: :btree
 
+  create_table "input_dependency_libraries", force: :cascade do |t|
+    t.integer  "input_project_id", limit: 4,   null: false
+    t.string   "name",             limit: 255, null: false
+    t.string   "version",          limit: 255, null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "input_dependency_libraries", ["input_project_id"], name: "input_dependency_libraries_input_project_id_fk", using: :btree
+
   create_table "input_projects", force: :cascade do |t|
     t.integer  "crawl_status_id",    limit: 4,     default: 0,     null: false
     t.integer  "github_item_id",     limit: 8,                     null: false
@@ -133,6 +143,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_foreign_key "input_branches", "input_projects", name: "input_branches_input_project_id_fk"
   add_foreign_key "input_contents", "input_projects", name: "input_contents_input_project_id_fk"
+  add_foreign_key "input_dependency_libraries", "input_projects", name: "input_dependency_libraries_input_project_id_fk"
   add_foreign_key "input_tags", "input_projects", name: "input_tags_input_project_id_fk"
   add_foreign_key "input_trees", "input_projects", name: "input_trees_input_project_id_fk"
   add_foreign_key "input_weekly_commit_counts", "input_projects", name: "input_weekly_commit_counts_input_project_id_fk"
