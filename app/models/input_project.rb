@@ -31,6 +31,14 @@
 class InputProject < ActiveRecord::Base
   extend ActiveHash::Associations::ActiveRecordExtensions
 
+  COPYABLE_ATTRIBUTES = %i(
+    github_item_id name full_name owner_id owner_login_name owner_type
+    github_url is_fork github_description github_created_at
+    github_updated_at github_pushed_at homepage
+    size stargazers_count watchers_count fork_count open_issue_count
+    github_score language
+  )
+
   # Relations
   belongs_to_active_hash :crawl_status
   has_many :input_branches, dependent: :destroy
