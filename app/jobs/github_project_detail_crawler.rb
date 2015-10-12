@@ -195,7 +195,7 @@ class GithubProjectDetailCrawler < Base
           content = fetch_projects_detail_contents_by_project_id_and_sha(
             project_information.github_item_id,
             target.sha
-          )
+          ).join
           save_project_detail_contents(
             input_project_id,
             target.path,
