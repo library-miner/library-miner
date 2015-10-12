@@ -21,14 +21,20 @@ class RubyGemResponse
                else
                  ""
                end
+      homepage_uri = if body['homepage_uri'].present?
+                       body['homepage_uri']
+                     else
+                       nil
+                     end
       source_code_uri = if body['source_code_uri'].present?
                  body['source_code_uri']
                else
-                 ""
+                 nil
                end
       r.base_information = {
         name: name,
         version: version,
+        homepage_uri: homepage_uri,
         source_code_uri: source_code_uri
       }
       r.items = if body['dependencies']['runtime'].present?

@@ -98,6 +98,7 @@ create_table 'input_libraries', collate: 'utf8_bin', comment: '入力元_ライ�
 
   t.varchar :name, comment: 'ライブラリ名'
   t.varchar :version, comment: 'ライブラリバージョン'
+  t.varchar :homepage_uri, null: true
   t.varchar :source_code_uri, null: true
   t.foreign_key 'input_project_id', reference: 'input_projects', reference_column: 'id'
 

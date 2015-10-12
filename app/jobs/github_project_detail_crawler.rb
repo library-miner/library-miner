@@ -135,6 +135,7 @@ class GithubProjectDetailCrawler < Base
       pj.attributes = {
         name: base_information[:name],
         version: base_information[:version],
+        homepage_uri: base_information[:homepage_uri],
         source_code_uri: base_information[:source_code_uri],
         input_project_id: target_id
       }
