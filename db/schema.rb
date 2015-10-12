@@ -95,6 +95,42 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_index "input_weekly_commit_counts", ["input_project_id"], name: "input_weekly_commit_counts_input_project_id_fk", using: :btree
 
+  create_table "project_dependencies", force: :cascade do |t|
+    t.integer  "project_from_id", limit: 4,   null: false
+    t.integer  "project_to_id",   limit: 4
+    t.string   "library_name",    limit: 255, null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.boolean  "is_incomplete",                    default: true,  null: false
+    t.integer  "github_item_id",     limit: 8
+    t.string   "name",               limit: 255,                   null: false
+    t.string   "full_name",          limit: 255
+    t.integer  "owner_id",           limit: 8
+    t.string   "owner_login_name",   limit: 255,   default: "",    null: false
+    t.string   "owner_type",         limit: 30,    default: "",    null: false
+    t.string   "github_url",         limit: 255
+    t.boolean  "is_fork",                          default: false, null: false
+    t.text     "github_description", limit: 65535
+    t.datetime "github_created_at"
+    t.datetime "github_updated_at"
+    t.datetime "github_pushed_at"
+    t.text     "homepage",           limit: 65535
+    t.integer  "size",               limit: 8,     default: 0,     null: false
+    t.integer  "stargazers_count",   limit: 8,     default: 0,     null: false
+    t.integer  "watchers_count",     limit: 8,     default: 0,     null: false
+    t.integer  "fork_count",         limit: 8,     default: 0,     null: false
+    t.integer  "open_issue_count",   limit: 8,     default: 0,     null: false
+    t.string   "github_score",       limit: 255,   default: "",    null: false
+    t.string   "language",           limit: 255,   default: "",    null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+  end
+
+  add_index "projects", ["github_item_id"], name: "index_projects_on_github_item_id", unique: true, using: :btree
+
   add_foreign_key "input_branches", "input_projects", name: "input_branches_input_project_id_fk"
   add_foreign_key "input_contents", "input_projects", name: "input_contents_input_project_id_fk"
   add_foreign_key "input_tags", "input_projects", name: "input_tags_input_project_id_fk"
