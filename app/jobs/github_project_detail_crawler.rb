@@ -28,6 +28,9 @@ class GithubProjectDetailCrawler < Base
       )
       save_project_detail_trees_only_analyze_file(target.id, tree_results)
 
+      # コンテンツ
+      is_success = fetch_and_save_project_detail_contents(target.id)
+
       target.attributes = {
         crawl_status: CrawlStatus::DONE
       }
@@ -86,6 +89,18 @@ class GithubProjectDetailCrawler < Base
     end
   end
 
+  # コンテンツ情報格納
+  def save_project_detail_contents(target_id, path, sha, content)
+    InputContent.where(input_project_id: target_id).delete_all
+    pj = InputContent.new(
+      path: path,
+      sha: sha,
+      content: content,
+      input_project_id: target_id
+    )
+    pj.save!
+  end
+
   # 指定したプロジェクトIDよりリポジトリ詳細情報(ブランチ)取得
   def fetch_projects_detail_branches_by_project_id(project_id)
     Rails.logger.info("fetch project detail branches #{project_id}")
@@ -142,6 +157,56 @@ class GithubProjectDetailCrawler < Base
     results = fetch_projects_detail_with_rate_limit(
       p
     ).flatten
+  end
+
+  # 指定したプロジェクトIDとSHAよりリポジトリ詳細情報(コンテンツ)取得
+  def fetch_projects_detail_contents_by_project_id_and_sha(project_id, sha)
+    Rails.logger.info("fetch project detail contents #{project_id} #{sha}")
+
+    p = proc do |page|
+      client = GithubClient.new(Settings.github_crawl_token)
+      res = client.get_repositories_contents_by_project_id_and_sha(
+        project_id,
+        sha,
+        page: page
+      )
+      Rails.logger.info("fetch project #{project_id} #{sha} (page: #{page})")
+      res
+    end
+
+    results = fetch_projects_detail_with_rate_limit(
+      p
+    )
+  end
+
+  # 指定したプロジェクトの主キーを元に解析対象のリポジトリ詳細情報(コンテンツ)取得と格納
+  def fetch_and_save_project_detail_contents(input_project_id)
+    is_success = true
+    project_information = InputProject.find(input_project_id)
+    targets = InputTree.where(input_project_id: input_project_id)
+
+    targets.each do |target|
+      is_target = InputTree.is_analize_target?(target.path)
+      Rails.logger.info("input_project_id=#{input_project_id};"\
+                        "path=#{target.path};"\
+                        "analyze_target=#{is_target}")
+      if is_target
+        if InputTree.is_gemfile?(target.path)
+          content = fetch_projects_detail_contents_by_project_id_and_sha(
+            project_information.github_item_id,
+            target.sha
+          )
+          save_project_detail_contents(
+            input_project_id,
+            target.path,
+            target.sha,
+            content
+          )
+        end
+      end
+    end
+
+    is_success
   end
 
   # API制限,リトライを考慮してデータ取得　

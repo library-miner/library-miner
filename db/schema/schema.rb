@@ -73,7 +73,6 @@ create_table 'input_contents', collate: 'utf8_bin', comment: '入力元_プロ�
 
   t.varchar :path, comment: 'ファイルパス'
   t.varchar :sha
-  t.varchar :url
   t.text :content, comment: 'ファイル内容'
   t.foreign_key 'input_project_id', reference: 'input_projects', reference_column: 'id'
 

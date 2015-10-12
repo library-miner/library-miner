@@ -41,4 +41,8 @@ class InputTree < ActiveRecord::Base
 
     is_target
   end
+
+  def self.is_gemfile?(file_name)
+    file_name == "Gemfile"
+  end
 end
