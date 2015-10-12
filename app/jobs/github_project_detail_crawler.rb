@@ -6,6 +6,11 @@
 class GithubProjectDetailCrawler < Base
   queue_as :github_project_detail_crawler
 
+  # リトライ時の待ち時間
+  RETRY_WAIT_TIME = 1
+  # WEEKLY コミット取得の際の待ち時間
+  WEEKLY_COMMIT_COUNT_WAIT_TIME = 3
+
   def perform(max_count)
     targets = InputProject.get_project_detail_crawl_target(max_count)
     targets.each do |target|
@@ -206,6 +211,8 @@ class GithubProjectDetailCrawler < Base
 
     p = proc do |page|
       client = GithubClient.new(Settings.github_crawl_token)
+      # 失敗率が高いため少し待ってから取得する
+      sleep WEEKLY_COMMIT_COUNT_WAIT_TIME
       res = client.get_repositories_weekly_commit_counts_by_project_id(
         project_id,
         page: page
@@ -274,6 +281,8 @@ class GithubProjectDetailCrawler < Base
           fail 'Retry Limit.'
         else
           retry_count += 1
+          # Retry する場合 少し待つ
+          sleep RETRY_WAIT_TIME
           redo
         end
       else
