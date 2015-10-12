@@ -129,19 +129,18 @@ class GithubProjectDetailCrawler < Base
 
   # ライブラリ情報格納
   def save_library_information(target_id, base_information)
-      pj = InputLibrary.find_or_initialize_by(
-        name: base_information[:name]
-      )
-      pj.attributes = {
-        name: base_information[:name],
-        version: base_information[:version],
-        homepage_uri: base_information[:homepage_uri],
-        source_code_uri: base_information[:source_code_uri],
-        input_project_id: target_id
-      }
-      pj.save!
+    pj = InputLibrary.find_or_initialize_by(
+      name: base_information[:name]
+    )
+    pj.attributes = {
+      name: base_information[:name],
+      version: base_information[:version],
+      homepage_uri: base_information[:homepage_uri],
+      source_code_uri: base_information[:source_code_uri],
+      input_project_id: target_id
+    }
+    pj.save!
   end
-
 
   # 依存ライブラリ情報格納
   def save_project_detail_dependency_libraries(target_id, libraries)
@@ -281,17 +280,21 @@ class GithubProjectDetailCrawler < Base
         elsif InputTree.is_gemspec?(target.path)
           Rails.logger.info("fetch project libraries information from rubygems "\
                             "#{project_information.github_item_id} #{target.path}")
-          library_information,dependency_libraries = fetch_projects_detail_from_ruby_gem(
+          library_found,library_information,dependency_libraries = fetch_projects_detail_from_ruby_gem(
             project_information.name
           )
-          save_library_information(
-            input_project_id,
-            library_information
-          )
-          save_project_detail_dependency_libraries(
-            input_project_id,
-            dependency_libraries
-          )
+          if library_found
+            save_library_information(
+              input_project_id,
+              library_information
+            )
+            save_project_detail_dependency_libraries(
+              input_project_id,
+              dependency_libraries
+            )
+          else
+            Rails.logger.info("rubygems not found #{project_information.name}")
+          end
         end
       end
     end
@@ -356,6 +359,11 @@ class GithubProjectDetailCrawler < Base
       )
       Rails.logger.info("fetch project #{name}")
 
+      if res.not_found
+        is_success = false
+        break
+      end
+
       unless res.is_success
         Rails.logger.info("fetch failed. Retry(retry count: #{retry_count})")
         if retry_count >= 5
@@ -373,7 +381,7 @@ class GithubProjectDetailCrawler < Base
       end
     end while !res.is_success
 
-    [base_information,results.flatten]
+    [is_success,base_information,results.flatten]
   end
 
 end
