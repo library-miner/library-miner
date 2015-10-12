@@ -6,6 +6,7 @@ class GithubClient
   TAGS_URL = '/tags'
   TREES_URL = '/git/trees'
   BLOBS_URL = '/git/blobs'
+  WEEKLY_COMMIT_COUNTS_URL = '/stats/participation'
 
   # search_repository 1ページあたりに取得可能な最大件数
   GITHUB_SEARCH_REPOSITORY_MAX_PER = 100
@@ -46,6 +47,13 @@ class GithubClient
     Rails.logger.info("GithubClient Access to #{path} - page: #{page}")
 
     GithubRepositoryResponse.parse(get_request_to(path, page: page), page)
+  end
+
+  def get_repositories_weekly_commit_counts_by_project_id(project_id, page: 1)
+    path = "#{REPOSITORY_URL}/#{project_id}#{WEEKLY_COMMIT_COUNTS_URL}"
+    Rails.logger.info("GithubClient Access to #{path} - page: #{page}")
+
+    GithubRepositoryStatsParticipationResponse.parse(get_request_to(path, page: page), page)
   end
 
   def get_repositories_contents_by_project_id_and_sha(project_id, sha, page: 1)
