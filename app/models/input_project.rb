@@ -58,8 +58,6 @@ class InputProject < ActiveRecord::Base
 
   # Class Methods
 
-  # Methods
-
   # 未処理の情報を取得
   # 取得上限の指定が必要
   # 別クローラが同じプロジェクトを解析しない考慮あり
@@ -75,5 +73,13 @@ class InputProject < ActiveRecord::Base
     end
 
     InputProject.where(crawl_status: CrawlStatus::IN_PROGRESS)
+  end
+
+
+  # Methods
+
+  # TODO: FIXME なんかまずそう Gemfileは本当に一つ?
+  def gemfile
+    self.input_contents.find_by(path: "Gemfile")
   end
 end

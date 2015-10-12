@@ -30,6 +30,8 @@
 
 class Project < ActiveRecord::Base
   # Relations
+  has_many :project_dependencies, foreign_key: :project_from_id
+  has_many :projects, through: :project_dependencies, source: :project_from
 
   # Validations
 
@@ -40,4 +42,16 @@ class Project < ActiveRecord::Base
   # Class Methods
 
   # Methods
+
+  # 引数として指定したgemを関連ライブラリとして保存
+  def create_dependency_projects(gemfile_names)
+    gemfile_names.each do |name|
+      self
+        .project_dependencies
+        .find_or_initialize_by(library_name: name)
+      # TODO: ライブラリ名からProjectIdに変換する処理を考える!
+    end
+
+    self.project_dependencies
+  end
 end
