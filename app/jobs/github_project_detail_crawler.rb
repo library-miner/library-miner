@@ -12,7 +12,10 @@ class GithubProjectDetailCrawler < Base
   WEEKLY_COMMIT_COUNT_WAIT_TIME = 3
 
   def perform(max_count)
-    targets = InputProject.get_project_detail_crawl_target(max_count)
+    targets = InputProject.get_project_detail_crawl_target(
+      max_count,
+      Settings.client_node_id
+    )
     targets.each do |target|
       # ブランチ情報
       tree_results = fetch_projects_detail_branches_by_project_id(target.github_item_id)

@@ -64,7 +64,7 @@ class InputProject < ActiveRecord::Base
   # 未処理の情報を取得
   # 取得上限の指定が必要
   # 別クローラが同じプロジェクトを解析しない考慮あり
-  def self.get_project_detail_crawl_target(max_count)
+  def self.get_project_detail_crawl_target(max_count, client_node_id)
     targets = InputProject
       .where(crawl_status: CrawlStatus::WAITING)
       .order(:updated_at)
@@ -72,10 +72,14 @@ class InputProject < ActiveRecord::Base
 
     targets.each do |target|
       target.crawl_status = CrawlStatus::IN_PROGRESS
+      target.client_node_id = client_node_id
       target.save!
     end
 
-    InputProject.where(crawl_status: CrawlStatus::IN_PROGRESS)
+    InputProject.where(
+      crawl_status: CrawlStatus::IN_PROGRESS,
+      client_node_id: client_node_id
+    )
   end
 
 
