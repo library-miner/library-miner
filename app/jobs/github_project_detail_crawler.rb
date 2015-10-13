@@ -9,7 +9,7 @@ class GithubProjectDetailCrawler < Base
   # リトライ時の待ち時間
   RETRY_WAIT_TIME = 1
   # WEEKLY コミット取得の際の待ち時間
-  WEEKLY_COMMIT_COUNT_WAIT_TIME = 10
+  WEEKLY_COMMIT_COUNT_WAIT_TIME = 3
 
   def perform(max_count)
     targets = InputProject.get_project_detail_crawl_target(
@@ -17,7 +17,7 @@ class GithubProjectDetailCrawler < Base
       Settings.client_node_id
     )
     # マルチプロセスで詳細情報を収集
-    Parallel.each(targets, in_processes: 10) { |target|
+    Parallel.each(targets, in_processes: Settings.detail_crawler_process_count) { |target|
       ActiveRecord::Base.connection_pool.with_connection do
         # ブランチ情報
         tree_results = fetch_projects_detail_branches_by_project_id(target.github_item_id)
