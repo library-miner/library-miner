@@ -3,6 +3,7 @@ create_table 'input_projects', collate: 'utf8_bin', comment: '入力元_プロ�
 
   t.int :crawl_status_id, default: 0, comment: '収集ステータス'
   t.bigint :github_item_id, comment: 'Github Item ID'
+  t.int :client_node_id, null: true, comment: 'クライアントID'
   t.varchar :name
   t.varchar :full_name
   t.bigint :owner_id

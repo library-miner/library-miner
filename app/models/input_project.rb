@@ -5,6 +5,7 @@
 #  id                 :integer          not null, primary key
 #  crawl_status_id    :integer          default(0), not null
 #  github_item_id     :integer          not null
+#  client_node_id     :integer
 #  name               :string(255)      not null
 #  full_name          :string(255)      not null
 #  owner_id           :integer          not null
