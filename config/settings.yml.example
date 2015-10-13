@@ -2,10 +2,15 @@ defaults: &defaults
 
 development:
   github_crawl_token: ''
+  client_node_id: 1
   <<: *defaults
 
 test:
+  github_crawl_token: ''
+  client_node_id: 1
   <<: *defaults
 
 production:
+  github_crawl_token: ''
+  client_node_id:
   <<: *defaults
