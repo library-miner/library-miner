@@ -9,45 +9,48 @@ class GithubProjectDetailCrawler < Base
   # リトライ時の待ち時間
   RETRY_WAIT_TIME = 1
   # WEEKLY コミット取得の際の待ち時間
-  WEEKLY_COMMIT_COUNT_WAIT_TIME = 3
+  WEEKLY_COMMIT_COUNT_WAIT_TIME = 10
 
   def perform(max_count)
     targets = InputProject.get_project_detail_crawl_target(
       max_count,
       Settings.client_node_id
     )
-    targets.each do |target|
-      # ブランチ情報
-      tree_results = fetch_projects_detail_branches_by_project_id(target.github_item_id)
-      save_project_detail_branches(target.id, tree_results)
+    # マルチプロセスで詳細情報を収集
+    Parallel.each(targets, in_processes: 10) { |target|
+      ActiveRecord::Base.connection_pool.with_connection do
+        # ブランチ情報
+        tree_results = fetch_projects_detail_branches_by_project_id(target.github_item_id)
+        save_project_detail_branches(target.id, tree_results)
 
-      # タグ情報
-      tag_results = fetch_projects_detail_tags_by_project_id(target.github_item_id)
-      save_project_detail_tags(target.id, tag_results)
+        # タグ情報
+        tag_results = fetch_projects_detail_tags_by_project_id(target.github_item_id)
+        save_project_detail_tags(target.id, tag_results)
 
-      # ツリー情報から解析対象のファイル取得
-      tree_results = fetch_projects_detail_trees_by_project_id_and_sha(
-        target.github_item_id,
-        InputBranch.where(
-          input_project_id: target.id,
-          name: 'master'
-        ).first
-        .try(:sha)
-      )
-      save_project_detail_trees_only_analyze_file(target.id, tree_results)
+        # ツリー情報から解析対象のファイル取得
+        tree_results = fetch_projects_detail_trees_by_project_id_and_sha(
+          target.github_item_id,
+          InputBranch.where(
+            input_project_id: target.id,
+            name: 'master'
+          ).first
+          .try(:sha)
+        )
+        save_project_detail_trees_only_analyze_file(target.id, tree_results)
 
-      # 週間コミット情報
-      weekly_commit_results = fetch_projects_detail_weekly_commit_counts_by_project_id(target.github_item_id)
-      save_project_detail_weekly_commit_counts(target.id, weekly_commit_results)
+        # 週間コミット情報
+        weekly_commit_results = fetch_projects_detail_weekly_commit_counts_by_project_id(target.github_item_id)
+        save_project_detail_weekly_commit_counts(target.id, weekly_commit_results)
 
-      # コンテンツ
-      is_success = fetch_and_save_project_detail_contents(target.id)
+        # コンテンツ
+        is_success = fetch_and_save_project_detail_contents(target.id)
 
-      target.attributes = {
-        crawl_status: CrawlStatus::DONE
-      }
-      target.save!
-    end
+        target.attributes = {
+          crawl_status: CrawlStatus::DONE
+        }
+        target.save!
+      end
+    }
   end
 
   # private
