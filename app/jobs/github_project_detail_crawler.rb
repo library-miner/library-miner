@@ -127,6 +127,34 @@ class GithubProjectDetailCrawler < Base
     pj.save!
   end
 
+  # ライブラリ情報格納
+  def save_library_information(target_id, base_information)
+    pj = InputLibrary.find_or_initialize_by(
+      name: base_information[:name]
+    )
+    pj.attributes = {
+      name: base_information[:name],
+      version: base_information[:version],
+      homepage_uri: base_information[:homepage_uri],
+      source_code_uri: base_information[:source_code_uri],
+      input_project_id: target_id
+    }
+    pj.save!
+  end
+
+  # 依存ライブラリ情報格納
+  def save_project_detail_dependency_libraries(target_id, libraries)
+    InputDependencyLibrary.where(input_project_id: target_id).delete_all
+    libraries.each do |library|
+      pj = InputDependencyLibrary.new(
+        name: library.name,
+        version: library.requirements,
+        input_project_id: target_id
+      )
+      pj.save!
+    end
+  end
+
   # 指定したプロジェクトIDよりリポジトリ詳細情報(ブランチ)取得
   def fetch_projects_detail_branches_by_project_id(project_id)
     Rails.logger.info("fetch project detail branches #{project_id}")
@@ -249,6 +277,24 @@ class GithubProjectDetailCrawler < Base
             target.sha,
             content
           )
+        elsif InputTree.is_gemspec?(target.path)
+          Rails.logger.info("fetch project libraries information from rubygems "\
+                            "#{project_information.github_item_id} #{target.path}")
+          library_found,library_information,dependency_libraries = fetch_projects_detail_from_ruby_gem(
+            project_information.name
+          )
+          if library_found
+            save_library_information(
+              input_project_id,
+              library_information
+            )
+            save_project_detail_dependency_libraries(
+              input_project_id,
+              dependency_libraries
+            )
+          else
+            Rails.logger.info("rubygems not found #{project_information.name}")
+          end
         end
       end
     end
@@ -299,4 +345,43 @@ class GithubProjectDetailCrawler < Base
 
     results
   end
+
+  # リトライを考慮してRubyGemsからデータを取得
+  def fetch_projects_detail_from_ruby_gem(name)
+    results = []
+    is_success = true
+    retry_count = 0
+
+    begin
+      client = RubyGemsClient.new
+      res = client.get_ruby_gems_information_by_name(
+        name
+      )
+      Rails.logger.info("fetch project #{name}")
+
+      if res.not_found
+        is_success = false
+        break
+      end
+
+      unless res.is_success
+        Rails.logger.info("fetch failed. Retry(retry count: #{retry_count})")
+        if retry_count >= 5
+          fail 'Retry Limit.'
+        else
+          retry_count += 1
+          # Retry する場合 少し待つ
+          sleep RETRY_WAIT_TIME
+          redo
+        end
+      else
+        retry_count = 0
+        base_information = res.base_information
+        results << res.items
+      end
+    end while !res.is_success
+
+    [is_success,base_information,results.flatten]
+  end
+
 end
