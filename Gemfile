@@ -31,6 +31,7 @@ gem 'faraday'
 gem 'unicorn'
 gem 'execjs'
 gem 'activerecord-import'
+gem 'parallel'
 
 group :development do
   gem 'spring'

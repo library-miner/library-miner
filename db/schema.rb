@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 0) do
   create_table "input_projects", force: :cascade do |t|
     t.integer  "crawl_status_id",    limit: 4,     default: 0,     null: false
     t.integer  "github_item_id",     limit: 8,                     null: false
+    t.integer  "client_node_id",     limit: 4
     t.string   "name",               limit: 255,                   null: false
     t.string   "full_name",          limit: 255,                   null: false
     t.integer  "owner_id",           limit: 8,                     null: false

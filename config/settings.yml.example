@@ -2,10 +2,18 @@ defaults: &defaults
 
 development:
   github_crawl_token: ''
+  client_node_id: 1
+  detail_crawler_process_count: 2
   <<: *defaults
 
 test:
+  github_crawl_token: ''
+  client_node_id: 1
+  detail_crawler_process_count: 1
   <<: *defaults
 
 production:
+  github_crawl_token: ''
+  client_node_id:
+  detail_crawler_process_count:
   <<: *defaults
