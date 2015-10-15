@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 0) do
   create_table "input_libraries", force: :cascade do |t|
     t.integer  "input_project_id", limit: 4
     t.string   "name",             limit: 255, null: false
-    t.string   "version",          limit: 255, null: false
+    t.string   "version",          limit: 255
     t.string   "homepage_uri",     limit: 255
     t.string   "source_code_uri",  limit: 255
     t.datetime "created_at",                   null: false
