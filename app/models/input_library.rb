@@ -5,7 +5,7 @@
 #  id               :integer          not null, primary key
 #  input_project_id :integer
 #  name             :string(255)      not null
-#  version          :string(255)      not null
+#  version          :string(255)
 #  homepage_uri     :string(255)
 #  source_code_uri  :string(255)
 #  created_at       :datetime         not null
