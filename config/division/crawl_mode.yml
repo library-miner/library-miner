@@ -1,0 +1,6 @@
+- id: 0
+  type: created
+  name: 作成日で収集
+- id: 1
+  type: updated
+  name: 更新日で収集
