@@ -1,45 +1,61 @@
 # Githubから基本情報を取得するジョブ
 #
 # [即時実行]
-#   GithubProjectClawler.new.perform(Date.new(2015,10,1), Date.new(2015,10,6))
+# 作成日ベースで取得
+#   GithubProjectCrawler.new.perform(Date.new(2015,10,1), Date.new(2015,10,6))
+# 更新日ベースで取得
+#   GithubProjectCrawler.new.perform(
+#     Time.utc(2015,10,18,7,00,00),
+#     Time.utc(2015,10,18,8,00,00),
+#     mode: CrawlMode::UPDATED
+#   )
 class GithubProjectCrawler < Base
   queue_as :github_project_crawler
 
-  def perform(date_from, date_to)
+  def perform(date_from, date_to, mode: CrawlMode::CREATED)
     language = 'ruby'
 
-    (date_from..date_to).each do |target_date|
-      results = fetch_projects_created_at(target_date, language)
-      results.each do |result|
-        pj = InputProject.find_or_initialize_by(github_item_id: result.id)
-        pj.attributes = {
-          crawl_status: CrawlStatus::WAITING,
-          name: result.name,
-          full_name: result.full_name,
-          owner_id: result.owner.id,
-          owner_login_name: result.owner.login,
-          owner_type: result.owner.type,
-          github_url: result.html_url,
-          is_fork: result.fork,
-          github_description: result.description,
-          github_created_at: result.created_at,
-          github_updated_at: result.updated_at,
-          github_pushed_at: result.pushed_at,
-          homepage: result.homepage,
-          size: result.size,
-          stargazers_count: result.stargazers_count,
-          watchers_count: result.watchers_count,
-          fork_count: result.forks_count,
-          open_issue_count: result.open_issues_count,
-          github_score: result.score,
-          language: result.language || language
-        }
-        pj.save!
+    if mode == CrawlMode::CREATED
+      (date_from..date_to).each do |target_date|
+        results = fetch_projects_created_at(target_date, language)
+        save_projects(results)
       end
+    else
+      results = fetch_projects_updated_at(date_from,date_to,language)
     end
   end
 
   private
+
+  # リポジトリの結果結果を保存
+  def save_projects(results)
+    results.each do |result|
+      pj = InputProject.find_or_initialize_by(github_item_id: result.id)
+      pj.attributes = {
+        crawl_status: CrawlStatus::WAITING,
+        name: result.name,
+        full_name: result.full_name,
+        owner_id: result.owner.id,
+        owner_login_name: result.owner.login,
+        owner_type: result.owner.type,
+        github_url: result.html_url,
+        is_fork: result.fork,
+        github_description: result.description,
+        github_created_at: result.created_at,
+        github_updated_at: result.updated_at,
+        github_pushed_at: result.pushed_at,
+        homepage: result.homepage,
+        size: result.size,
+        stargazers_count: result.stargazers_count,
+        watchers_count: result.watchers_count,
+        fork_count: result.forks_count,
+        open_issue_count: result.open_issues_count,
+        github_score: result.score,
+        language: result.language || language
+      }
+      pj.save!
+    end
+  end
 
   # 指定した日付に作成されたリポジトリ取得
   def fetch_projects_created_at(target_date, language)
@@ -71,8 +87,39 @@ class GithubProjectCrawler < Base
     end
   end
 
+  # 指定した日時に更新されたリポジトリ取得
+  def fetch_projects_updated_at(from_time, to_time, language)
+    Rails.logger.info("fetch target time #{from_time} - #{to_time}")
+    fetch_projects_updated_between(
+      from_time, to_time, language
+    )
+  end
+
+  # 指定した範囲のデータ取得
+  # ただし取得した結果データ件数が1000件以上だった場合は、
+  # 時刻をさらに分割して検索をかける
+  def fetch_projects_updated_between(time_from, time_to, language)
+    Rails.logger.info("fetch from #{time_from} - #{time_to}")
+    is_success, results = fetch_projects_with_rate_limit(time_from, time_to, language, mode: CrawlMode::UPDATED)
+    if is_success
+      results
+    else
+      s0 = time_from
+      e1 = time_to
+
+      e0 = s0 + ((e1 - s0) / 2)
+      s1 = e0 + 1
+
+      [
+        fetch_projects_created_between(s0, e0, language, mode: CrawlMode::UPDATED),
+        fetch_projects_created_between(s1, e1, language, mode: CrawlMode::UPDATED)
+      ].flatten.compact
+    end
+  end
+
+
   # API制限を考慮してデータ取得　
-  def fetch_projects_with_rate_limit(time_from, time_to, language)
+  def fetch_projects_with_rate_limit(time_from, time_to, language, mode: CrawlMode::CREATED)
     results = []
     is_success = true
     client = GithubClient.new(Settings.github_crawl_token)
@@ -85,12 +132,21 @@ class GithubProjectCrawler < Base
       next if total_count.present? &&
               total_count <= ((page - 1) * GithubClient::GITHUB_SEARCH_REPOSITORY_MAX_PER)
 
-      res = client.search_repositories_by_created_at(
-        time_from.strftime('%Y-%m-%dT%H:%M:%SZ'),
-        time_to.strftime('%Y-%m-%dT%H:%M:%SZ'),
-        language: language,
-        page: page
-      )
+      if mode == CrawlMode::CREATED
+        res = client.search_repositories_by_created_at(
+          time_from.strftime('%Y-%m-%dT%H:%M:%SZ'),
+          time_to.strftime('%Y-%m-%dT%H:%M:%SZ'),
+          language: language,
+          page: page
+        )
+      else
+        res = client.search_repositories_by_updated_at(
+          time_from.strftime('%Y-%m-%dT%H:%M:%SZ'),
+          time_to.strftime('%Y-%m-%dT%H:%M:%SZ'),
+          language: language,
+          page: page
+        )
+      end
       total_count ||= res.total_count
       Rails.logger.info("fetch #{time_from}-#{time_to}(page: #{page}, total: #{total_count})" \
                         " and results #{res.items.size}")

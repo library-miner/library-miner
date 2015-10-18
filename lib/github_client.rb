@@ -28,6 +28,15 @@ class GithubClient
     GithubSearchRepositoryResponse.parse(get_request_to(path, page: page), page)
   end
 
+  # ex. search_repositories_by_updated_at("2014-08-20T00:00:00Z", "2014-08-20T23:59:59Z")
+  def search_repositories_by_updated_at(from_date, to_date, page: 1, language: 'ruby', sort: 'stars')
+    path = "#{SEARCH_REPOSITORY_URL}?q=language:#{language} "\
+           "pushed:\"#{from_date}..#{to_date}\"&sort=#{sort}"
+    Rails.logger.info("GithubClient Access to #{path} - page: #{page}")
+
+    GithubSearchRepositoryResponse.parse(get_request_to(path, page: page), page)
+  end
+
   def get_repositories_branches_by_project_id(project_id, page: 1)
     path = "#{REPOSITORY_URL}/#{project_id}#{BRANCHES_URL}"
     Rails.logger.info("GithubClient Access to #{path} - page: #{page}")
