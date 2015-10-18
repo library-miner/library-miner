@@ -39,8 +39,11 @@ class GithubProjectDetailCrawler < Base
         save_project_detail_trees_only_analyze_file(target.id, tree_results)
 
         # 週間コミット情報
-        weekly_commit_results = fetch_projects_detail_weekly_commit_counts_by_project_id(target.github_item_id)
-        save_project_detail_weekly_commit_counts(target.id, weekly_commit_results)
+        fetch_and_save_project_detail_weekly_commit_counts(
+          target.id,
+          target.github_item_id,
+          target.github_updated_at
+        )
 
         # コンテンツ
         is_success = fetch_and_save_project_detail_contents(target.id)
@@ -237,6 +240,22 @@ class GithubProjectDetailCrawler < Base
     results = fetch_projects_detail_with_rate_limit(
       p
     )
+  end
+
+  # 週間コミット数の取得と格納
+  # 過去12週の間に更新されていない場合はコミット数0とする
+  def fetch_and_save_project_detail_weekly_commit_counts(target_id, github_item_id, github_updated_at)
+
+    if github_updated_at > (Date.today - 3.months).to_s
+      weekly_commit_results = fetch_projects_detail_weekly_commit_counts_by_project_id(github_item_id)
+    else
+      weekly_commit_results = []
+      12.times do |i|
+        weekly_commit_results << {index: i, all: 0, owner: 0}
+      end
+    end
+
+    save_project_detail_weekly_commit_counts(target_id, weekly_commit_results)
   end
 
   # 指定したプロジェクトIDよりリポジトリ詳細情報(週間コミット数)取得
