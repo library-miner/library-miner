@@ -27,12 +27,13 @@ class ProjectAnalyzer < Base
         source_project = Project
           .find_or_initialize_by(github_item_id: project.github_item_id)
           .tap { |v| v.attributes = dup_project_attributes }
-        # TODO: 詳細情報もコピーする
-
         ActiveRecord::Base.transaction do
           source_project.create_dependency_projects(gemfiles.map(&:name))
           # TODO: dependencies ライブラリもProjectとして保存する(is_incomplete = trueとする)
           # TODO: SourceProjectを解析済みにする
+
+          # TODO: 詳細情報もコピーする
+          source_tree = copy_project_tree(project, source_project)
           source_project.save!
         end
       else
@@ -45,5 +46,21 @@ class ProjectAnalyzer < Base
   private
 
   def search_or_initialize_project(library_name)
+  end
+
+  def copy_project_tree(input_project, project)
+    trees = input_project.input_trees
+    project.project_trees.delete_all
+
+    trees.each do |tree|
+      dup_tree_attributes = tree
+      .attributes
+      .slice(*InputTree::COPYABLE_ATTRIBUTES.map(&:to_s))
+      source_tree = project
+      .project_trees
+      .build
+      .tap { |v| v.attributes = dup_tree_attributes }
+      source_tree.save!
+    end
   end
 end
