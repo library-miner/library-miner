@@ -32,6 +32,10 @@ class Project < ActiveRecord::Base
   # Relations
   has_many :project_dependencies, foreign_key: :project_from_id
   has_many :projects, through: :project_dependencies, source: :project_to
+  has_many :project_branches, dependent: :destroy
+  has_many :project_trees, dependent: :destroy
+  has_many :project_tags, dependent: :destroy
+  has_many :project_weekly_commit_counts, dependent: :destroy
 
   # Validations
 
