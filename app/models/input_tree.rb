@@ -13,6 +13,11 @@
 #
 
 class InputTree < ActiveRecord::Base
+
+  COPYABLE_ATTRIBUTES = %i(
+    path file_type sha url
+  )
+
   # Relations
   belongs_to :input_project
 

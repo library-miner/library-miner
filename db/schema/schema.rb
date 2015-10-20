@@ -162,6 +162,59 @@ create_table 'project_dependencies', collate: 'utf8_bin', comment: 'プロジェ
   t.datetime :updated_at
 end
 
+create_table 'project_branches', collate: 'utf8_bin', comment: 'プロジェクト_ブランチ' do |t|
+  t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
+  t.int :project_id, comment: 'Project id'
+
+  t.varchar :name, comment: 'ブランチ名'
+  t.varchar :sha
+  t.varchar :url
+  t.foreign_key 'project_id', reference: 'projects', reference_column: 'id'
+
+  t.datetime :created_at
+  t.datetime :updated_at
+end
+
+create_table 'project_tags', collate: 'utf8_bin', comment: 'プロジェクト_タグ' do |t|
+  t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
+  t.int :project_id, comment: 'Project id'
+
+  t.varchar :name, comment: 'タグ名'
+  t.varchar :sha
+  t.varchar :url
+  t.foreign_key 'project_id', reference: 'projects', reference_column: 'id'
+
+  t.datetime :created_at
+  t.datetime :updated_at
+end
+
+create_table 'project_trees', collate: 'utf8_bin', comment: 'プロジェクト_ツリー' do |t|
+  t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
+  t.int :project_id, comment: 'Project id'
+
+  t.varchar :path, comment: 'ファイルパス'
+  t.varchar :file_type, comment: 'ファイルタイプ'
+  t.varchar :sha
+  t.varchar :url
+  t.foreign_key 'Project_id', reference: 'projects', reference_column: 'id'
+
+  t.datetime :created_at
+  t.datetime :updated_at
+end
+
+create_table 'project_weekly_commit_counts', collate: 'utf8_bin', comment: 'プロジェクト_週間コミット数' do |t|
+  t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
+  t.int :project_id, comment: 'Project id'
+
+  t.int :index, comment: '過去何週前 0は最新を表す'
+  t.int :all_count, comment: '全体コミット数'
+  t.int :owner_count, comment: 'オーナーコミット数'
+  t.foreign_key 'project_id', reference: 'projects', reference_column: 'id'
+
+  t.datetime :created_at
+  t.datetime :updated_at
+end
+
 
 create_table 'schema_migrations', collate: 'utf8_bin', comment: '' do |t|
   t.varchar 'version'

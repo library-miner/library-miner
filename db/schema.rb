@@ -118,6 +118,17 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_index "input_weekly_commit_counts", ["input_project_id"], name: "input_weekly_commit_counts_input_project_id_fk", using: :btree
 
+  create_table "project_branches", force: :cascade do |t|
+    t.integer  "project_id", limit: 4,   null: false
+    t.string   "name",       limit: 255, null: false
+    t.string   "sha",        limit: 255, null: false
+    t.string   "url",        limit: 255, null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "project_branches", ["project_id"], name: "project_branches_project_id_fk", using: :btree
+
   create_table "project_dependencies", force: :cascade do |t|
     t.integer  "project_from_id", limit: 4,   null: false
     t.integer  "project_to_id",   limit: 4
@@ -125,6 +136,40 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end
+
+  create_table "project_tags", force: :cascade do |t|
+    t.integer  "project_id", limit: 4,   null: false
+    t.string   "name",       limit: 255, null: false
+    t.string   "sha",        limit: 255, null: false
+    t.string   "url",        limit: 255, null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "project_tags", ["project_id"], name: "project_tags_project_id_fk", using: :btree
+
+  create_table "project_trees", force: :cascade do |t|
+    t.integer  "project_id", limit: 4,   null: false
+    t.string   "path",       limit: 255, null: false
+    t.string   "file_type",  limit: 255, null: false
+    t.string   "sha",        limit: 255, null: false
+    t.string   "url",        limit: 255, null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "project_trees", ["project_id"], name: "project_trees_Project_id_fk", using: :btree
+
+  create_table "project_weekly_commit_counts", force: :cascade do |t|
+    t.integer  "project_id",  limit: 4, null: false
+    t.integer  "index",       limit: 4, null: false
+    t.integer  "all_count",   limit: 4, null: false
+    t.integer  "owner_count", limit: 4, null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "project_weekly_commit_counts", ["project_id"], name: "project_weekly_commit_counts_project_id_fk", using: :btree
 
   create_table "projects", force: :cascade do |t|
     t.boolean  "is_incomplete",                    default: true,  null: false
@@ -161,4 +206,8 @@ ActiveRecord::Schema.define(version: 0) do
   add_foreign_key "input_tags", "input_projects", name: "input_tags_input_project_id_fk"
   add_foreign_key "input_trees", "input_projects", name: "input_trees_input_project_id_fk"
   add_foreign_key "input_weekly_commit_counts", "input_projects", name: "input_weekly_commit_counts_input_project_id_fk"
+  add_foreign_key "project_branches", "projects", name: "project_branches_project_id_fk"
+  add_foreign_key "project_tags", "projects", name: "project_tags_project_id_fk"
+  add_foreign_key "project_trees", "projects", name: "project_trees_Project_id_fk"
+  add_foreign_key "project_weekly_commit_counts", "projects", name: "project_weekly_commit_counts_project_id_fk"
 end
