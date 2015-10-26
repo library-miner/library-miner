@@ -32,8 +32,11 @@ class ProjectAnalyzer < Base
           # TODO: dependencies ライブラリもProjectとして保存する(is_incomplete = trueとする)
           # TODO: SourceProjectを解析済みにする
 
-          # TODO: 詳細情報もコピーする
-          source_tree = copy_project_tree(project, source_project)
+          # TODO: ReadMEをコピーする
+          copy_project_trees(project, source_project)
+          copy_project_branches(project, source_project)
+          copy_project_tags(project, source_project)
+          copy_project_weekly_commit_counts(project, source_project)
           source_project.save!
         end
       else
@@ -48,7 +51,7 @@ class ProjectAnalyzer < Base
   def search_or_initialize_project(library_name)
   end
 
-  def copy_project_tree(input_project, project)
+  def copy_project_trees(input_project, project)
     trees = input_project.input_trees
     project.project_trees.delete_all
 
@@ -63,4 +66,53 @@ class ProjectAnalyzer < Base
       source_tree.save!
     end
   end
+
+  def copy_project_branches(input_project, project)
+    branches = input_project.input_branches
+    project.project_trees.delete_all
+
+    branches.each do |branch|
+      dup_branch_attributes = branch
+      .attributes
+      .slice(*InputBranch::COPYABLE_ATTRIBUTES.map(&:to_s))
+      source_branch = project
+      .project_branches
+      .build
+      .tap { |v| v.attributes = dup_branch_attributes }
+      source_branch.save!
+    end
+  end
+
+  def copy_project_tags(input_project, project)
+    tags = input_project.input_tags
+    project.project_tags.delete_all
+
+    tags.each do |tag|
+      dup_tag_attributes = tag
+      .attributes
+      .slice(*InputTag::COPYABLE_ATTRIBUTES.map(&:to_s))
+      source_tag = project
+      .project_tags
+      .build
+      .tap { |v| v.attributes = dup_tag_attributes }
+      source_tag.save!
+    end
+  end
+
+  def copy_project_weekly_commit_counts(input_project, project)
+    commits = input_project.input_weekly_commit_counts
+    project.project_weekly_commit_counts.delete_all
+
+    commits.each do |commit|
+      dup_commit_attributes = commit
+      .attributes
+      .slice(*InputWeeklyCommitCount::COPYABLE_ATTRIBUTES.map(&:to_s))
+      source_commit = project
+      .project_weekly_commit_counts
+      .build
+      .tap { |v| v.attributes = dup_commit_attributes }
+      source_commit.save!
+    end
+  end
+
 end
