@@ -52,7 +52,7 @@ class GithubClient
   end
 
   def get_repositories_trees_by_project_id_and_sha(project_id, sha, page: 1)
-    path = "#{REPOSITORY_URL}/#{project_id}#{TREES_URL}/#{sha}"
+    path = "#{REPOSITORY_URL}/#{project_id}#{TREES_URL}/#{sha}?recursive=20"
     Rails.logger.info("GithubClient Access to #{path} - page: #{page}")
 
     GithubRepositoryResponse.parse(get_request_to(path, page: page), page)
