@@ -12,6 +12,10 @@
 #
 
 class InputTag < ActiveRecord::Base
+
+  COPYABLE_ATTRIBUTES = %i(
+    name sha url
+  )
   # Relations
   belongs_to :input_project
 

@@ -36,7 +36,7 @@ class GithubProjectDetailCrawler < Base
           ).first
           .try(:sha)
         )
-        save_project_detail_trees_only_analyze_file(target.id, tree_results)
+        save_project_detail_trees(target.id, tree_results)
 
         # 週間コミット情報
         fetch_and_save_project_detail_weekly_commit_counts(
@@ -86,24 +86,17 @@ class GithubProjectDetailCrawler < Base
   end
 
   # ツリー情報格納
-  def save_project_detail_trees_only_analyze_file(target_id, results)
+  def save_project_detail_trees(target_id, results)
     InputTree.where(input_project_id: target_id).delete_all
     results.each do |result|
-      is_target = InputTree.is_analize_target?(result.path)
-      Rails.logger.info("input_project_id=#{target_id};"\
-                        "path=#{result.path};"\
-                        "analyze_target=#{is_target}")
-
-      if is_target
-        pj = InputTree.new(
-          path: result.path,
-          file_type: result.type,
-          sha: result.sha,
-          url: result.url,
-          input_project_id: target_id
-        )
-        pj.save!
-      end
+      pj = InputTree.new(
+        path: result.path,
+        file_type: result.type,
+        sha: result.sha,
+        url: result.url,
+        input_project_id: target_id
+      )
+      pj.save!
     end
   end
 

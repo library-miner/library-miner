@@ -12,6 +12,11 @@
 #
 
 class InputWeeklyCommitCount < ActiveRecord::Base
+
+  COPYABLE_ATTRIBUTES = %i(
+    index all_count owner_count
+  )
+
   # Relations
   belongs_to :input_project
 
