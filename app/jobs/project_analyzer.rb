@@ -37,6 +37,7 @@ class ProjectAnalyzer < Base
           copy_project_branches(project, source_project)
           copy_project_tags(project, source_project)
           copy_project_weekly_commit_counts(project, source_project)
+          copy_project_readme(project, source_project)
           source_project.save!
         end
       else
@@ -112,6 +113,24 @@ class ProjectAnalyzer < Base
       .build
       .tap { |v| v.attributes = dup_commit_attributes }
       source_commit.save!
+    end
+  end
+
+  def copy_project_readme(input_project, project)
+    contents = input_project.input_contents
+    project.project_readmes.delete_all
+
+    contents.each do |content|
+      if InputTree.is_readme?(content.path)
+        dup_content_attributes = content
+        .attributes
+        .slice(*InputContent::COPYABLE_ATTRIBUTES.map(&:to_s))
+        source_content = project
+        .project_readmes
+        .build
+        .tap { |v| v.attributes = dup_content_attributes }
+        source_content.save!
+      end
     end
   end
 
