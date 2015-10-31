@@ -163,7 +163,7 @@ create_table 'project_dependencies', collate: 'utf8_bin', comment: 'プロジェ
   t.datetime :updated_at
 end
 
-create_table 'project_readme', collate: 'utf8_bin', comment: 'プロジェクト_README' do |t|
+create_table 'project_readmes', collate: 'utf8_bin', comment: 'プロジェクト_README' do |t|
   t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
   t.int :project_id, comment: 'Project id'
 
