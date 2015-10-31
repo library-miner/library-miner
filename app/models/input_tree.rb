@@ -41,6 +41,10 @@ class InputTree < ActiveRecord::Base
     # gemspec
     is_target = true if file_name.downcase =~ /.gemspec$/
 
+    # readme
+    is_target = true if file_name.downcase == 'readme.md' ||
+      file_name.downcase == 'readme.rdoc'
+
     is_target
   end
 
@@ -50,5 +54,10 @@ class InputTree < ActiveRecord::Base
 
   def self.is_gemspec?(file_name)
     file_name.downcase =~ /.gemspec$/
+  end
+
+  def self.is_readme?(file_name)
+    file_name.downcase == 'readme.md' ||
+      file_name.downcase == 'readme.rdoc'
   end
 end

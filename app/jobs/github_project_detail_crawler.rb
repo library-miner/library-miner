@@ -127,7 +127,6 @@ class GithubProjectDetailCrawler < Base
 
   # コンテンツ情報格納
   def save_project_detail_contents(target_id, path, sha, content)
-    InputContent.where(input_project_id: target_id).delete_all
     pj = InputContent.new(
       path: path,
       sha: sha,
@@ -285,6 +284,7 @@ class GithubProjectDetailCrawler < Base
     is_success = true
     project_information = InputProject.find(input_project_id)
     targets = InputTree.where(input_project_id: input_project_id)
+    InputContent.where(input_project_id: input_project_id).delete_all
 
     targets.each do |target|
       is_target = InputTree.is_analize_target?(target.path)
@@ -292,7 +292,7 @@ class GithubProjectDetailCrawler < Base
                         "path=#{target.path};"\
                         "analyze_target=#{is_target}")
       if is_target
-        if InputTree.is_gemfile?(target.path)
+        if InputTree.is_gemfile?(target.path) || InputTree.is_readme?(target.path)
           content = fetch_projects_detail_contents_by_project_id_and_sha(
             project_information.github_item_id,
             target.sha
