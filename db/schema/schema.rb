@@ -163,6 +163,19 @@ create_table 'project_dependencies', collate: 'utf8_bin', comment: 'プロジェ
   t.datetime :updated_at
 end
 
+create_table 'project_readme', collate: 'utf8_bin', comment: 'プロジェクト_README' do |t|
+  t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
+  t.int :project_id, comment: 'Project id'
+
+  t.varchar :path, comment: 'ファイルパス'
+  t.varchar :sha
+  t.text :content, comment: 'ファイル内容'
+  t.foreign_key 'project_id', reference: 'projects', reference_column: 'id'
+
+  t.datetime :created_at
+  t.datetime :updated_at
+end
+
 create_table 'project_branches', collate: 'utf8_bin', comment: 'プロジェクト_ブランチ' do |t|
   t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
   t.int :project_id, comment: 'Project id'
