@@ -16,7 +16,7 @@
 class InputTree < ActiveRecord::Base
 
   COPYABLE_ATTRIBUTES = %i(
-    path file_type sha url
+    path file_type sha url size
   )
 
   # Relations
