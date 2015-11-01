@@ -100,7 +100,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "path",             limit: 255, null: false
     t.string   "file_type",        limit: 255, null: false
     t.string   "sha",              limit: 255, null: false
-    t.string   "url",              limit: 255, null: false
+    t.string   "url",              limit: 255
+    t.integer  "size",             limit: 4
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
   end
@@ -153,7 +154,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "path",       limit: 255, null: false
     t.string   "file_type",  limit: 255, null: false
     t.string   "sha",        limit: 255, null: false
-    t.string   "url",        limit: 255, null: false
+    t.string   "url",        limit: 255
+    t.integer  "size",       limit: 4
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
@@ -208,6 +210,6 @@ ActiveRecord::Schema.define(version: 0) do
   add_foreign_key "input_weekly_commit_counts", "input_projects", name: "input_weekly_commit_counts_input_project_id_fk"
   add_foreign_key "project_branches", "projects", name: "project_branches_project_id_fk"
   add_foreign_key "project_tags", "projects", name: "project_tags_project_id_fk"
-  add_foreign_key "project_trees", "projects", name: "project_trees_Project_id_fk"
+  add_foreign_key "project_trees", "projects", column: "Project_id", name: "project_trees_Project_id_fk"
   add_foreign_key "project_weekly_commit_counts", "projects", name: "project_weekly_commit_counts_project_id_fk"
 end

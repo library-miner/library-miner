@@ -7,3 +7,6 @@
 - id: 2
   type: done
   name: 収集済
+- id: 9
+  type: error
+  name: エラー

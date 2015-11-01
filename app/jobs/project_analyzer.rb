@@ -69,7 +69,7 @@ class ProjectAnalyzer < Base
 
   def copy_project_branches(input_project, project)
     branches = input_project.input_branches
-    project.project_trees.delete_all
+    project.project_branches.delete_all
 
     branches.each do |branch|
       dup_branch_attributes = branch
