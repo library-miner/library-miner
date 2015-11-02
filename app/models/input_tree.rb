@@ -36,14 +36,13 @@ class InputTree < ActiveRecord::Base
     is_target = false
 
     # Gemfile
-    is_target = true if file_name == 'Gemfile'
+    is_target = true if self.is_gemfile?(file_name)
 
     # gemspec
-    is_target = true if file_name.downcase =~ /.gemspec$/
+    is_target = true if self.is_gemspec?(file_name)
 
     # readme
-    is_target = true if file_name.downcase == 'readme.md' ||
-      file_name.downcase == 'readme.rdoc'
+    is_target = true if self.is_readme?(file_name)
 
     is_target
   end
@@ -57,7 +56,7 @@ class InputTree < ActiveRecord::Base
   end
 
   def self.is_readme?(file_name)
-    file_name.downcase == 'readme.md' ||
-      file_name.downcase == 'readme.rdoc'
+    # readme.rdoc は整備率が低いため取得しない
+    file_name.downcase == 'readme.md'
   end
 end
