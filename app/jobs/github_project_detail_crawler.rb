@@ -21,33 +21,41 @@ class GithubProjectDetailCrawler < Base
       ActiveRecord::Base.connection_pool.with_connection do
         begin
           # ブランチ情報
-          tree_results = fetch_projects_detail_branches_by_project_id(target.github_item_id)
-          save_project_detail_branches(target.id, tree_results)
+          branch_results = fetch_projects_detail_branches_by_project_id(target.github_item_id)
+          save_project_detail_branches(target.id, branch_results)
+          master_branch_sha = InputBranch.where(
+            input_project_id: target.id,
+            name: 'master'
+          ).first
+          .try(:sha)
 
-          # タグ情報
-          tag_results = fetch_projects_detail_tags_by_project_id(target.github_item_id)
-          save_project_detail_tags(target.id, tag_results)
+          # Masterブランチが更新されている場合に詳細情報を取得する
+          if InputBranch.check_master_branch_is_update?(target.github_item_id, master_branch_sha)
+            # タグ情報
+            tag_results = fetch_projects_detail_tags_by_project_id(target.github_item_id)
+            save_project_detail_tags(target.id, tag_results)
 
-          # ツリー情報から解析対象のファイル取得
-          tree_results = fetch_projects_detail_trees_by_project_id_and_sha(
-            target.github_item_id,
-            InputBranch.where(
-              input_project_id: target.id,
-              name: 'master'
-            ).first
-            .try(:sha)
-          )
-          save_project_detail_trees(target.id, tree_results)
+            # ツリー情報から解析対象のファイル取得
+            tree_results = fetch_projects_detail_trees_by_project_id_and_sha(
+              target.github_item_id,
+              master_branch_sha
+            )
+            save_project_detail_trees(target.id, tree_results)
 
-          # 週間コミット情報
-          fetch_and_save_project_detail_weekly_commit_counts(
-            target.id,
-            target.github_item_id,
-            target.github_updated_at
-          )
+            # 週間コミット情報
+            fetch_and_save_project_detail_weekly_commit_counts(
+              target.id,
+              target.github_item_id,
+              target.github_updated_at
+            )
 
-          # コンテンツ
-          is_success = fetch_and_save_project_detail_contents(target.id)
+            # 解析対象が更新されている場合コンテンツを取得
+            analyze_target_update =
+              InputTree.check_analyze_target_is_update?(target.github_item_id)
+            if analyze_target_update
+              is_success = fetch_and_save_project_detail_contents(target.id)
+            end
+          end
 
           target.attributes = {
             crawl_status: CrawlStatus::DONE
@@ -287,7 +295,7 @@ class GithubProjectDetailCrawler < Base
     InputContent.where(input_project_id: input_project_id).delete_all
 
     targets.each do |target|
-      is_target = InputTree.is_analize_target?(target.path)
+      is_target = InputTree.is_analyze_target?(target.path)
       Rails.logger.info("input_project_id=#{input_project_id};"\
                         "path=#{target.path};"\
                         "analyze_target=#{is_target}")

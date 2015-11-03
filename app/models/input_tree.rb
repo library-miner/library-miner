@@ -32,7 +32,7 @@ class InputTree < ActiveRecord::Base
 
   # Methods
   # ファイル解析対象であるか判定
-  def self.is_analize_target?(file_name)
+  def self.is_analyze_target?(file_name)
     is_target = false
 
     # Gemfile
@@ -58,5 +58,61 @@ class InputTree < ActiveRecord::Base
   def self.is_readme?(file_name)
     # readme.rdoc は整備率が低いため取得しない
     file_name.downcase == 'readme.md'
+  end
+
+  def self.check_analyze_target_is_update?(github_item_id)
+    is_update = false
+
+    project_info = Project.where(github_item_id: github_item_id).first
+    input_project_info = InputProject.where(github_item_id: github_item_id).first
+
+    if project_info.present? && input_project_info.present?
+
+      project_trees = project_info.project_trees
+      input_trees = input_project_info.input_trees
+
+      input_trees.each do |tree|
+        if InputTree.is_analyze_target?(tree.path)
+          p_tree = ProjectTree.where(
+            project_id: project_info.id,
+            path: tree.path
+          ).first
+          if p_tree.present?
+            if p_tree.sha != tree.sha
+              is_update = true
+              break
+            end
+          else
+            is_update = true
+            break
+          end
+        end
+      end
+
+      if is_update != true
+        project_trees.each do |tree|
+          if InputTree.is_analyze_target?(tree.path)
+            i_tree = InputTree.where(
+              input_project_id: input_project_info.id,
+              path: tree.path
+            ).first
+            if i_tree.present?
+              if i_tree.sha != tree.sha
+                is_update = true
+                break
+              end
+            else
+              is_update = true
+              break
+            end
+          end
+        end
+      end
+
+    else
+      is_update = true
+    end
+
+    is_update
   end
 end
