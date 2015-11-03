@@ -12,7 +12,11 @@
 #
 
 class InputContent < ActiveRecord::Base
-  # Relations
+   COPYABLE_ATTRIBUTES = %i(
+    path sha content
+  )
+
+ # Relations
   belongs_to :input_project
 
   # Validations

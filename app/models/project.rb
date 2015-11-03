@@ -36,6 +36,7 @@ class Project < ActiveRecord::Base
   has_many :project_trees, dependent: :destroy
   has_many :project_tags, dependent: :destroy
   has_many :project_weekly_commit_counts, dependent: :destroy
+  has_many :project_readmes, dependent: :destroy
 
   # Validations
 
