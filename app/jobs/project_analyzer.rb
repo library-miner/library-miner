@@ -12,7 +12,16 @@ class ProjectAnalyzer < Base
       # InputProjectのGemfileを解析し、紐づくgemfilesのリストを取得する
       is_parse_success, gemfiles, error =
         begin
-          GemfileParser.new.parse_gemfile(project.gemfile.try(:content))
+          contents = project.gemfile.try(:content)
+          # FIXME: もっといい感じにする
+          # gemspecの場合はrubygemsからの情報を持っているためgemfilesに加える
+          InputDependencyLibrary.where(input_project_id: project.id).each do |lib|
+            if contents.nil?
+              contents = ""
+            end
+            contents += "\n gem '" + lib.name + "'"
+          end
+          GemfileParser.new.parse_gemfile(contents)
         rescue => e
           [false, nil, e]
         end
@@ -27,11 +36,13 @@ class ProjectAnalyzer < Base
         source_project = Project
           .find_or_initialize_by(github_item_id: project.github_item_id)
           .tap { |v| v.attributes = dup_project_attributes }
+
         ActiveRecord::Base.transaction do
           source_project.create_dependency_projects(gemfiles.map(&:name))
 
           # dependencies ライブラリもProjectとして保存する(is_incomplete = trueとする)
           source_project.create_project_from_dependency(gemfiles.map(&:name))
+
 
           # 各種プロジェクト詳細情報をコピー
           copy_project_trees(project, source_project)
