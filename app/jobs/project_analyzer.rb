@@ -29,8 +29,9 @@ class ProjectAnalyzer < Base
           .tap { |v| v.attributes = dup_project_attributes }
         ActiveRecord::Base.transaction do
           source_project.create_dependency_projects(gemfiles.map(&:name))
-          # TODO: dependencies ライブラリもProjectとして保存する(is_incomplete = trueとする)
-          # TODO: SourceProjectを解析済みにする
+
+          # dependencies ライブラリもProjectとして保存する(is_incomplete = trueとする)
+          source_project.create_project_from_dependency(gemfiles.map(&:name))
 
           # 各種プロジェクト詳細情報をコピー
           copy_project_trees(project, source_project)
@@ -38,10 +39,20 @@ class ProjectAnalyzer < Base
           copy_project_tags(project, source_project)
           copy_project_weekly_commit_counts(project, source_project)
           copy_project_readme(project, source_project)
+
           source_project.save!
+
+          project.attributes = {
+            crawl_status: CrawlStatus::ANALYZE_DONE
+          }
+          project.save!
         end
       else
-        # TODO: パース失敗時の処理
+        # 解析失敗
+        project.attributes = {
+          crawl_status: CrawlStatus::ANALYZE_ERROR
+        }
+        project.save!
         Rails.logger.error("Parse error #{project.id} - #{error}")
       end
     end
