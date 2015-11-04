@@ -230,6 +230,15 @@ create_table 'project_weekly_commit_counts', collate: 'utf8_bin', comment: 'プ�
   t.datetime :updated_at
 end
 
+create_table 'library_relation_errors', collate: 'utf8_bin', comment: 'プロジェクト依存関係紐付け失敗' do |t|
+  t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
+
+  t.varchar :library_name
+  t.int :error_count, comment: 'いくつのプロジェクトから紐付け失敗したか'
+
+  t.datetime :created_at
+  t.datetime :updated_at
+end
 
 create_table 'schema_migrations', collate: 'utf8_bin', comment: '' do |t|
   t.varchar 'version'
