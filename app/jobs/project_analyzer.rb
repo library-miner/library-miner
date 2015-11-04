@@ -32,7 +32,7 @@ class ProjectAnalyzer < Base
           # TODO: dependencies ライブラリもProjectとして保存する(is_incomplete = trueとする)
           # TODO: SourceProjectを解析済みにする
 
-          # TODO: ReadMEをコピーする
+          # 各種プロジェクト詳細情報をコピー
           copy_project_trees(project, source_project)
           copy_project_branches(project, source_project)
           copy_project_tags(project, source_project)
