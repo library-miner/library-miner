@@ -18,10 +18,10 @@ class LibraryRelation < Base
     dependencies = ProjectDependency.where(:project_id_to: nil)
     dependencies.each do |dependency|
       # rubygems から github_item_id を求め紐付ける
-      
+      github_item_id = InputLibrary.get_github_item_id_from_gem_name(dependency.name)
 
       # 上記失敗の場合、rubygemsからfull_nameを求め紐付ける
-
+      full_name = InputLibrary.get_full_name_from_gem_name(dependency.name)
       # 上記失敗の場合、nameからproject_idを求める(Starが一番多いもの)
 
       # 全て失敗した場合はエラーリストに格納する(基本的に発生しない)
