@@ -50,6 +50,8 @@ class Project < ActiveRecord::Base
 
   # 引数として指定したgemを関連ライブラリとして保存
   def create_dependency_projects(gemfile_names)
+    # FIXME: ライブラリが削除された場合は考慮されているのか？
+    # FIXME: Version情報も格納したい
     gemfile_names.each do |name|
       self
         .project_dependencies
@@ -58,5 +60,17 @@ class Project < ActiveRecord::Base
     end
 
     self.project_dependencies
+  end
+
+  # 関連gemの情報がprojectにない場合、プロジェクト情報を作成
+  def create_project_from_dependency(gemfile_name)
+    gemfile_name.each do |name|
+      if Project.where(name: name).first.nil?
+        project = Project.new(
+          name: name
+        )
+        project.save
+      end
+    end
   end
 end

@@ -7,6 +7,12 @@
 - id: 2
   type: done
   name: 収集済
+- id: 3
+  type: analyze_done
+  name: 解析済み
 - id: 9
   type: error
   name: エラー
+- id: 10
+  type: analyze_error
+  name: 解析失敗

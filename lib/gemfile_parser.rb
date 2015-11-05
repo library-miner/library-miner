@@ -11,26 +11,35 @@ class GemfileParser
   #     - [1] array - Gem Dependenciesのリスト
   #     - [2] object - エラークラス
   def parse_gemfile(rubygems_contents)
-    gem_lines = rubygems_contents
+    # gemfile がない場合は飛ばす
+    if rubygems_contents.present?
+      # gemspec を参照している場合、その行は無視する
+      gem_lines = rubygems_contents
       .split("\n")
       .map(&:strip)
-      .select { |v| v.start_with?("gem") }
-    file = Tempfile.new("TemporaryGem")
+      .select { |v| v.start_with?("gem") && !v.start_with?("gemspec") }
+      file = Tempfile.new("TemporaryGem")
 
-    is_success = false
-    error = nil
-    gems = []
+      is_success = false
+      error = nil
+      gems = []
 
-    begin
-      file.puts(gem_lines)
-      file.rewind
-      gems = Bundler::Definition.build(file.path, nil, nil).dependencies
+      begin
+        file.puts(gem_lines)
+        file.rewind
+        gems = Bundler::Definition.build(file.path, nil, nil).dependencies
+        is_success = true
+      rescue => e
+        error = e
+      ensure
+        file.close
+        file.unlink
+      end
+
+    else
       is_success = true
-    rescue => e
-      error = e
-    ensure
-      file.close
-      file.unlink
+      gems = []
+      error = nil
     end
     [is_success, gems, error]
   end
