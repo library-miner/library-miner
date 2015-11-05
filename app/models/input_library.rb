@@ -24,5 +24,14 @@ class InputLibrary < ActiveRecord::Base
 
   # Class Methods
 
+  # gem名からgithub_item_idを取得する
+  def self.get_github_item_id_from_gem_name(gem_name)
+    InputLibrary
+    .where(name: gem_name)
+    .first
+    .try(:input_project)
+    .try(github_item_id)
+  end
+
   # Methods
 end
