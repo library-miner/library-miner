@@ -41,11 +41,30 @@ class Project < ActiveRecord::Base
   # Validations
 
   # Scopes
-
+  scope :incompleted, -> do
+    where(is_incomplete: true)
+  end
   # Delegates
 
   # Class Methods
 
+  # プロジェクトが完全であるかチェックする
+  # 依存ライブラリが全てプロジェクトIDと紐付いている
+  # かつ project の github_item_idがある場合
+  # プロジェクトは完全と見なす
+  # なお、依存ライブラリ側のgithub_item_idがなくとも完全と見なす
+  def check_completed?
+    completed = true
+    self.project_dependencies.each do |dependency|
+      if dependency.project_to_id.nil?
+        completed = false
+      end
+    end
+    if self.github_item_id.nil?
+      completed = false
+    end
+    completed
+  end
   # Methods
 
   # 引数として指定したgemを関連ライブラリとして保存

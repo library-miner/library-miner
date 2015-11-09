@@ -20,6 +20,18 @@ class LibraryRelationError < ActiveRecord::Base
   # Delegates
 
   # Class Methods
+  def self.count_up_error_library(library_name)
+    library = LibraryRelationError.where(library_name: library_name).first
+    if library.nil?
+      library = LibraryRelationError.new(
+        library_name: library_name,
+        error_count: 1
+      )
+    else
+      library.error_count += 1
+    end
+    library.save
+  end
 
   # Methods
 end
