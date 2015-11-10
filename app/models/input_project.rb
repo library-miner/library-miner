@@ -89,4 +89,5 @@ class InputProject < ActiveRecord::Base
   def gemfile
     self.input_contents.find_by(path: "Gemfile")
   end
+
 end

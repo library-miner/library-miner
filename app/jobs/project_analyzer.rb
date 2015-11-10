@@ -30,19 +30,13 @@ class ProjectAnalyzer < Base
         # InputProjectおよび紐づくテーブルの情報をProjectに格納する
         # 既にデータが存在する場合は上書き保存をする
         # また、関連するライブラリの情報を保存する
-        dup_project_attributes = project
-          .attributes
-          .slice(*InputProject::COPYABLE_ATTRIBUTES.map(&:to_s))
-        source_project = Project
-          .find_or_initialize_by(github_item_id: project.github_item_id)
-          .tap { |v| v.attributes = dup_project_attributes }
+        source_project = copy_project(project)
 
         ActiveRecord::Base.transaction do
           source_project.create_dependency_projects(gemfiles.map(&:name))
 
           # dependencies ライブラリもProjectとして保存する(is_incomplete = trueとする)
           source_project.create_project_from_dependency(gemfiles.map(&:name))
-
 
           # 各種プロジェクト詳細情報をコピー
           copy_project_trees(project, source_project)
@@ -71,7 +65,35 @@ class ProjectAnalyzer < Base
 
   private
 
-  def search_or_initialize_project(library_name)
+  # project情報作成
+  # 次の順で作成する
+  # 1.github_item_idが存在する場合、プロジェクト情報更新
+  # 2.上記がない場合、full_nameで検索し、存在したらプロジェクト情報作成
+  # 3.上記がない場合、nameで検索し、存在したらプロジェクト情報作成
+  # 4.いずれにも該当しない場合、新規作成
+  def copy_project(project)
+    dup_project_attributes = project
+    .attributes
+    .slice(*InputProject::COPYABLE_ATTRIBUTES.map(&:to_s))
+
+    if Project.where(github_item_id: project.github_item_id).present?
+      source_project = Project
+      .find_or_initialize_by(github_item_id: project.github_item_id)
+      .tap { |v| v.attributes = dup_project_attributes }
+    elsif Project.where(full_name: project.full_name).present?
+      source_project = Project
+      .find_or_initialize_by(full_name: project.full_name)
+      .tap { |v| v.attributes = dup_project_attributes }
+    elsif Project.where(name: project.name).present?
+       source_project = Project
+      .find_or_initialize_by(name: project.name)
+      .tap { |v| v.attributes = dup_project_attributes }
+    else
+      source_project = Project
+      .find_or_initialize_by(github_item_id: project.github_item_id)
+      .tap { |v| v.attributes = dup_project_attributes }
+    end
+    source_project
   end
 
   def copy_project_trees(input_project, project)
