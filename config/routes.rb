@@ -4,8 +4,9 @@ Rails.application.routes.draw do
   resources :homes, only: [:index]
 
   namespace :api, defaults: { format: :json } do
-    resources :admin,only: [] do
+    resources :operational_status,only: [] do
       collection do
+        get 'projects_crawl_status'
       end
     end
 
