@@ -7,6 +7,8 @@ Rails.application.routes.draw do
     resources :operational_status,only: [] do
       collection do
         get 'projects_crawl_status'
+        get 'projects_analyze_status'
+        get 'crawl_inprogress'
       end
     end
 

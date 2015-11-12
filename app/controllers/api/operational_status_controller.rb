@@ -8,7 +8,7 @@ class Api::OperationalStatusController < ApplicationController
     .where(crawl_status: CrawlStatus::WAITING)
     .count
 
-    @in_progress = InputProject
+    @inprogress = InputProject
     .where(crawl_status: CrawlStatus::IN_PROGRESS)
     .count
 
@@ -29,5 +29,36 @@ class Api::OperationalStatusController < ApplicationController
     .count
   end
 
+  # 収集中一覧
+  def crawl_inprogress
+    @input_projects = InputProject
+    .where(crawl_status: CrawlStatus::IN_PROGRESS)
+    .group(:client_node_id)
+    .count
+  end
+
+  # プロジェクト解析状況
+  def projects_analyze_status
+    @all = Project.count
+
+    @incompleted = Project
+    .incompleted
+    .count
+
+    @completed = Project
+    .completed
+    .count
+
+    @github_id_nothing = Project
+    .incompleted
+    .where(github_item_id: nil)
+    .where(full_name: !nil)
+    .count
+
+    @full_name_nothing = Project
+    .incompleted
+    .where(full_name: nil)
+    .count
+  end
 end
 

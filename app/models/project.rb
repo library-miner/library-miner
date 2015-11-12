@@ -44,6 +44,10 @@ class Project < ActiveRecord::Base
   scope :incompleted, -> do
     where(is_incomplete: true)
   end
+
+  scope :completed, -> do
+    where(is_incomplete: false)
+  end
   # Delegates
 
   # Class Methods
