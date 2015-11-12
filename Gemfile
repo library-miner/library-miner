@@ -32,6 +32,7 @@ gem 'unicorn'
 gem 'execjs'
 gem 'activerecord-import'
 gem 'parallel'
+gem 'rabl'
 
 group :development do
   gem 'spring'
