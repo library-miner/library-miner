@@ -9,11 +9,16 @@ Rails.application.routes.draw do
         get 'projects_crawl_status'
         get 'projects_analyze_status'
         get 'crawl_inprogress'
-        get 'crawl_error_list'
+      end
+    end
+
+    resources :input_projects,only: [:show] do
+      collection do
+        get 'crawl_errors'
+        get 'analyze_errors'
       end
     end
 
   end
-
 
 end
