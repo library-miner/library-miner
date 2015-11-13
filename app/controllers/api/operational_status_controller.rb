@@ -60,5 +60,11 @@ class Api::OperationalStatusController < ApplicationController
     .where(full_name: nil)
     .count
   end
+
+  # 収集失敗リスト
+  def crawl_error_list
+    @projects = InputProject
+    .where(crawl_status: CrawlStatus::ERROR)
+  end
 end
 
