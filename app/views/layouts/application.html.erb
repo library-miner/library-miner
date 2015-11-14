@@ -9,18 +9,14 @@
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
-<body class="layout-top-nav skin-black" data-controller="<%= params[:controller] %>" data-action="<%= params[:action] %>">
+<body class="skin-blue layout-top-nav">
 
-<div class="wrapper">
-<%= render 'shared/header' %>
+  <%= render 'shared/header' %>
 
-<div class="content-wrapper">
-<div class="container container-full">
-<%= yield %>
-</div><!-- /.container -->
-</div><!-- /.content-wrapper -->
-
-</div>
+  <%= render 'shared/sidebar' %>
+  <div class="content-wrapper">
+    <%= yield %>
+  </div>
 
 </body>
 </html>
