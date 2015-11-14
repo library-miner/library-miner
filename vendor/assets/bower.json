@@ -5,6 +5,7 @@
     "backbone": "latest",
     "marionette": "latest",
     "backbone.stickit": "latest",
+    "backbone.trackit": "latest",
     "backbone.relational": "latest"
   }
 }

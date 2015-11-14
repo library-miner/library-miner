@@ -2,4 +2,5 @@ asset "admin-lte"
 asset 'backbone'
 asset 'marionette'
 asset 'backbone.stickit'
+asset 'backbone.trackit'
 asset 'backbone.relational'
