@@ -12,7 +12,13 @@ Rails.application.routes.draw do
       end
     end
 
-  end
+    resources :input_projects,only: [:show] do
+      collection do
+        get 'crawl_errors'
+        get 'analyze_errors'
+      end
+    end
 
+  end
 
 end

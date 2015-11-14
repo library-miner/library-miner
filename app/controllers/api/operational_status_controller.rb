@@ -60,5 +60,6 @@ class Api::OperationalStatusController < ApplicationController
     .where(full_name: nil)
     .count
   end
+
 end
 
