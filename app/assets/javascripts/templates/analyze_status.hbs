@@ -1,0 +1,75 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">プロジェクト解析状況</h3>
+      </div>
+
+      <div class="box-body">
+        <div class="col-md-12">
+
+          <!-- completed -->
+          <div class="progress-group">
+            <span class="progress-text">プロジェクト完全数</span>
+            <span class="progress-number">
+              <b>{{ crawl_status.completed }}</b>/{{ crawl_status.all }}
+            </span>
+
+            <div class="progress sm">
+              <div class="progress-bar progress-bar-aqua"
+                style="width:{{ percent2 crawl_status.completed crawl_status.all }}">
+              </div>
+            </div>
+          </div>
+
+          <!-- incompleted -->
+          <div class="progress-group">
+            <span class="progress-text">プロジェク不完全数</span>
+            <span class="progress-number">
+              <b>{{ crawl_status.incompleted }}</b>/{{ crawl_status.all }}
+            </span>
+
+            <div class="progress sm">
+              <div class="progress-bar progress-bar-yellow"
+                style="width:{{ percent2 crawl_status.incompleted crawl_status.all }}">
+              </div>
+            </div>
+          </div>
+
+          <hr/>
+          <!-- github_id_nothing -->
+          <div class="progress-group">
+            <span class="progress-text">プロジェクト不完全数 内訳:GithubIdなし</span>
+            <span class="progress-number">
+              <b>{{ crawl_status.githubIdNothing }}</b>/{{ crawl_status.incompleted }}
+            </span>
+
+            <div class="progress sm">
+              <div class="progress-bar progress-bar-yellow"
+                style="width:{{ percent2 crawl_status.githubIdNothing crawl_status.incompleted }}">
+              </div>
+            </div>
+          </div>
+
+          <!-- fullNameNothing -->
+          <div class="progress-group">
+            <span class="progress-text">プロジェクト不完全数 内訳:FullNameなし</span>
+            <span class="progress-number">
+              <b>{{ crawl_status.fullNameNothing }}</b>/{{ crawl_status.incompleted }}
+            </span>
+
+            <div class="progress sm">
+              <div class="progress-bar progress-bar-yellow"
+                style="width:{{ percent2 crawl_status.fullNameNothing crawl_status.incompleted }}">
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

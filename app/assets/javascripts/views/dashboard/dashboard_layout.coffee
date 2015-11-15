@@ -2,17 +2,26 @@ class Miner.Views.DashboardLayout extends Marionette.LayoutView
   template: HandlebarsTemplates['dashboard_layout']
 
   regions: {
-    crawlStatus: "#crawl-status"
+    crawlStatusRegion: "#crawl-status"
+    analyzeStatusRegion: "#analyze-status"
   }
 
   initCrawlStatus: ->
-    @status = new Miner.Models.CrawlStatus()
-    @crawlStatusView = new Miner.Views.CrawlStatusView(model: @status)
-    @crawlStatus.show(@crawlStatusView)
+    @crawlStatus = new Miner.Models.CrawlStatus()
+    @crawlStatusView = new Miner.Views.CrawlStatusView(model: @crawlStatus)
+    @crawlStatusRegion.show(@crawlStatusView)
 
-    @status.fetch(reset: true)
+    @crawlStatus.fetch(reset: true)
+
+  initAnalyzeStatus: ->
+    @analyzeStatus = new Miner.Models.AnalyzeStatus()
+    @analyzeStatusView = new Miner.Views.AnalyzeStatusView(model: @analyzeStatus)
+    @analyzeStatusRegion.show(@analyzeStatusView)
+
+    @analyzeStatus.fetch(reset: true)
 
 
   onRender: ->
     @initCrawlStatus()
+    @initAnalyzeStatus()
 
