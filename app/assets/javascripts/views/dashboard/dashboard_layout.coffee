@@ -20,8 +20,15 @@ class Miner.Views.DashboardLayout extends Marionette.LayoutView
 
     @analyzeStatus.fetch(reset: true)
 
+  statusTimer: (interval) ->
+    @hoge = @crawlStatus
+    setInterval =>
+      @crawlStatus.fetch(reset: true)
+      @analyzeStatus.fetch(reset: true)
+    , interval
 
   onRender: ->
     @initCrawlStatus()
     @initAnalyzeStatus()
+    @statusTimer(5000)
 
