@@ -18,7 +18,7 @@ class GithubProjectCrawler < Base
     if mode == CrawlMode::CREATED
       (date_from..date_to).each do |target_date|
         results = fetch_projects_created_at(target_date, language)
-        save_projects(results)
+        save_projects(results, language)
       end
     else
       results = fetch_projects_updated_at(date_from,date_to,language)
@@ -28,7 +28,7 @@ class GithubProjectCrawler < Base
   private
 
   # リポジトリの結果結果を保存
-  def save_projects(results)
+  def save_projects(results, language)
     results.each do |result|
       pj = InputProject.find_or_initialize_by(github_item_id: result.id)
       pj.attributes = {
