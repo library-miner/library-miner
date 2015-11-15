@@ -52,7 +52,7 @@ class Api::OperationalStatusController < ApplicationController
     @github_id_nothing = Project
     .incompleted
     .where(github_item_id: nil)
-    .where(full_name: !nil)
+    .where("full_name is not null")
     .count
 
     @full_name_nothing = Project

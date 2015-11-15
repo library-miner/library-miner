@@ -1,0 +1,100 @@
+<h3> クロール状況 </h3>
+<div class="row">
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-blue">
+        <i class="fa fa-cloud-download">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">全体数</span>
+        <span class="info-box-number">{{ crawl_status.all }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow">
+        <i class="fa fa-pause">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">収集待ち</span>
+        <span class="info-box-number">{{ crawl_status.waiting }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow">
+        <i class="fa fa-spinner">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">収集中</span>
+        <span class="info-box-number">{{ crawl_status.inprogress }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow">
+        <i class="fa fa-pause">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">解析待ち</span>
+        <span class="info-box-number">{{ crawl_status.done }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+
+</div>
+
+<div class="row">
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-green">
+        <i class="fa fa-check-circle">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">解析完了</span>
+        <span class="info-box-number">{{ crawl_status.analyzeDone }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-red">
+        <i class="fa fa-exclamation-triangle">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">収集失敗</span>
+        <span class="info-box-number">{{ crawl_status.error }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-red">
+        <i class="fa fa-exclamation-triangle">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">解析失敗</span>
+        <span class="info-box-number">{{ crawl_status.analyzeError }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+</div>
+
+

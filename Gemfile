@@ -33,6 +33,7 @@ gem 'execjs'
 gem 'activerecord-import'
 gem 'parallel'
 gem 'rabl'
+gem 'handlebars_assets'
 
 group :development do
   gem 'spring'

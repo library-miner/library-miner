@@ -17,6 +17,10 @@
 /tmp
 *~
 
+# Ignore vendor assets
+/vendor/assets/bower_components
+
+
 config/dev_database.yml
 
 public/uploads
