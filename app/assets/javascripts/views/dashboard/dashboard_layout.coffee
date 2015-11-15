@@ -6,11 +6,11 @@ class Miner.Views.DashboardLayout extends Marionette.LayoutView
   }
 
   initCrawlStatus: ->
-    crawlStatus = new Miner.Models.CrawlStatus()
-    crawlStatusView = new Miner.Views.CrawlStatusView(model: crawlStatus)
-    @crawlStatus.show(crawlStatusView)
+    @status = new Miner.Models.CrawlStatus()
+    @crawlStatusView = new Miner.Views.CrawlStatusView(model: @status)
+    @crawlStatus.show(@crawlStatusView)
 
-    crawlStatus.fetch(reset: true)
+    @status.fetch(reset: true)
 
 
   onRender: ->
