@@ -10,12 +10,16 @@
   <%= csrf_meta_tags %>
 </head>
 <body class="skin-blue layout-top-nav">
+  <div class="wrapper">
+    <%= render 'shared/header' %>
 
-  <%= render 'shared/header' %>
+    <div class="sidebar-wrapper">
+      <%= render 'shared/sidebar' %>
+    </div>
 
-  <%= render 'shared/sidebar' %>
-  <div class="content-wrapper">
-    <%= yield %>
+    <div class="content-wrapper">
+      <%= yield %>
+    </div>
   </div>
 
 </body>
