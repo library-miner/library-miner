@@ -9,13 +9,11 @@
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
-<body class="skin-blue layout-top-nav">
+<body class="skin-blue fixed">
   <div class="wrapper">
     <%= render 'shared/header' %>
 
-    <div class="sidebar-wrapper">
-      <%= render 'shared/sidebar' %>
-    </div>
+    <%= render 'shared/sidebar' %>
 
     <div class="content-wrapper">
       <%= yield %>
