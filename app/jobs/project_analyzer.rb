@@ -4,7 +4,7 @@
 # [使い方]
 #   ProjectAnalyzer.new.perform
 class ProjectAnalyzer < Base
-  queue_as :project_analyzer
+  queue_as :analyzer
 
   def perform(analyze_count: 5)
     target_projects = InputProject.crawled.limit(analyze_count)
