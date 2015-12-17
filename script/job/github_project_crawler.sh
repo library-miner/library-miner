@@ -2,12 +2,14 @@
 
 # ヘルプメッセージ
 usage() {
-  echo "Usage: $PROGNAME -e arg"
+  echo "Usage: $PROGNAME -e arg -c 100"
   echo
   echo "オプション:"
   echo "  -h, --help"
   echo "  -e <ARG>     <必須> (development/production)"
-  echo "  -all 全量入れ替えモード"
+  echo "  -from <DATE> ex. 20150101"
+  echo "  -to <DATE> ex. 20150101"
+  echo "  -days <ARG> ex. 3"
   echo
   exit 1
 }
@@ -41,10 +43,14 @@ do
     shift 2
     ;;
 
-    # 全量入れ替えモード
-    '-all' )
-    MODE='all'
-    shift 1
+    '-from' )
+    FROM="$2"
+    shift 2
+    ;;
+
+    '-to' )
+    TO="$2"
+    shift 2
     ;;
 
   esac
@@ -57,10 +63,14 @@ if [ -z $FLG_ENV ]; then
   exit 1
 fi
 
-# ALLモードではない場合
-if [ -z $MODE ]; then
-  MODE='diff'
-fi
+current=$(date -j -f %Y%m%d "$FROM" +%Y%m%d)
+end=$(date -j -v+1d -f %Y%m%d "$TO" +%Y%m%d)
+
+while [ "$end" != "$current" ]
+do
+  echo $current
+  current=$( date -j -v+1d -f %Y%m%d $current +%Y%m%d)
+done
 
 # 起動処理
-bundle exec rails runner "LibraryRelation.perform_later(mode: \"$MODE\")" -e $ARG_ENV
+#bundle exec rails runner "GithubProjectDetailCrawler.perform_later(\"$FLG_COUNT\")" -e $ARG_ENV

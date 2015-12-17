@@ -2,12 +2,12 @@
 
 # ヘルプメッセージ
 usage() {
-  echo "Usage: $PROGNAME -e arg"
+  echo "Usage: $PROGNAME -e arg -c 100"
   echo
   echo "オプション:"
   echo "  -h, --help"
   echo "  -e <ARG>     <必須> (development/production)"
-  echo "  -all 全量入れ替えモード"
+  echo "  -c <COUNT> <必須> １回あたりの解析数"
   echo
   exit 1
 }
@@ -41,10 +41,14 @@ do
     shift 2
     ;;
 
-    # 全量入れ替えモード
-    '-all' )
-    MODE='all'
-    shift 1
+    # 解析件数
+    '-c' )
+    # オプションに引数がなかった場合（必須）
+    if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+      echo "$PROGNAME:「$1」オプションには引数(件数)が必要です" 1>&2
+      exit 1
+    fi
+    FLG_COUNT="$2"
     ;;
 
   esac
@@ -57,10 +61,13 @@ if [ -z $FLG_ENV ]; then
   exit 1
 fi
 
-# ALLモードではない場合
-if [ -z $MODE ]; then
-  MODE='diff'
+# -c パラメータがない場合
+if [ -z $FLG_COUNT ]; then
+  echo "$PROGNAME:「-c」オプションは必須です。正しいオプションを指定してください" 1>&2
+  echo $HELP_MSG 1>&2
+  exit 1
 fi
 
+
 # 起動処理
-bundle exec rails runner "LibraryRelation.perform_later(mode: \"$MODE\")" -e $ARG_ENV
+bundle exec rails runner "ProjectAnalyzer.perform_later(analyze_count: \"$FLG_COUNT\")" -e $ARG_ENV
