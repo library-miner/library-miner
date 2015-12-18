@@ -112,10 +112,10 @@ current=$(date -j -f %Y%m%d%H "$CURRENT_DATE$CURRENT_TIME" +%Y%m%d%H)
 
 for (( i=0; i < $RUN_TERM; i++ )); do
   # 起動処理
-  arg1=$current
-  arg2=$( date -j -v-1H -f %Y%m%d%H $current +%Y%m%d%H)
+  arg1=$( date -j -v-1H -f %Y%m%d%H $current +%Y%m%d%H)
+  arg2=$current
   bundle exec rails runner "GithubProjectCrawler.perform_later(\"$arg1\",\"$arg2\",mode: \"UPDATED\")" -e $ARG_ENV
-  echo "enqueue github_project_crawler $arg2 - $arg1"
+  echo "enqueue github_project_crawler $arg1 - $arg2"
   current=$( date -j -v-1H -f %Y%m%d%H $current +%Y%m%d%H)
 done
 
