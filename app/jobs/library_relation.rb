@@ -4,7 +4,7 @@
 #   LibraryRelation.new.perform(mode: "all")
 #   LibraryRelation.new.perform()
 class LibraryRelation < Base
-  queue_as :library_relation
+  queue_as :analyzer
 
   def perform(mode: "diff")
     # ライブラリ紐付け失敗テーブルの初期化

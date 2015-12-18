@@ -2,17 +2,32 @@
 #
 # [即時実行]
 # 作成日ベースで取得
-#   GithubProjectCrawler.new.perform(Date.new(2015,10,1), Date.new(2015,10,6))
+#   GithubProjectCrawler.new.perform('20150101','20150102')
+#   GithubProjectCrawler.perform_later('20150101','20150102')
 # 更新日ベースで取得
 #   GithubProjectCrawler.new.perform(
-#     Time.utc(2015,10,18,7,00,00),
-#     Time.utc(2015,10,18,8,00,00),
-#     mode: CrawlMode::UPDATED
+#     '20150101000000',
+#     '20150101010000',
+#     mode: 'UPDATED'
+#   )
+#   GithubProjectCrawler.perform_later(
+#     '20150101000000',
+#     '20150101010000',
+#     mode: 'UPDATED'
 #   )
 class GithubProjectCrawler < Base
   queue_as :github_project_crawler
 
-  def perform(date_from, date_to, mode: CrawlMode::CREATED)
+  def perform(date_from, date_to, mode: 'CREATED')
+
+    if mode == 'CREATED'
+      mode = CrawlMode::CREATED
+    else
+      mode = CrawlMode::UPDATED
+    end
+    date_from = DateTime.parse(date_from)
+    date_to = DateTime.parse(date_to)
+
     language = 'ruby'
 
     if mode == CrawlMode::CREATED
@@ -22,6 +37,7 @@ class GithubProjectCrawler < Base
       end
     else
       results = fetch_projects_updated_at(date_from,date_to,language)
+      save_projects(results,language)
     end
   end
 
