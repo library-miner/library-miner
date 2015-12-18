@@ -2,7 +2,7 @@
 
 # ヘルプメッセージ
 usage() {
-  echo "Usage: $PROGNAME -e arg -c 100"
+  echo "Usage: $PROGNAME -e production -from 20150101 -to 20150101"
   echo
   echo "オプション:"
   echo "  -h, --help"

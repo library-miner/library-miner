@@ -2,7 +2,7 @@
 
 # ヘルプメッセージ
 usage() {
-  echo "Usage: $PROGNAME -e arg"
+  echo "Usage: $PROGNAME -e production"
   echo
   echo "オプション:"
   echo "  -h, --help"
