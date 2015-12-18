@@ -9,7 +9,6 @@ usage() {
   echo "  -e <ARG>     <必須> (development/production)"
   echo "  -from <DATE> ex. 20150101"
   echo "  -to <DATE> ex. 20150101"
-  echo "  -days <ARG> ex. 3"
   echo
   exit 1
 }
@@ -45,11 +44,23 @@ do
 
     '-from' )
     FROM="$2"
+    # オプションに引数がなかった場合（必須）
+    if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+      echo "$PROGNAME:「$1」オプションには引数(ex. 20150101)が必要です" 1>&2
+      exit 1
+    fi
+
     shift 2
     ;;
 
     '-to' )
     TO="$2"
+    # オプションに引数がなかった場合（必須）
+    if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+      echo "$PROGNAME:「$1」オプションには引数(ex. 20150101)が必要です" 1>&2
+      exit 1
+    fi
+
     shift 2
     ;;
 
@@ -63,14 +74,31 @@ if [ -z $FLG_ENV ]; then
   exit 1
 fi
 
-current=$(date -j -f %Y%m%d "$FROM" +%Y%m%d)
-end=$(date -j -v+1d -f %Y%m%d "$TO" +%Y%m%d)
+# -from パラメータがない場合
+if [ -z $FROM ]; then
+  echo "$PROGNAME:「-from」オプションは必須です。正しいオプションを指定してください" 1>&2
+  echo $HELP_MSG 1>&2
+  exit 1
+fi
+
+# -to パラメータがない場合
+if [ -z $TO ]; then
+  echo "$PROGNAME:「-to」オプションは必須です。正しいオプションを指定してください" 1>&2
+  echo $HELP_MSG 1>&2
+  exit 1
+fi
+
+
+current=$(date -d "$FROM")
+end=$(date -d "$TO +1 days")
 
 while [ "$end" != "$current" ]
 do
-  echo $current
-  current=$( date -j -v+1d -f %Y%m%d $current +%Y%m%d)
+  # 起動処理
+  arg=$(date -d "$current" +%Y%m%d)
+  bundle exec rails runner "GithubProjectCrawler.perform_later(\"$arg\",\"$arg\")" -e $ARG_ENV
+  echo "enqueue github_project_crawler $arg"
+  current=$( date -d "$current +1 days")
 done
 
-# 起動処理
-#bundle exec rails runner "GithubProjectDetailCrawler.perform_later(\"$FLG_COUNT\")" -e $ARG_ENV
+
