@@ -20,6 +20,13 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :management_jobs,only: [] do
+      collection do
+        get 'job_lists'
+      end
+    end
+
+
   end
 
 end
