@@ -9,6 +9,7 @@ Rails.application.routes.draw do
         get 'projects_crawl_status'
         get 'projects_analyze_status'
         get 'crawl_inprogress'
+        get 'job_status'
       end
     end
 

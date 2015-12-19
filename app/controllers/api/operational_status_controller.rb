@@ -61,5 +61,35 @@ class Api::OperationalStatusController < ApplicationController
     .count
   end
 
+  # ジョブ状況
+  def job_status
+    before_1_days = DateTime.now - 1
+
+    @all = ManagementJob
+      .where('created_at > ?', before_1_days)
+      .count
+
+    @waiting = ManagementJob
+    .where(job_status: JobStatus::WAITING)
+    .where('created_at > ?', before_1_days)
+    .count
+
+    @executing = ManagementJob
+    .where(job_status: JobStatus::EXECUTING)
+    .where('created_at > ?', before_1_days)
+    .count
+
+    @complete = ManagementJob
+    .where(job_status: JobStatus::EXECUTING)
+    .where('created_at > ?', before_1_days)
+    .count
+
+    @error = ManagementJob
+    .where(job_status: JobStatus::ERROR)
+    .where('created_at > ?', before_1_days)
+    .count
+
+  end
+
 end
 
