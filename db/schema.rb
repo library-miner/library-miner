@@ -148,7 +148,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.text     "error_message", limit: 65535
     t.datetime "started_at"
     t.datetime "ended_at"
-    t.integer  "job_status",    limit: 4,     null: false
+    t.integer  "job_status_id", limit: 4,     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

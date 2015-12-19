@@ -265,7 +265,7 @@ create_table :management_jobs, comment: "ジョブ管理" do |t|
   t.text :error_message, null: true
   t.datetime :started_at, null: true
   t.datetime :ended_at, null: true
-  t.int :job_status
+  t.int :job_status_id
 
   t.datetime :created_at, null: true, comment: '作成日時'
   t.datetime :updated_at, null: true, comment: '更新日時'
