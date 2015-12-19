@@ -258,6 +258,21 @@ create_table :delayed_jobs, comment: "Delayed Job" do |t|
   t.index [:priority, :run_at], name: "delayed_jobs_priority"
 end
 
+create_table :management_jobs, comment: "ジョブ管理" do |t|
+  t.int :id, primary_key: true, extra: 'auto_increment'
+  t.varchar :job_id, null: true
+  t.varchar :job_name, null: true
+  t.text :error_message, null: true
+  t.datetime :started_at, null: true
+  t.datetime :ended_at, null: true
+  t.int :job_status
+
+  t.datetime :created_at, null: true, comment: '作成日時'
+  t.datetime :updated_at, null: true, comment: '更新日時'
+
+  t.index [:job_id], name: "management_jobs_job_id"
+end
+
 create_table 'schema_migrations', collate: 'utf8_bin', comment: '' do |t|
   t.varchar 'version'
 

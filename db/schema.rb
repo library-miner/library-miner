@@ -142,6 +142,19 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at",               null: false
   end
 
+  create_table "management_jobs", force: :cascade do |t|
+    t.string   "job_id",        limit: 255
+    t.string   "job_name",      limit: 255
+    t.text     "error_message", limit: 65535
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.integer  "job_status",    limit: 4,     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "management_jobs", ["job_id"], name: "management_jobs_job_id", using: :btree
+
   create_table "project_branches", force: :cascade do |t|
     t.integer  "project_id", limit: 4,   null: false
     t.string   "name",       limit: 255, null: false
