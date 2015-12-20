@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root 'home#index'
 
   resources :homes, only: [:index]
+  get 'miner', to: 'home#index'
 
   namespace :api, defaults: { format: :json } do
     resources :operational_status,only: [] do
