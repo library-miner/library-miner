@@ -8,6 +8,10 @@ class Api::ManagementJobsController < ApplicationController
       .order(created_at: :desc)
   end
 
+  def job_search_lists
+    @job_lists = %w(hello hello2)
+  end
+
   private
 
   def search_params

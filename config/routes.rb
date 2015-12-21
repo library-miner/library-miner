@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     resources :management_jobs,only: [] do
       collection do
         get 'job_lists'
+        get 'job_search_lists'
       end
     end
 
