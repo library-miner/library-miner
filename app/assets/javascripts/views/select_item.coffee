@@ -9,3 +9,6 @@ class Miner.Views.SelectItemsView extends Marionette.CollectionView
   childView: Miner.Views.SelectItemView
   tagName: 'select'
   className: 'form-control'
+
+  initialize: ->
+    $(@el).append('<option value="">全て</option>')

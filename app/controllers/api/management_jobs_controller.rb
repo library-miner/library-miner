@@ -9,7 +9,7 @@ class Api::ManagementJobsController < ApplicationController
   end
 
   def job_search_lists
-    @job_lists = %w(hello hello2)
+    @job_lists = ManagementJob.select(:job_name).uniq
   end
 
   private
