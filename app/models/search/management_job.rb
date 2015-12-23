@@ -14,7 +14,7 @@ class Search::ManagementJob < Search::Base
     results = ::ManagementJob.all
 
     results = results.where(contains(t[:job_name], job_name)) if job_name.present?
-    results = results.where(contains(t[:job_status], job_status)) if job_status.present?
+    results = results.where(t[:job_status_id].eq(job_status)) if job_status.present?
     results = results.where(t[:started_at].gteq(started_at)) if started_at.present?
     results = results.where(t[:ended_at].lteq(ended_at)) if ended_at.present?
     if from.present?

@@ -1,7 +1,7 @@
 class Api::ManagementJobsController < ApplicationController
-  before_action :search_params, only: [:job_list]
+  before_action :search_params, only: []
 
-  def job_lists
+  def index
     @job = Search::ManagementJob.new(search_params)
     @jobs = @job
       .matches

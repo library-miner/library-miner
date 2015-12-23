@@ -15,5 +15,5 @@ class Miner.Models.JobSearch extends Backbone.Model
       currentDate.getHours() +
       ":" +
       "00"
-    @set(jobFrom: before24Hour)
+    @set(From: before24Hour)
 
