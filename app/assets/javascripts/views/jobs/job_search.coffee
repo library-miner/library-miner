@@ -13,10 +13,17 @@ class Miner.Views.JobSearchView extends Marionette.LayoutView
           @jobSearchLists
         labelPath: 'id'
         valuePath: 'name'
+        defaultOption:
+          label: '全て'
+          value: null
     }
     '#job-status': {
       observe: 'jobStatus'
     }
+    '.job-started-at': 'jobStartedAt'
+    '.job-ended-at': 'jobEndedAt'
+    '.job-from': 'jobFrom'
+    '.job-to': 'jobTo'
   }
 
   initialize: ->
@@ -29,7 +36,37 @@ class Miner.Views.JobSearchView extends Marionette.LayoutView
     @jobSearchLists = new Miner.Collections.JobSearchLists()
     @jobSearchLists.fetch()
 
+  initPlugin: ->
+    $('#job-started-at').daterangepicker({
+      timePicker: true
+      timePickerIncrement: 5
+      format: 'YYYY/MM/DD HH:mm'
+      singleDatePicker: true
+    })
+    $('#job-ended-at').daterangepicker({
+      timePicker: true
+      timePickerIncrement: 5
+      format: 'YYYY/MM/DD HH:mm'
+      singleDatePicker: true
+    })
+    $('#job-from').daterangepicker({
+      timePicker: true
+      timePickerIncrement: 5
+      format: 'YYYY/MM/DD HH:mm'
+      singleDatePicker: true
+    })
+    $('#job-to').daterangepicker({
+      timePicker: true
+      timePickerIncrement: 5
+      format: 'YYYY/MM/DD HH:mm'
+      singleDatePicker: true
+    })
+
   onRender: ->
     @initJobSearchList()
     @stickit()
+    @
+
+  onAttach: ->
+    @initPlugin()
     @
