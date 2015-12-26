@@ -182,7 +182,7 @@ class GithubProjectDetailCrawler < Base
         project_id,
         page: page
       )
-      Rails.logger.info("fetch project #{project_id} (page: #{page})")
+      Rails.logger.info("fetch project detail branches #{project_id} (page: #{page})")
       res
     end
 
@@ -201,7 +201,7 @@ class GithubProjectDetailCrawler < Base
         project_id,
         page: page
       )
-      Rails.logger.info("fetch project #{project_id} (page: #{page})")
+      Rails.logger.info("fetch project detail tags #{project_id} (page: #{page})")
       res
     end
 
@@ -221,7 +221,7 @@ class GithubProjectDetailCrawler < Base
         sha,
         page: page
       )
-      Rails.logger.info("fetch project #{project_id} #{sha} (page: #{page})")
+      Rails.logger.info("fetch project detail trees #{project_id} #{sha} (page: #{page})")
       res
     end
 
@@ -241,7 +241,7 @@ class GithubProjectDetailCrawler < Base
         sha,
         page: page
       )
-      Rails.logger.info("fetch project #{project_id} #{sha} (page: #{page})")
+      Rails.logger.info("fetch project detail contents #{project_id} #{sha} (page: #{page})")
       res
     end
 

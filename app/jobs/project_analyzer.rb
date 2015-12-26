@@ -58,7 +58,7 @@ class ProjectAnalyzer < Base
           crawl_status: CrawlStatus::ANALYZE_ERROR
         }
         project.save!
-        Rails.logger.error("Parse error #{project.id} - #{error}")
+        Rails.logger.warn("Parse error #{project.id} - #{error}")
       end
     end
   end
