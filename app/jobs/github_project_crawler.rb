@@ -173,7 +173,7 @@ class GithubProjectCrawler < Base
       if res.rate_limit_remaining <= 1
         # rate limit解除時間まで待つ 3秒ほど余裕を持たせる
         till_time = Time.at(res.rate_limit_reset.to_i)
-        Rails.logger.info("Rate limit exceeded. Waiting until #{till_time}")
+        Rails.logger.warn("Rate limit exceeded. Waiting until #{till_time}")
         sleep_time = (till_time - Time.now).ceil + 3
         sleep_time = 3 if sleep_time <= 0
         sleep sleep_time
