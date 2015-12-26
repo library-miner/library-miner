@@ -4,6 +4,7 @@ class Miner.Views.DashboardLayout extends Marionette.LayoutView
   regions: {
     crawlStatusRegion: "#crawl-status"
     analyzeStatusRegion: "#analyze-status"
+    jobStatusRegion: "#job-status"
   }
 
   initCrawlStatus: ->
@@ -20,15 +21,24 @@ class Miner.Views.DashboardLayout extends Marionette.LayoutView
 
     @analyzeStatus.fetch(reset: true)
 
+  initJobStatus: ->
+    @jobStatus = new Miner.Models.JobStatus()
+    @jobStatusView = new Miner.Views.JobStatusView(model: @jobStatus)
+    @jobStatusRegion.show(@jobStatusView)
+
+    @jobStatus.fetch(reset: true)
+
   statusTimer: (interval) ->
     @hoge = @crawlStatus
     setInterval =>
       @crawlStatus.fetch(reset: true)
       @analyzeStatus.fetch(reset: true)
+      @jobStatus.fetch(reset: true)
     , interval
 
   onRender: ->
     @initCrawlStatus()
     @initAnalyzeStatus()
+    @initJobStatus()
     @statusTimer(5000)
 
