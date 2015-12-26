@@ -76,7 +76,11 @@ class Miner.Views.JobSearchView extends Marionette.LayoutView
         jobEndedAt: @model.get('jobEndedAt')
         from: @model.get('From')
         to: @model.get('To')
-    )
+    ).done ->
+      # DataTableの設定
+      $(".table").DataTable({
+        "order": [[ 5, "desc" ]]
+      })
 
   onRender: ->
     @initJobSearchList()

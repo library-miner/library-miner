@@ -5,6 +5,8 @@
 #= require admin-lte/plugins/slimScroll/jquery.slimscroll
 #= require admin-lte/plugins/daterangepicker/moment
 #= require admin-lte/plugins/daterangepicker/daterangepicker
+#= require admin-lte/plugins/datatables/jquery.dataTables
+#= require admin-lte/plugins/datatables/dataTables.bootstrap
 #= require underscore
 #= require backbone
 #= require handlebars.runtime
