@@ -1,0 +1,57 @@
+<h3> ジョブ状況(直近24h) </h3>
+<div class="row">
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow">
+        <i class="fa fa-pause">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">実行待ち</span>
+        <span class="info-box-number">{{ job_status.waiting }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow">
+        <i class="fa fa-spinner">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">実行中</span>
+        <span class="info-box-number">{{ job_status.executing }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-green">
+        <i class="fa fa-check-circle">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">完了</span>
+        <span class="info-box-number">{{ job_status.complete }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-red">
+        <i class="fa fa-exclamation-triangle">
+        </i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">エラー</span>
+        <span class="info-box-number">{{ job_status.error }}</span>
+      </div><!-- /.info-box-content -->
+    </div><!-- /.info-box -->
+  </div>
+
+</div>
+

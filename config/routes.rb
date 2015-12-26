@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root 'home#index'
 
   resources :homes, only: [:index]
+  get 'miner', to: 'home#index'
 
   namespace :api, defaults: { format: :json } do
     resources :operational_status,only: [] do
@@ -9,6 +10,7 @@ Rails.application.routes.draw do
         get 'projects_crawl_status'
         get 'projects_analyze_status'
         get 'crawl_inprogress'
+        get 'job_status'
       end
     end
 
@@ -18,6 +20,13 @@ Rails.application.routes.draw do
         get 'analyze_errors'
       end
     end
+
+    resources :management_jobs,only: [:index] do
+      collection do
+        get 'job_search_lists'
+      end
+    end
+
 
   end
 

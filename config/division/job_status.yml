@@ -1,0 +1,12 @@
+- id: 0
+  type: waiting
+  name: 実行待ち
+- id: 1
+  type: executing
+  name: 実行中
+- id: 2
+  type: complete
+  name: 完了
+- id: 9
+  type: error
+  name: エラー
