@@ -1,3 +1,5 @@
+require File.expand_path("../support/github_response_support.rb",__FILE__)
+
 RSpec.configure do |config|
   require 'simplecov'
 
