@@ -11,5 +11,5 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
   
-  SimpleCov.start
+  SimpleCov.start 'rails'
 end
