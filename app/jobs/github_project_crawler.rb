@@ -19,7 +19,6 @@ class GithubProjectCrawler < Base
   queue_as :github_project_crawler
 
   def perform(date_from, date_to, mode: 'CREATED')
-
     if mode == 'CREATED'
       mode = CrawlMode::CREATED
     else
