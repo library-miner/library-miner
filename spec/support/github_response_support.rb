@@ -7,8 +7,12 @@ module GithubResponseSupport
     r = File.read('spec/fixtures/' + file_name + '.txt')
     results = Hash.new
     r.split(/[\r\n]+/).each do |line|
-      l = line.split(":")
-      results[l[0]] = l[1].to_s
+      first_s, *s_a = line.split(":")
+      t = ""
+      s_a.each do |s|
+        t = t + s.to_s
+      end
+      results[first_s] = t
     end
     results
   end
