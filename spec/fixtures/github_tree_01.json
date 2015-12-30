@@ -18,7 +18,7 @@
       "url": "https://api.github.com/repos/octocat/Hello-World/git/blobs/f484d249c660418515fb01c2b9662073663c242e"
     },
     {
-      "path": "exec_file",
+      "path": "Gemfile",
       "mode": "100755",
       "type": "blob",
       "size": 75,

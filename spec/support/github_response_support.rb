@@ -30,7 +30,7 @@ module GithubResponseSupport
     ).
     with(
       :headers => {
-        'Accept'=>'*/*',
+        'Accept'=> /.*/,
         'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
         'Authorization'=> /token */,
         'User-Agent'=> /Faraday */
