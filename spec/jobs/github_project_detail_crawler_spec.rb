@@ -9,7 +9,10 @@ RSpec.describe GithubProjectDetailCrawler, type: :model do
         # Faraday dummy Responseを返すように設定
         dummy_faraday_response
         # Input Project に テストデータ投入
-        create(:input_project)
+        create(
+          :input_project,
+          github_updated_at: Date.today
+        )
         targets = InputProject.get_project_detail_crawl_target(
           1,
           1
@@ -24,21 +27,60 @@ RSpec.describe GithubProjectDetailCrawler, type: :model do
     end
 
     def dummy_faraday_response
-      WebMock.stub_request(
-        :get,
-        "https://api.github.com/repositories/123456789123456789/branches?page=1&per_page=100").
-      with(
-        :headers => {
-          'Accept'=>'*/*',
-          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Authorization'=>'token 229ba8b7116bc902c0122ed6f34e58464eebdeaa',
-          'User-Agent'=>'Faraday v0.9.2'
-        }
-      ).
-      to_return(
-        status: 200,
-        body: readJsonFile("github_branch_01"),
-        headers: readResponseHeaderFile("github_branch_01_header")
+      # Branch
+      set_dummy_response(
+        url: /https:\/\/api.github.com\/repositories\/123456789123456789\/branches*/,
+        header_file_name: "github_branch_01_header",
+        body_file_name: "github_branch_01",
+        status: 200
+      )
+
+      # Branch end
+      set_dummy_response(
+        url: /https:\/\/api.github.com\/repositories\/123456789123456789\/branches\?page=5\&per_page=100/,
+        header_file_name: "github_branch_02_header",
+        body_file_name: "github_branch_01",
+        status: 200
+      )
+
+      # Tags
+      set_dummy_response(
+        url: /https:\/\/api.github.com\/repositories\/123456789123456789\/tags*/,
+        header_file_name: "github_tags_01_header",
+        body_file_name: "github_tags_01",
+        status: 200
+      )
+
+      # Tags end
+      set_dummy_response(
+        url: /https:\/\/api.github.com\/repositories\/123456789123456789\/tags\?page=5\&per_page=100/,
+        header_file_name: "github_tags_02_header",
+        body_file_name: "github_tags_01",
+        status: 200
+      )
+
+      # tree
+      set_dummy_response(
+        url: /https:\/\/api.github.com\/repositories\/123456789123456789\/git\/trees*/,
+        header_file_name: "github_tree_01_header",
+        body_file_name: "github_tree_01",
+        status: 200
+      )
+
+      # weekly_commit
+      set_dummy_response(
+        url: /https:\/\/api.github.com\/repositories\/123456789123456789\/stats\/participation*/,
+        header_file_name: "github_weekly_commit_count_01_header",
+        body_file_name: "github_weekly_commit_count_01",
+        status: 200
+      )
+
+      # blob
+      set_dummy_response(
+        url: /https:\/\/api.github.com\/repositories\/123456789123456789\/git\/blobs*/,
+        header_file_name: "github_blob_01_header",
+        body_file_name: "github_blob_01",
+        status: 200
       )
 
     end
