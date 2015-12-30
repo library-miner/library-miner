@@ -2,6 +2,7 @@ require File.expand_path("../support/github_response_support.rb",__FILE__)
 
 RSpec.configure do |config|
   require 'simplecov'
+  require 'webmock/rspec'
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
