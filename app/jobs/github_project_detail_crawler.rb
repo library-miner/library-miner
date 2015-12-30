@@ -67,7 +67,7 @@ class GithubProjectDetailCrawler < Base
         crawl_status: CrawlStatus::DONE
       }
 
-    rescue
+    rescue => e
       target.attributes = {
         crawl_status: CrawlStatus::ERROR
       }
@@ -345,11 +345,11 @@ class GithubProjectDetailCrawler < Base
     results = []
     is_success = true
     retry_count = 0
-    page = 1
+    page_count = 1
     has_next_page = false
 
     begin
-      res = get_repositories_proc.call(page)
+      res = get_repositories_proc.call(page_count)
 
       if res.rate_limit_remaining <= 1
         # rate limit解除時間まで待つ 3秒ほど余裕を持たせる

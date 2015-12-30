@@ -40,11 +40,6 @@ RSpec.describe GithubProjectDetailCrawler, type: :model do
         body: readJsonFile("github_branch_01"),
         headers: readResponseHeaderFile("github_branch_01_header")
       )
-      #to_return(
-      #  :status => 200,
-      #  :body => "",
-      #  :headers => {}
-      #)
 
     end
 
