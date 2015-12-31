@@ -55,6 +55,7 @@ end
 group :test do
   gem 'rspec'
   gem 'simplecov', require: false
+  gem 'webmock'
 end
 
 group :development, :test do
@@ -68,5 +69,4 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'factory_girl'
   gem 'factory_girl_rails'
-  gem 'webmock'
 end
