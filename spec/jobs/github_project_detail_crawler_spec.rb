@@ -5,7 +5,7 @@ RSpec.describe GithubProjectDetailCrawler, type: :model do
 
   describe "Github Repository Response の正常系テスト"
     context "正常リクエスト取得時(代表ケース)" do
-      before :all do
+      before :each do
         # Faraday dummy Responseを返すように設定
         dummy_faraday_response
         # Input Project に テストデータ投入
