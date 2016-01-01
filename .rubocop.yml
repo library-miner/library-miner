@@ -3,9 +3,15 @@ AllCops:
     - config/unicorn.rb
     - db/**
   RunRailsCops: true
-  # Use UTF-8 as the source file encoding.
+# Use UTF-8 as the source file encoding.
 Encoding:
   Enabled: false
-  # Use only ascii symbols in comments.
+# Limit lines to 80 characters.
+LineLength:
+  Enabled: false
+# Avoid methods longer than 10 lines of code
+MethodLength:
+  Enabled: false
+# Use only ascii symbols in comments.
 AsciiComments:
   Enabled: false
