@@ -441,6 +441,15 @@ RSpec.describe ProjectAnalyzer, type: :model do
         expect(Project.find(@i2.id).size).to eq 777
       end
     end
+  end
+
+  describe "プロジェクト関連情報更新確認" do
+    context "Gemfileの内容が以前より減った(Gemfileからライブラリを消した)場合" do
+      it "ProjectDependencyから減ったライブラリの情報が削除されること"
+    end
+    context "Gemfileの内容が以前より増えた(Gemfileからライブラリを増やした)場合" do
+      it "ProjectDependencyから増えたライブラリの情報が追加されること"
+    end
 
   end
 end
