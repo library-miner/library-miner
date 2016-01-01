@@ -487,7 +487,8 @@ RSpec.describe ProjectAnalyzer, type: :model do
 
       it 'ProjectDependencyから減ったライブラリの情報が削除されること' do
         expect(ProjectDependency.all.count).to eq 2
-        expect(ProjectDependency.find(@pd3.id)).to eq nil
+        expect{ProjectDependency.find(@pd3.id)}.to raise_exception(
+          ActiveRecord::RecordNotFound)
       end
 
     end

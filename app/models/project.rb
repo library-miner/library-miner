@@ -69,14 +69,16 @@ class Project < ActiveRecord::Base
 
   # 引数として指定したgemを関連ライブラリとして保存
   def create_dependency_projects(gemfile_names)
-    # FIXME: ライブラリが削除された場合は考慮されているのか？
-    # FIXME: Version情報も格納したい
     gemfile_names.each do |name|
       project_dependencies
         .find_or_initialize_by(library_name: name)
-      # TODO: ライブラリ名からProjectIdに変換する処理を考える!
     end
-
+    # 過去に存在したが、現在はないライブラリは削除する
+    project_dependencies.each do |pd|
+      unless gemfile_names.include?(pd.library_name)
+        pd.delete
+      end
+    end
     project_dependencies
   end
 
