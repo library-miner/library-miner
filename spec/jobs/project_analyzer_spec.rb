@@ -444,10 +444,90 @@ RSpec.describe ProjectAnalyzer, type: :model do
 
   describe 'プロジェクト関連情報更新確認' do
     context 'Gemfileの内容が以前より減った(Gemfileからライブラリを消した)場合' do
-      it 'ProjectDependencyから減ったライブラリの情報が削除されること'
+      before :each do
+        # Input Project に テストデータ投入
+        i = create(
+          :input_project,
+          full_name: 'test/full_name',
+          github_item_id: 10,
+          crawl_status_id: 2
+        )
+        c = File.read('spec/fixtures/gemfile03.txt')
+        # Gemfile
+        create(
+          :input_content,
+          input_project_id: i.id,
+          path: 'Gemfile',
+          content: c.to_s
+        )
+        @p1 = create(
+          :project,
+          github_item_id: 10,
+          full_name: 'test/full_name'
+        )
+        @pd1 = create(
+          :project_dependency,
+          project_from_id: @p1.id,
+          library_name: 'rails'
+        )
+        @pd2 = create(
+          :project_dependency,
+          project_from_id: @p1.id,
+          library_name: 'sqlite3'
+        )
+        @pd3 = create(
+          :project_dependency,
+          project_from_id: @p1.id,
+          library_name: 'omniauth-eveonline'
+        )
+
+        # テスト対象実行
+        ProjectAnalyzer.new.perform(analyze_count: 1)
+      end
+
+      it 'ProjectDependencyから減ったライブラリの情報が削除されること' do
+        expect(ProjectDependency.all.count).to eq 2
+        expect(ProjectDependency.find(@pd3.id)).to eq nil
+      end
+
     end
     context 'Gemfileの内容が以前より増えた(Gemfileからライブラリを増やした)場合' do
-      it 'ProjectDependencyから増えたライブラリの情報が追加されること'
+      before :each do
+        # Input Project に テストデータ投入
+        i = create(
+          :input_project,
+          full_name: 'test/full_name',
+          github_item_id: 10,
+          crawl_status_id: 2
+        )
+        c = File.read('spec/fixtures/gemfile03.txt')
+        # Gemfile
+        create(
+          :input_content,
+          input_project_id: i.id,
+          path: 'Gemfile',
+          content: c.to_s
+        )
+        @p1 = create(
+          :project,
+          github_item_id: 10,
+          full_name: 'test/full_name'
+        )
+        @pd1 = create(
+          :project_dependency,
+          project_from_id: @p1.id,
+          library_name: 'rails'
+        )
+
+        # テスト対象実行
+        ProjectAnalyzer.new.perform(analyze_count: 1)
+      end
+
+      it 'ProjectDependencyから増えたライブラリの情報が追加されること' do
+        expect(ProjectDependency.all.count).to eq 2
+        expect(ProjectDependency.where(:library_name => 'sqlite3').count).to eq 1
+      end
+
     end
   end
 end
