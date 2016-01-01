@@ -3,3 +3,7 @@ AllCops:
     - config/unicorn.rb
     - db/**
   RunRailsCops: true
+
+    # Use only ascii symbols in comments.
+  AsciiComments:
+    Enabled: false
