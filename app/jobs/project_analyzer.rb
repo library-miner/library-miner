@@ -73,25 +73,31 @@ class ProjectAnalyzer < Base
   # 4.いずれにも該当しない場合、新規作成
   def copy_project(project)
     dup_project_attributes = project
-    .attributes
-    .slice(*InputProject::COPYABLE_ATTRIBUTES.map(&:to_s))
+      .attributes
+      .slice(*InputProject::COPYABLE_ATTRIBUTES.map(&:to_s))
 
     if Project.where(github_item_id: project.github_item_id).present?
       source_project = Project
-      .find_or_initialize_by(github_item_id: project.github_item_id)
-      .tap { |v| v.attributes = dup_project_attributes }
-    elsif Project.where(full_name: project.full_name).present?
+        .find_or_initialize_by(github_item_id: project.github_item_id)
+        .tap { |v| v.attributes = dup_project_attributes }
+    elsif Project.where(full_name: project.full_name,
+                        github_item_id: nil).present?
       source_project = Project
-      .find_or_initialize_by(full_name: project.full_name)
-      .tap { |v| v.attributes = dup_project_attributes }
-    elsif Project.where(name: project.name).present?
-       source_project = Project
-      .find_or_initialize_by(name: project.name)
-      .tap { |v| v.attributes = dup_project_attributes }
+        .find_or_initialize_by(full_name: project.full_name,
+      github_item_id: nil)
+        .tap { |v| v.attributes = dup_project_attributes }
+    elsif Project.where(name: project.name,
+                        full_name: nil,
+                        github_item_id: nil).present?
+      source_project = Project
+        .find_or_initialize_by(name: project.name,
+      full_name: nil,
+      github_item_id: nil)
+        .tap { |v| v.attributes = dup_project_attributes }
     else
       source_project = Project
-      .find_or_initialize_by(github_item_id: project.github_item_id)
-      .tap { |v| v.attributes = dup_project_attributes }
+        .find_or_initialize_by(github_item_id: project.github_item_id)
+        .tap { |v| v.attributes = dup_project_attributes }
     end
     source_project
   end
