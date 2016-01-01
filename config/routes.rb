@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get 'miner', to: 'home#index'
 
   namespace :api, defaults: { format: :json } do
-    resources :operational_status,only: [] do
+    resources :operational_status, only: [] do
       collection do
         get 'projects_crawl_status'
         get 'projects_analyze_status'
@@ -14,20 +14,17 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :input_projects,only: [:show] do
+    resources :input_projects, only: [:show] do
       collection do
         get 'crawl_errors'
         get 'analyze_errors'
       end
     end
 
-    resources :management_jobs,only: [:index] do
+    resources :management_jobs, only: [:index] do
       collection do
         get 'job_search_lists'
       end
     end
-
-
   end
-
 end

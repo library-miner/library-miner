@@ -40,5 +40,5 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # log
-  config.logger = Logger.new("log/development.log", 'daily')
+  config.logger = Logger.new('log/development.log', 'daily')
 end

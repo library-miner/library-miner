@@ -35,8 +35,8 @@ class GithubProjectCrawler < Base
         save_projects(results, language)
       end
     else
-      results = fetch_projects_updated_at(date_from,date_to,language)
-      save_projects(results,language)
+      results = fetch_projects_updated_at(date_from, date_to, language)
+      save_projects(results, language)
     end
   end
 
@@ -131,7 +131,6 @@ class GithubProjectCrawler < Base
       ].flatten.compact
     end
   end
-
 
   # API制限を考慮してデータ取得　
   def fetch_projects_with_rate_limit(time_from, time_to, language, mode: CrawlMode::CREATED)

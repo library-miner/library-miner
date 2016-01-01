@@ -14,7 +14,6 @@
 #
 
 class InputTree < ActiveRecord::Base
-
   COPYABLE_ATTRIBUTES = %i(
     path file_type sha url size
   )
@@ -63,8 +62,8 @@ class InputTree < ActiveRecord::Base
   def self.check_analyze_target_is_update?(github_item_id)
     is_update = false
 
-    project_info = Project.where(github_item_id: github_item_id).first
-    input_project_info = InputProject.where(github_item_id: github_item_id).first
+    project_info = Project.find_by(github_item_id: github_item_id)
+    input_project_info = InputProject.find_by(github_item_id: github_item_id)
 
     if project_info.present? && input_project_info.present?
 
@@ -72,39 +71,37 @@ class InputTree < ActiveRecord::Base
       input_trees = input_project_info.input_trees
 
       input_trees.each do |tree|
-        if InputTree.is_analyze_target?(tree.path)
-          p_tree = ProjectTree.where(
-            project_id: project_info.id,
+        next unless InputTree.is_analyze_target?(tree.path)
+        p_tree = ProjectTree.find_by(
+          project_id: project_info.id,
+          path: tree.path
+        )
+        if p_tree.present?
+          if p_tree.sha != tree.sha
+            is_update = true
+            break
+          end
+        else
+          is_update = true
+          break
+        end
+      end
+
+      if is_update != true
+        project_trees.each do |tree|
+          next unless InputTree.is_analyze_target?(tree.path)
+          i_tree = InputTree.find_by(
+            input_project_id: input_project_info.id,
             path: tree.path
-          ).first
-          if p_tree.present?
-            if p_tree.sha != tree.sha
+          )
+          if i_tree.present?
+            if i_tree.sha != tree.sha
               is_update = true
               break
             end
           else
             is_update = true
             break
-          end
-        end
-      end
-
-      if is_update != true
-        project_trees.each do |tree|
-          if InputTree.is_analyze_target?(tree.path)
-            i_tree = InputTree.where(
-              input_project_id: input_project_info.id,
-              path: tree.path
-            ).first
-            if i_tree.present?
-              if i_tree.sha != tree.sha
-                is_update = true
-                break
-              end
-            else
-              is_update = true
-              break
-            end
           end
         end
       end

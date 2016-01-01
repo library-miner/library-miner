@@ -1,10 +1,10 @@
 FactoryGirl.define do
   factory :input_project do
     crawl_status_id 0
-    github_item_id 123456789123456789
+    github_item_id 123_456_789_123_456_789
     name 'test'
     full_name 'owner/test'
-    owner_id 12345678
+    owner_id 12_345_678
     owner_login_name 'owner'
     owner_type 'owner_type'
     github_url 'http://test.com'
@@ -19,5 +19,4 @@ FactoryGirl.define do
     open_issue_count 789
     language 'ruby'
   end
-
 end

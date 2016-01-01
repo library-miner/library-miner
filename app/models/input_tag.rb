@@ -12,7 +12,6 @@
 #
 
 class InputTag < ActiveRecord::Base
-
   COPYABLE_ATTRIBUTES = %i(
     name sha url
   )

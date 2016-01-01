@@ -4,5 +4,4 @@ FactoryGirl.define do
     name 'test_library'
     version ''
   end
-
 end

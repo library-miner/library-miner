@@ -10,7 +10,6 @@
 #
 
 class LibraryRelationError < ActiveRecord::Base
-
   # Relations
 
   # Validations
@@ -21,7 +20,7 @@ class LibraryRelationError < ActiveRecord::Base
 
   # Class Methods
   def self.count_up_error_library(library_name)
-    library = LibraryRelationError.where(library_name: library_name).first
+    library = LibraryRelationError.find_by(library_name: library_name)
     if library.nil?
       library = LibraryRelationError.new(
         library_name: library_name,

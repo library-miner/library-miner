@@ -17,6 +17,6 @@ class Base < ActiveJob::Base
 
   rescue_from(Exception) do |exception|
     ManagementJob.job_error(job_id, exception.message)
-    raise exception
+    fail exception
   end
 end

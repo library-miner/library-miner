@@ -1,9 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe ProjectAnalyzer, type: :model do
-
-  describe "Project Analyzerテスト" do
-    context "代表ケース" do
+  describe 'Project Analyzerテスト' do
+    context '代表ケース' do
       before :each do
         # Input Project に テストデータ投入
         i1 = create(
@@ -13,52 +12,52 @@ RSpec.describe ProjectAnalyzer, type: :model do
           crawl_status_id: 2
         )
         create(:input_tree,
-              input_project_id: i1.id)
+               input_project_id: i1.id)
         create(:input_branch,
-              input_project_id: i1.id)
+               input_project_id: i1.id)
         create(:input_tag,
-              input_project_id: i1.id)
+               input_project_id: i1.id)
         create(:input_weekly_commit_count,
-              input_project_id: i1.id)
+               input_project_id: i1.id)
         # テスト対象実行
         ProjectAnalyzer.new.perform(analyze_count: 1)
       end
 
-      it "InputProject の情報が Projectに格納されていること" do
+      it 'InputProject の情報が Projectに格納されていること' do
         results = Project.all
 
         expect(results.count).to eq 1
         expect(results[0].full_name).to eq 'test/full_name'
       end
 
-      it "解析完了後はInputProject のステータスが 3(解析済み)となること" do
+      it '解析完了後はInputProject のステータスが 3(解析済み)となること' do
         results = InputProject.all
 
         expect(results[0].crawl_status_id).to eq 3
       end
 
-      it "ProjectTreeにInputTreeの内容がコピーされること" do
+      it 'ProjectTreeにInputTreeの内容がコピーされること' do
         results = ProjectTree.all
 
         expect(results.count).to eq 1
         expect(results[0].path).to eq 'test'
       end
 
-      it "ProjectBranchにInputBranchの内容がコピーされること" do
+      it 'ProjectBranchにInputBranchの内容がコピーされること' do
         results = ProjectBranch.all
 
         expect(results.count).to eq 1
         expect(results[0].name).to eq 'master'
       end
 
-      it "ProjectTagにInputTagの内容がコピーされること" do
+      it 'ProjectTagにInputTagの内容がコピーされること' do
         results = ProjectTag.all
 
         expect(results.count).to eq 1
         expect(results[0].name).to eq 'v1.0'
       end
 
-      it "ProjectWeeklyCommitCountにInputWeeklyCommitCountの内容がコピーされること" do
+      it 'ProjectWeeklyCommitCountにInputWeeklyCommitCountの内容がコピーされること' do
         results = ProjectWeeklyCommitCount.all
 
         expect(results.count).to eq 1
@@ -66,7 +65,7 @@ RSpec.describe ProjectAnalyzer, type: :model do
       end
     end
 
-    context "readme.mdファイルが含まれる場合" do
+    context 'readme.mdファイルが含まれる場合' do
       before :each do
         # Input Project に テストデータ投入
         i1 = create(
@@ -85,7 +84,7 @@ RSpec.describe ProjectAnalyzer, type: :model do
                content: 'test'
               )
       end
-      it "InputContentに格納されているReadmeファイルの内容がProjectReadmeにコピーされること" do
+      it 'InputContentに格納されているReadmeファイルの内容がProjectReadmeにコピーされること' do
         # テスト対象実行
         ProjectAnalyzer.new.perform(analyze_count: 1)
 
@@ -97,7 +96,7 @@ RSpec.describe ProjectAnalyzer, type: :model do
       end
     end
 
-    context "readme.mdファイルが含まれない場合" do
+    context 'readme.mdファイルが含まれない場合' do
       before :each do
         # Input Project に テストデータ投入
         i1 = create(
@@ -115,7 +114,7 @@ RSpec.describe ProjectAnalyzer, type: :model do
           path: 'READREAD.md'
         )
       end
-      it "InputContentに格納されている内容がProjectReadmeにコピーされないこと" do
+      it 'InputContentに格納されている内容がProjectReadmeにコピーされないこと' do
         # テスト対象実行
         ProjectAnalyzer.new.perform(analyze_count: 1)
 
@@ -126,7 +125,7 @@ RSpec.describe ProjectAnalyzer, type: :model do
       end
     end
 
-    context "Gemfileが存在する かつ RubyGemでない場合" do
+    context 'Gemfileが存在する かつ RubyGemでない場合' do
       before :each do
         # Input Project に テストデータ投入
         i = create(
@@ -148,21 +147,21 @@ RSpec.describe ProjectAnalyzer, type: :model do
         ProjectAnalyzer.new.perform(analyze_count: 1)
       end
 
-      it "Gemfileの内容が解析され ProjectDependencyに 外部ライブラリ情報が格納されること" do
+      it 'Gemfileの内容が解析され ProjectDependencyに 外部ライブラリ情報が格納されること' do
         results = ProjectDependency.all
 
         expect(results.count).to eq 6
         expect(results[1].library_name).to eq 'sqlite3'
       end
 
-      it "dependencies ライブラリもProjectとして保存されている(is_incomplete = trueとする)" do
-        results = Project.where(:is_incomplete => 1)
+      it 'dependencies ライブラリもProjectとして保存されている(is_incomplete = trueとする)' do
+        results = Project.where(is_incomplete: 1)
 
         expect(results.count).to eq 7
       end
     end
 
-    context "Gemfileが存在する かつ RubyGemである場合" do
+    context 'Gemfileが存在する かつ RubyGemである場合' do
       before :each do
         # Input Project に テストデータ投入
         i = create(
@@ -189,21 +188,21 @@ RSpec.describe ProjectAnalyzer, type: :model do
         ProjectAnalyzer.new.perform(analyze_count: 1)
       end
 
-      it "InputDependencyLibraryに格納されている情報も"\
-        "ProjectDependency にライブラリ情報が格納されること" do
+      it 'InputDependencyLibraryに格納されている情報も'\
+        'ProjectDependency にライブラリ情報が格納されること' do
         results = ProjectDependency.all
 
         expect(results.count).to eq 7
         expect(results[6].library_name).to eq 'test_lib'
       end
-      it "dependencies ライブラリもProjectとして保存されている(is_incomplete = trueとする)" do
-        results = Project.where(:is_incomplete => 1)
+      it 'dependencies ライブラリもProjectとして保存されている(is_incomplete = trueとする)' do
+        results = Project.where(is_incomplete: 1)
 
         expect(results.count).to eq 8
       end
     end
 
-    context "InputContentに何も情報が格納されていない場合" do
+    context 'InputContentに何も情報が格納されていない場合' do
       before :each do
         InputProject.destroy_all
         InputContent.delete_all
@@ -218,7 +217,7 @@ RSpec.describe ProjectAnalyzer, type: :model do
         ProjectAnalyzer.new.perform(analyze_count: 1)
       end
 
-      it "InputProject のステータスが 3(解析済み)となること" do
+      it 'InputProject のステータスが 3(解析済み)となること' do
         results = InputProject.where(crawl_status_id: 3)
 
         expect(results.count).to eq 1
@@ -226,8 +225,8 @@ RSpec.describe ProjectAnalyzer, type: :model do
     end
   end
 
-  describe "Project情報作成テスト" do
-    context "Projectにgithub_item_idが存在する場合" do
+  describe 'Project情報作成テスト' do
+    context 'Projectにgithub_item_idが存在する場合' do
       before :each do
         InputProject.destroy_all
         Project.destroy_all
@@ -263,16 +262,16 @@ RSpec.describe ProjectAnalyzer, type: :model do
         ProjectAnalyzer.new.perform(analyze_count: 1)
       end
 
-      it "InputProjectのgithub_item_idと合致するProjectの情報が更新されること" do
+      it 'InputProjectのgithub_item_idと合致するProjectの情報が更新されること' do
         expect(Project.find(@i2.id).size).to eq 999
       end
 
-      it "InputProjectのgithub_item_idと合致しないProjectの情報が更新されないこと" do
+      it 'InputProjectのgithub_item_idと合致しないProjectの情報が更新されないこと' do
         expect(Project.find(@i3.id).size).to eq 777
       end
     end
 
-    context "FullNameが異なる2つのプロジェクトが存在する場合 かつ 両者ともgithub_item_idが存在しない場合" do
+    context 'FullNameが異なる2つのプロジェクトが存在する場合 かつ 両者ともgithub_item_idが存在しない場合' do
       before :each do
         InputProject.destroy_all
         Project.destroy_all
@@ -308,15 +307,15 @@ RSpec.describe ProjectAnalyzer, type: :model do
         ProjectAnalyzer.new.perform(analyze_count: 1)
       end
 
-      it "InputProjectのfull_nameと合致するProjectの情報が更新されること" do
+      it 'InputProjectのfull_nameと合致するProjectの情報が更新されること' do
         expect(Project.find(@i2.id).size).to eq 999
       end
-      it "InputProjectのfull_nameと合致しないProjectの情報が更新されないこと" do
+      it 'InputProjectのfull_nameと合致しないProjectの情報が更新されないこと' do
         expect(Project.find(@i3.id).size).to eq 777
       end
     end
 
-    context "Nameのみ存在する場合 と Nameは同じだがgithub_item_idが異なる場合" do
+    context 'Nameのみ存在する場合 と Nameは同じだがgithub_item_idが異なる場合' do
       before :each do
         InputProject.destroy_all
         Project.destroy_all
@@ -352,16 +351,16 @@ RSpec.describe ProjectAnalyzer, type: :model do
         ProjectAnalyzer.new.perform(analyze_count: 1)
       end
 
-      it "github_item_idが存在せずnameと合致するProjectの情報が更新されること" do
+      it 'github_item_idが存在せずnameと合致するProjectの情報が更新されること' do
         expect(Project.find(@i2.id).size).to eq 999
       end
 
-      it "github_item_idが合致しないProjectの情報が更新されないこと" do
+      it 'github_item_idが合致しないProjectの情報が更新されないこと' do
         expect(Project.find(@i3.id).size).to eq 777
       end
     end
 
-    context "Nameのみ存在する場合 と Nameは同じだがfull_nameが異なる場合" do
+    context 'Nameのみ存在する場合 と Nameは同じだがfull_nameが異なる場合' do
       before :each do
         InputProject.destroy_all
         Project.destroy_all
@@ -397,16 +396,16 @@ RSpec.describe ProjectAnalyzer, type: :model do
         ProjectAnalyzer.new.perform(analyze_count: 1)
       end
 
-      it "full_nameがなくnameと合致するProjectの情報が更新されること" do
+      it 'full_nameがなくnameと合致するProjectの情報が更新されること' do
         expect(Project.find(@i2.id).size).to eq 999
       end
 
-      it "full_nameが合致しないProjectの情報が更新されないこと" do
+      it 'full_nameが合致しないProjectの情報が更新されないこと' do
         expect(Project.find(@i3.id).size).to eq 777
       end
     end
 
-    context "InputProjectのnameと同じだが、full_nameが異なる場合" do
+    context 'InputProjectのnameと同じだが、full_nameが異なる場合' do
       before :each do
         InputProject.destroy_all
         Project.destroy_all
@@ -433,24 +432,22 @@ RSpec.describe ProjectAnalyzer, type: :model do
         ProjectAnalyzer.new.perform(analyze_count: 1)
       end
 
-      it "新規にプロジェクト情報が作成されること" do
+      it '新規にプロジェクト情報が作成されること' do
         expect(Project.all.count).to eq 2
       end
 
-      it "full_nameが合致しないProjectの情報が更新されないこと" do
+      it 'full_nameが合致しないProjectの情報が更新されないこと' do
         expect(Project.find(@i2.id).size).to eq 777
       end
     end
   end
 
-  describe "プロジェクト関連情報更新確認" do
-    context "Gemfileの内容が以前より減った(Gemfileからライブラリを消した)場合" do
-      it "ProjectDependencyから減ったライブラリの情報が削除されること"
+  describe 'プロジェクト関連情報更新確認' do
+    context 'Gemfileの内容が以前より減った(Gemfileからライブラリを消した)場合' do
+      it 'ProjectDependencyから減ったライブラリの情報が削除されること'
     end
-    context "Gemfileの内容が以前より増えた(Gemfileからライブラリを増やした)場合" do
-      it "ProjectDependencyから増えたライブラリの情報が追加されること"
+    context 'Gemfileの内容が以前より増えた(Gemfileからライブラリを増やした)場合' do
+      it 'ProjectDependencyから増えたライブラリの情報が追加されること'
     end
-
   end
 end
-

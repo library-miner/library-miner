@@ -5,5 +5,4 @@ FactoryGirl.define do
     file_type 'blob'
     sha 'aaaaabbbbbccccc'
   end
-
 end

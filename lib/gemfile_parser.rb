@@ -1,7 +1,6 @@
 require 'tempfile'
 
 class GemfileParser
-
   # [使い方]
   #   GemfileParser.new.parse_gemfile(rubygems_contents)
   #
@@ -15,10 +14,10 @@ class GemfileParser
     if rubygems_contents.present?
       # gemspec を参照している場合、その行は無視する
       gem_lines = rubygems_contents
-      .split("\n")
-      .map(&:strip)
-      .select { |v| v.start_with?("gem") && !v.start_with?("gemspec") }
-      file = Tempfile.new("TemporaryGem")
+                  .split("\n")
+                  .map(&:strip)
+                  .select { |v| v.start_with?('gem') && !v.start_with?('gemspec') }
+      file = Tempfile.new('TemporaryGem')
 
       is_success = false
       error = nil
@@ -54,15 +53,15 @@ class GemfileParser
   #   Array - Gemfile名のリスト
   def parse_gemspec(gemspec_contents)
     dependencies = gemspec_contents
-      .split("\n")
-      .select { |v| v.include?("add_dependency") }
-      .map { |v| v.scan(/add_dependency\s+(.[^,)]*)/).flatten.first }
-      .map { |v| v.gsub("'","").gsub("\"","").gsub("(", "").gsub(")", "") }
+                   .split("\n")
+                   .select { |v| v.include?('add_dependency') }
+                   .map { |v| v.scan(/add_dependency\s+(.[^,)]*)/).flatten.first }
+                   .map { |v| v.delete("'").delete("\"").delete('(').delete(')') }
     dev_dependencies = gemspec_contents
-      .split("\n")
-      .select { |v| v.include?("add_development_dependency") }
-      .map { |v| v.scan(/add_development_dependency\s+(.[^,)]*)/).flatten.first }
-      .map { |v| v.gsub("'","").gsub("\"","").gsub("(", "").gsub(")", "") }
+                       .split("\n")
+                       .select { |v| v.include?('add_development_dependency') }
+                       .map { |v| v.scan(/add_development_dependency\s+(.[^,)]*)/).flatten.first }
+                       .map { |v| v.delete("'").delete("\"").delete('(').delete(')') }
 
     dependencies.concat(dev_dependencies)
   end

@@ -59,14 +59,10 @@ class Project < ActiveRecord::Base
   # なお、依存ライブラリ側のgithub_item_idがなくとも完全と見なす
   def check_completed?
     completed = true
-    self.project_dependencies.each do |dependency|
-      if dependency.project_to_id.nil?
-        completed = false
-      end
+    project_dependencies.each do |dependency|
+      completed = false if dependency.project_to_id.nil?
     end
-    if self.github_item_id.nil?
-      completed = false
-    end
+    completed = false if github_item_id.nil?
     completed
   end
   # Methods
@@ -76,24 +72,22 @@ class Project < ActiveRecord::Base
     # FIXME: ライブラリが削除された場合は考慮されているのか？
     # FIXME: Version情報も格納したい
     gemfile_names.each do |name|
-      self
-        .project_dependencies
+      project_dependencies
         .find_or_initialize_by(library_name: name)
       # TODO: ライブラリ名からProjectIdに変換する処理を考える!
     end
 
-    self.project_dependencies
+    project_dependencies
   end
 
   # 関連gemの情報がprojectにない場合、プロジェクト情報を作成
   def create_project_from_dependency(gemfile_name)
     gemfile_name.each do |name|
-      if Project.where(name: name).first.nil?
-        project = Project.new(
-          name: name
-        )
-        project.save
-      end
+      next unless Project.find_by(name: name).nil?
+      project = Project.new(
+        name: name
+      )
+      project.save
     end
   end
 end

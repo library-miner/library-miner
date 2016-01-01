@@ -5,5 +5,4 @@ FactoryGirl.define do
     all_count 777
     owner_count 777
   end
-
 end

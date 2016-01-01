@@ -17,12 +17,8 @@ class Search::ManagementJob < Search::Base
     results = results.where(t[:job_status_id].eq(job_status)) if job_status.present?
     results = results.where(t[:started_at].gteq(started_at)) if started_at.present?
     results = results.where(t[:ended_at].lteq(ended_at)) if ended_at.present?
-    if from.present?
-      results = results.where(t[:created_at].gteq(from))
-    end
-    if to.present?
-      results = results.where(t[:created_at].lteq(to))
-    end
+    results = results.where(t[:created_at].gteq(from)) if from.present?
+    results = results.where(t[:created_at].lteq(to)) if to.present?
     results
   end
 end

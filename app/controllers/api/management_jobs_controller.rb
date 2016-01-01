@@ -4,8 +4,8 @@ class Api::ManagementJobsController < ApplicationController
   def index
     @job = Search::ManagementJob.new(search_params)
     @jobs = @job
-      .matches
-      .order(created_at: :desc)
+            .matches
+            .order(created_at: :desc)
   end
 
   def job_search_lists
@@ -16,11 +16,10 @@ class Api::ManagementJobsController < ApplicationController
 
   def search_params
     rp = params.permit(
-      Search::ManagementJob::ATTRIBUTES.map {
-        |k| k.to_s.camelize(:lower).to_sym
-      }
+      Search::ManagementJob::ATTRIBUTES.map do |k|
+        k.to_s.camelize(:lower).to_sym
+      end
     )
     Hash[rp.map { |k, v| [k.underscore, v] }]
   end
 end
-

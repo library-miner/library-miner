@@ -8,13 +8,13 @@ class Api::InputProjectsController < ApplicationController
   # 収集失敗リスト
   def crawl_errors
     @input_projects = InputProject
-    .where(crawl_status: CrawlStatus::ERROR)
+                      .where(crawl_status: CrawlStatus::ERROR)
   end
 
- # 解析失敗リスト
+  # 解析失敗リスト
   def analyze_errors
     @input_projects = InputProject
-    .where(crawl_status: CrawlStatus::ANALYZE_ERROR)
+                      .where(crawl_status: CrawlStatus::ANALYZE_ERROR)
   end
 
   private
@@ -23,4 +23,3 @@ class Api::InputProjectsController < ApplicationController
     @input_project = InputProject.find(params[:id])
   end
 end
-

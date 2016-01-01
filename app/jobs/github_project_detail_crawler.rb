@@ -17,11 +17,11 @@ class GithubProjectDetailCrawler < Base
       Settings.client_node_id
     )
     # マルチプロセスで詳細情報を収集
-    Parallel.each(targets, in_processes: Settings.detail_crawler_process_count) { |target|
+    Parallel.each(targets, in_processes: Settings.detail_crawler_process_count) do |target|
       ActiveRecord::Base.connection_pool.with_connection do
         main(target)
       end
-    }
+    end
   end
 
   def main(target)
@@ -33,7 +33,7 @@ class GithubProjectDetailCrawler < Base
         input_project_id: target.id,
         name: 'master'
       ).first
-        .try(:sha)
+                          .try(:sha)
 
       # Masterブランチが更新されている場合に詳細情報を取得する
       if InputBranch.check_master_branch_is_update?(target.github_item_id, master_branch_sha)
@@ -257,13 +257,12 @@ class GithubProjectDetailCrawler < Base
   # 週間コミット数の取得と格納
   # 過去12週の間に更新されていない場合はコミット数0とする
   def fetch_and_save_project_detail_weekly_commit_counts(target_id, github_item_id, github_updated_at)
-
     if github_updated_at > (Date.today - 3.months).to_s
       weekly_commit_results = fetch_projects_detail_weekly_commit_counts_by_project_id(github_item_id)
     else
       weekly_commit_results = []
       12.times do |i|
-        weekly_commit_results << {index: i, all: 0, owner: 0}
+        weekly_commit_results << { index: i, all: 0, owner: 0 }
       end
     end
 
@@ -303,38 +302,37 @@ class GithubProjectDetailCrawler < Base
       Rails.logger.info("input_project_id=#{input_project_id};"\
                         "path=#{target.path};"\
                         "analyze_target=#{is_target}")
-      if is_target
-        if InputTree.is_gemfile?(target.path) || InputTree.is_readme?(target.path)
-          content = fetch_projects_detail_contents_by_project_id_and_sha(
-            project_information.github_item_id,
-            target.sha
-          ).join
-          save_project_detail_contents(
+      next unless is_target
+      if InputTree.is_gemfile?(target.path) || InputTree.is_readme?(target.path)
+        content = fetch_projects_detail_contents_by_project_id_and_sha(
+          project_information.github_item_id,
+          target.sha
+        ).join
+        save_project_detail_contents(
+          input_project_id,
+          target.path,
+          target.sha,
+          content
+        )
+      elsif InputTree.is_gemspec?(target.path)
+        Rails.logger.info('fetch project libraries information from rubygems '\
+                          "#{project_information.github_item_id} #{target.path}")
+        library_found, library_information, dependency_libraries = fetch_projects_detail_from_ruby_gem(
+          project_information.name
+        )
+        if library_found
+          save_library_information(
             input_project_id,
-            target.path,
-            target.sha,
-            content
+            library_information
           )
-        elsif InputTree.is_gemspec?(target.path)
-          Rails.logger.info("fetch project libraries information from rubygems "\
-                            "#{project_information.github_item_id} #{target.path}")
-          library_found,library_information,dependency_libraries = fetch_projects_detail_from_ruby_gem(
-            project_information.name
+          save_project_detail_dependency_libraries(
+            input_project_id,
+            dependency_libraries
           )
-          if library_found
-            save_library_information(
-              input_project_id,
-              library_information
-            )
-            save_project_detail_dependency_libraries(
-              input_project_id,
-              dependency_libraries
-            )
-          else
-            Rails.logger.info("rubygems not found #{project_information.name}")
-          end
+        else
+          Rails.logger.info("rubygems not found #{project_information.name}")
         end
-      end
+              end
     end
 
     is_success
@@ -419,7 +417,6 @@ class GithubProjectDetailCrawler < Base
       end
     end while !res.is_success
 
-    [is_success,base_information,results.flatten]
+    [is_success, base_information, results.flatten]
   end
-
 end

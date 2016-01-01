@@ -6,5 +6,4 @@ FactoryGirl.define do
     content "source 'https://rubygems.org'
              gem 'sass-rails',   '4.0.5'"
   end
-
 end

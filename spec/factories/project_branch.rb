@@ -5,5 +5,4 @@ FactoryGirl.define do
     sha 'aaaaabbbbbccccc'
     url 'http://test.com/'
   end
-
 end

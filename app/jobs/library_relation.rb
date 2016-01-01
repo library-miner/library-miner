@@ -6,14 +6,12 @@
 class LibraryRelation < Base
   queue_as :analyzer
 
-  def perform(mode: "diff")
+  def perform(mode: 'diff')
     # ライブラリ紐付け失敗テーブルの初期化
     LibraryRelationError.delete_all
 
     # 全件入れ替えモードの場合、紐付けを初期化
-    if mode == "all"
-      remove_library_relation
-    end
+    remove_library_relation if mode == 'all'
 
     dependencies = ProjectDependency.where(project_to_id: nil)
     dependencies.each do |dependency|
@@ -38,9 +36,9 @@ class LibraryRelation < Base
       # 上記失敗の場合、nameからproject_idを求める(Starが一番多いもの)
       if project_to.nil?
         project_to = Project
-        .where(name: dependency.library_name)
-        .order(stargazers_count: :desc)
-        .first
+                     .where(name: dependency.library_name)
+                     .order(stargazers_count: :desc)
+                     .first
       end
 
       # 全て失敗した場合はエラーリストに格納する(基本的に発生しない)
@@ -59,12 +57,11 @@ class LibraryRelation < Base
     # in_complete フラグを更新する
     projects = Project.incompleted
     projects.each do |project|
-      if project.check_completed?
-        project.attributes = {
-          is_incomplete: false
-        }
-        project.save
-      end
+      next unless project.check_completed?
+      project.attributes = {
+        is_incomplete: false
+      }
+      project.save
     end
   end
 
@@ -82,5 +79,4 @@ class LibraryRelation < Base
       updated_at: Time.now
     )
   end
-
 end
