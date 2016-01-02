@@ -1,5 +1,5 @@
 # input_libraries に入っている情報をprojectに移す
-# 初回以降にて使用する
+# 初回に使用する
 
 libraries = InputLibrary.all
 
@@ -24,7 +24,8 @@ libraries.each do |library|
 
   project = Project.new(
     name: library.name,
-    full_name: full_name
+    full_name: full_name,
+    project_type: ProjectType::RUBYGEM
   )
 
   project.save
