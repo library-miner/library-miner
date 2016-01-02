@@ -58,8 +58,10 @@ class LibraryRelation < Base
     projects = Project.incompleted
     projects.each do |project|
       next unless project.check_completed?
+      pt = project.get_project_type
       project.attributes = {
-        is_incomplete: false
+        is_incomplete: false,
+        project_type: pt
       }
       project.save
     end

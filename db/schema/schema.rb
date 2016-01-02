@@ -121,6 +121,15 @@ create_table 'input_weekly_commit_counts', collate: 'utf8_bin', comment: '入力
   t.datetime :updated_at
 end
 
+create_table 'input_project_checkers', collate: 'utf8_bin', comment: '入力元_プロジェクト_初回チェック用' do |t|
+  t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
+
+  t.varchar :crawl_date, null: true
+
+  t.datetime :created_at
+  t.datetime :updated_at
+end
+
 create_table 'projects', collate: 'utf8_bin', comment: 'プロジェクト基本情報' do |t|
   t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
 
@@ -145,6 +154,7 @@ create_table 'projects', collate: 'utf8_bin', comment: 'プロジェクト基本
   t.bigint :open_issue_count, default: 0, comment: 'イシュー数'
   t.varchar :github_score, default: '', comment: 'Github上のスコア'
   t.varchar :language, default: ''
+  t.int :project_type_id, default: 0, comment: '外部ライブラリかどうか判定用'
 
   t.datetime :created_at
   t.datetime :updated_at

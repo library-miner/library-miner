@@ -8,7 +8,7 @@
 #  error_message :text(65535)
 #  started_at    :datetime
 #  ended_at      :datetime
-#  job_status    :integer          not null
+#  job_status_id :integer          not null
 #  created_at    :datetime
 #  updated_at    :datetime
 #

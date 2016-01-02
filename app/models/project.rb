@@ -24,13 +24,16 @@
 #  open_issue_count   :integer          default(0), not null
 #  github_score       :string(255)      default(""), not null
 #  language           :string(255)      default(""), not null
+#  project_type_id    :integer          default(0), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #
 
 class Project < ActiveRecord::Base
+  extend ActiveHash::Associations::ActiveRecordExtensions
   # Relations
-  has_many :project_dependencies, foreign_key: :project_from_id
+  belongs_to_active_hash :project_type
+  has_many :project_dependencies, foreign_key: :project_from_id, dependent: :destroy
   has_many :projects, through: :project_dependencies, source: :project_to
   has_many :project_branches, dependent: :destroy
   has_many :project_trees, dependent: :destroy
@@ -88,6 +91,15 @@ class Project < ActiveRecord::Base
         name: name
       )
       project.save
+    end
+  end
+
+  def get_project_type
+    gem_include = InputTree.include_gemspec?(self.id)
+    if gem_include
+      ProjectType::RUBYGEM
+    else
+      ProjectType::PROJECT
     end
   end
 end
