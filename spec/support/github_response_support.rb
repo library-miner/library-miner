@@ -3,7 +3,7 @@ require 'json'
 require 'webmock/rspec'
 
 module GithubResponseSupport
-  def readResponseHeaderFile(file_name)
+  def read_response_header_file(file_name)
     r = File.read('spec/fixtures/' + file_name + '.txt')
     results = {}
     r.split(/[\r\n]+/).each do |line|
@@ -17,7 +17,7 @@ module GithubResponseSupport
     results
   end
 
-  def readJsonFile(file_name)
+  def read_json_file(file_name)
     File.read('spec/fixtures/' + file_name + '.json')
   end
 
@@ -37,8 +37,8 @@ module GithubResponseSupport
       )
       .to_return(
         status: status,
-        body: readJsonFile(body_file_name.to_s),
-        headers: readResponseHeaderFile(header_file_name.to_s)
+        body: read_json_file(body_file_name.to_s),
+        headers: read_response_header_file(header_file_name.to_s)
       )
   end
 end

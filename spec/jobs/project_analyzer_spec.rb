@@ -8,7 +8,7 @@ RSpec.describe ProjectAnalyzer, type: :model do
         i1 = create(
           :input_project,
           full_name: 'test/full_name',
-          github_updated_at: Date.today,
+          github_updated_at: Time.zone.today,
           crawl_status_id: 2
         )
         create(:input_tree,
@@ -487,10 +487,9 @@ RSpec.describe ProjectAnalyzer, type: :model do
 
       it 'ProjectDependencyから減ったライブラリの情報が削除されること' do
         expect(ProjectDependency.all.count).to eq 2
-        expect{ProjectDependency.find(@pd3.id)}.to raise_exception(
+        expect { ProjectDependency.find(@pd3.id) }.to raise_exception(
           ActiveRecord::RecordNotFound)
       end
-
     end
     context 'Gemfileの内容が以前より増えた(Gemfileからライブラリを増やした)場合' do
       before :each do
@@ -526,9 +525,8 @@ RSpec.describe ProjectAnalyzer, type: :model do
 
       it 'ProjectDependencyから増えたライブラリの情報が追加されること' do
         expect(ProjectDependency.all.count).to eq 2
-        expect(ProjectDependency.where(:library_name => 'sqlite3').count).to eq 1
+        expect(ProjectDependency.where(library_name: 'sqlite3').count).to eq 1
       end
-
     end
   end
 end

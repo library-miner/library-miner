@@ -7,8 +7,8 @@ RSpec.describe GithubRepositoryResponse, type: :model do
   context '正常リクエスト取得時(ブランチ)' do
     before :each do
       # Responseの内容をファイルより取得
-      response_header = readResponseHeaderFile('github_branch_01_header')
-      response_body = readJsonFile('github_branch_01')
+      response_header = read_response_header_file('github_branch_01_header')
+      response_body = read_json_file('github_branch_01')
 
       # Faraday Dummy Response取得
       @resp = dummy_faraday_response(response_header, response_body)
@@ -40,8 +40,8 @@ RSpec.describe GithubRepositoryResponse, type: :model do
     context '最終ページにいる場合' do
       it 'has_next_pageがfalseであること' do
         # Responseの内容をファイルより取得
-        response_header = readResponseHeaderFile('github_branch_02_header')
-        response_body = readJsonFile('github_branch_01')
+        response_header = read_response_header_file('github_branch_02_header')
+        response_body = read_json_file('github_branch_01')
 
         # Faraday Dummy Response取得
         @resp = dummy_faraday_response(response_header, response_body)
@@ -55,8 +55,8 @@ RSpec.describe GithubRepositoryResponse, type: :model do
   context '正常リクエスト取得時(Tag)' do
     before :each do
       # Responseの内容をファイルより取得
-      response_header = readResponseHeaderFile('github_tags_01_header')
-      response_body = readJsonFile('github_tags_01')
+      response_header = read_response_header_file('github_tags_01_header')
+      response_body = read_json_file('github_tags_01')
 
       # Faraday Dummy Response取得
       @resp = dummy_faraday_response(response_header, response_body)
@@ -89,8 +89,8 @@ RSpec.describe GithubRepositoryResponse, type: :model do
   context '正常リクエスト取得時(Tree)' do
     before :each do
       # Responseの内容をファイルより取得
-      response_header = readResponseHeaderFile('github_tree_01_header')
-      response_body = readJsonFile('github_tree_01')
+      response_header = read_response_header_file('github_tree_01_header')
+      response_body = read_json_file('github_tree_01')
 
       # Faraday Dummy Response取得
       @resp = dummy_faraday_response(response_header, response_body)
@@ -123,8 +123,8 @@ RSpec.describe GithubRepositoryResponse, type: :model do
   context '正常リクエスト取得時(Blob)' do
     before :each do
       # Responseの内容をファイルより取得
-      response_header = readResponseHeaderFile('github_blob_01_header')
-      response_body = readJsonFile('github_blob_01')
+      response_header = read_response_header_file('github_blob_01_header')
+      response_body = read_json_file('github_blob_01')
 
       # Faraday Dummy Response取得
       @resp = dummy_faraday_response(response_header, response_body)
@@ -156,8 +156,8 @@ RSpec.describe GithubRepositoryResponse, type: :model do
   context '情報が見つからない場合' do
     before :each do
       # Responseの内容をファイルより取得
-      response_header = readResponseHeaderFile('github_tree_01_header')
-      response_body = readJsonFile('github_not_found')
+      response_header = read_response_header_file('github_tree_01_header')
+      response_body = read_json_file('github_not_found')
 
       # Faraday Dummy Response取得
       @resp = dummy_faraday_response(response_header, response_body, status: 404)

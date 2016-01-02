@@ -7,8 +7,8 @@ RSpec.describe GithubRepositoryStatsParticipationResponse, type: :model do
   context '正常リクエスト取得時(週間コミット数)' do
     before :each do
       # Responseの内容をファイルより取得
-      response_header = readResponseHeaderFile('github_weekly_commit_count_01_header')
-      response_body = readJsonFile('github_weekly_commit_count_01')
+      response_header = read_response_header_file('github_weekly_commit_count_01_header')
+      response_body = read_json_file('github_weekly_commit_count_01')
 
       # Faraday Dummy Response取得
       @resp = dummy_faraday_response(response_header, response_body)
@@ -44,8 +44,8 @@ RSpec.describe GithubRepositoryStatsParticipationResponse, type: :model do
   context 'Github側で情報が作成されておらず結果が空で帰ってくる場合' do
     before :each do
       # Responseの内容をファイルより取得
-      response_header = readResponseHeaderFile('github_weekly_commit_count_01_header')
-      response_body = readJsonFile('github_weekly_commit_count_02')
+      response_header = read_response_header_file('github_weekly_commit_count_01_header')
+      response_body = read_json_file('github_weekly_commit_count_02')
 
       # Faraday Dummy Response取得
       @resp = dummy_faraday_response(response_header, response_body, status: 202)

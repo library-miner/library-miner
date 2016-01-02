@@ -7,8 +7,8 @@ RSpec.describe GithubSearchRepositoryResponse, type: :model do
   context '正常リクエスト取得時(データは複数ページに渡り存在する)' do
     before :each do
       # Responseの内容をファイルより取得
-      response_header = readResponseHeaderFile('github_project_base_info01_header')
-      response_body = readJsonFile('github_project_base_info01')
+      response_header = read_response_header_file('github_project_base_info01_header')
+      response_body = read_json_file('github_project_base_info01')
 
       # Faraday Stub 準備
       stubs = Faraday::Adapter::Test::Stubs.new do |stub|

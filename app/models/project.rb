@@ -75,9 +75,7 @@ class Project < ActiveRecord::Base
     end
     # 過去に存在したが、現在はないライブラリは削除する
     project_dependencies.each do |pd|
-      unless gemfile_names.include?(pd.library_name)
-        pd.delete
-      end
+      pd.delete unless gemfile_names.include?(pd.library_name)
     end
     project_dependencies
   end
