@@ -248,6 +248,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "open_issue_count",   limit: 8,     default: 0,     null: false
     t.string   "github_score",       limit: 255,   default: "",    null: false
     t.string   "language",           limit: 255,   default: "",    null: false
+    t.integer  "project_type_id",    limit: 4,     default: 0,     null: false
     t.datetime "created_at",                                       null: false
     t.datetime "updated_at",                                       null: false
   end

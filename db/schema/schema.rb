@@ -154,6 +154,7 @@ create_table 'projects', collate: 'utf8_bin', comment: 'プロジェクト基本
   t.bigint :open_issue_count, default: 0, comment: 'イシュー数'
   t.varchar :github_score, default: '', comment: 'Github上のスコア'
   t.varchar :language, default: ''
+  t.int :project_type_id, default: 0, comment: '外部ライブラリかどうか判定用'
 
   t.datetime :created_at
   t.datetime :updated_at
