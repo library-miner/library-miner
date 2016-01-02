@@ -299,12 +299,12 @@ class GithubProjectDetailCrawler < Base
     InputContent.where(input_project_id: input_project_id).delete_all
 
     targets.each do |target|
-      is_target = InputTree.is_analyze_target?(target.path)
+      is_target = InputTree.analyze_target?(target.path)
       Rails.logger.info("input_project_id=#{input_project_id};"\
                         "path=#{target.path};"\
                         "analyze_target=#{is_target}")
       next unless is_target
-      if InputTree.is_gemfile?(target.path) || InputTree.is_readme?(target.path)
+      if InputTree.gemfile?(target.path) || InputTree.readme?(target.path)
         content = fetch_projects_detail_contents_by_project_id_and_sha(
           project_information.github_item_id,
           target.sha
@@ -315,7 +315,7 @@ class GithubProjectDetailCrawler < Base
           target.sha,
           content
         )
-      elsif InputTree.is_gemspec?(target.path)
+      elsif InputTree.gemspec?(target.path)
         Rails.logger.info('fetch project libraries information from rubygems '\
                           "#{project_information.github_item_id} #{target.path}")
         library_found, library_information, dependency_libraries = fetch_projects_detail_from_ruby_gem(
@@ -347,7 +347,6 @@ class GithubProjectDetailCrawler < Base
 
     loop do
       res = get_repositories_proc.call(page_count)
-
       if res.rate_limit_remaining <= 1
         # rate limit解除時間まで待つ 3秒ほど余裕を持たせる
         till_time = Time.zone.at(res.rate_limit_reset.to_i)
@@ -386,7 +385,7 @@ class GithubProjectDetailCrawler < Base
     is_success = true
     retry_count = 0
 
-    begin
+    loop do
       client = RubyGemsClient.new
       res = client.get_ruby_gems_information_by_name(
         name
@@ -398,7 +397,7 @@ class GithubProjectDetailCrawler < Base
         break
       end
 
-      unless res.is_success
+      if !res.is_success
         Rails.logger.info("fetch failed. Retry(retry count: #{retry_count})")
         if retry_count >= 5
           fail 'Retry Limit.'
@@ -410,10 +409,10 @@ class GithubProjectDetailCrawler < Base
         end
       else
         retry_count = 0
-        base_information = res.base_information
         results << res.items
+        break
       end
-    end while !res.is_success
+    end
 
     [is_success, base_information, results.flatten]
   end

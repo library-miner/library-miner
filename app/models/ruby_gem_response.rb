@@ -10,7 +10,6 @@ class RubyGemResponse
     new.tap do |r|
       if response.body != 'This rubygem could not be found.'
         body = JSON.parse(response.body)
-        header = response.headers
         r.is_success = response.success?
         name = if body['name'].present?
                  body['name']

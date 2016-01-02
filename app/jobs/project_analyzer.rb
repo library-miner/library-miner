@@ -169,7 +169,7 @@ class ProjectAnalyzer < Base
     project.project_readmes.delete_all
 
     contents.each do |content|
-      next unless InputTree.is_readme?(content.path)
+      next unless InputTree.readme?(content.path)
       dup_content_attributes = content
                                .attributes
                                .slice(*InputContent::COPYABLE_ATTRIBUTES.map(&:to_s))

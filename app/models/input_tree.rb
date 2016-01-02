@@ -31,30 +31,30 @@ class InputTree < ActiveRecord::Base
 
   # Methods
   # ファイル解析対象であるか判定
-  def self.is_analyze_target?(file_name)
+  def self.analyze_target?(file_name)
     is_target = false
 
     # Gemfile
-    is_target = true if self.is_gemfile?(file_name)
+    is_target = true if self.gemfile?(file_name)
 
     # gemspec
-    is_target = true if self.is_gemspec?(file_name)
+    is_target = true if self.gemspec?(file_name)
 
     # readme
-    is_target = true if self.is_readme?(file_name)
+    is_target = true if self.readme?(file_name)
 
     is_target
   end
 
-  def self.is_gemfile?(file_name)
+  def self.gemfile?(file_name)
     file_name == 'Gemfile'
   end
 
-  def self.is_gemspec?(file_name)
+  def self.gemspec?(file_name)
     file_name.downcase =~ /.gemspec$/
   end
 
-  def self.is_readme?(file_name)
+  def self.readme?(file_name)
     # readme.rdoc は整備率が低いため取得しない
     file_name.downcase == 'readme.md'
   end
@@ -71,7 +71,7 @@ class InputTree < ActiveRecord::Base
       input_trees = input_project_info.input_trees
 
       input_trees.each do |tree|
-        next unless InputTree.is_analyze_target?(tree.path)
+        next unless InputTree.analyze_target?(tree.path)
         p_tree = ProjectTree.find_by(
           project_id: project_info.id,
           path: tree.path
@@ -89,7 +89,7 @@ class InputTree < ActiveRecord::Base
 
       if is_update != true
         project_trees.each do |tree|
-          next unless InputTree.is_analyze_target?(tree.path)
+          next unless InputTree.analyze_target?(tree.path)
           i_tree = InputTree.find_by(
             input_project_id: input_project_info.id,
             path: tree.path

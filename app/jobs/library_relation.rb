@@ -72,11 +72,11 @@ class LibraryRelation < Base
   def remove_library_relation
     ProjectDependency.update_all(
       project_to_id: nil,
-      updated_at: Time.now
+      updated_at: Time.zone.now
     )
     Project.update_all(
       is_incomplete: true,
-      updated_at: Time.now
+      updated_at: Time.zone.now
     )
   end
 end
