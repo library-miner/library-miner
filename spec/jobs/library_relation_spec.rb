@@ -280,4 +280,102 @@ RSpec.describe LibraryRelation, type: :model do
       end
     end
   end
+
+  describe 'プロジェクトタイプ判定' do
+    context 'プロジェクトが完全である かつ 第1階層にgemspecがある場合' do
+      before do
+        @t1 = create(:project,
+                     id: 10,
+                     is_incomplete: true,
+                     github_item_id: 99,
+                     full_name: 'owner/parent_test',
+                     name: 'parent_test')
+        @pd1 = create(:project_dependency,
+                      library_name: 'test',
+                      project_from_id: @t1.id,
+                      project_to_id: 999)
+        create(:project_tree,
+               path: 'parent_test.gemspec',
+               project_id: @t1.id,
+               file_type: 'blob')
+        LibraryRelation.new.perform
+      end
+      it 'プロジェクトタイプが2(Rubygem)となること' do
+        expect(Project.find(@t1.id).project_type_id).to eq 2
+      end
+    end
+
+    context 'プロジェクトが完全である かつ 第2階層にgemspecがある場合' do
+      before do
+        @t1 = create(:project,
+                     id: 10,
+                     is_incomplete: true,
+                     github_item_id: 99,
+                     full_name: 'owner/parent_test',
+                     name: 'parent_test')
+        @pd1 = create(:project_dependency,
+                      library_name: 'test',
+                      project_from_id: @t1.id,
+                      project_to_id: 999)
+        create(:project_tree,
+               path: 'test/parent_test.gemspec',
+               project_id: @t1.id,
+               file_type: 'blob')
+        LibraryRelation.new.perform
+      end
+      it 'プロジェクトタイプが1(Project)となること' do
+        expect(Project.find(@t1.id).project_type_id).to eq 1
+      end
+    end
+
+    context 'プロジェクトが完全である gemspecがない場合' do
+      before do
+        @t1 = create(:project,
+                     id: 10,
+                     is_incomplete: true,
+                     github_item_id: 99,
+                     full_name: 'owner/parent_test',
+                     name: 'parent_test')
+        @pd1 = create(:project_dependency,
+                      library_name: 'test',
+                      project_from_id: @t1.id,
+                      project_to_id: 999)
+        create(:project_tree,
+               path: 'parent_test.gemspec2',
+               project_id: @t1.id,
+               file_type: 'blob')
+        create(:project_tree,
+               path: 'parent_test.gemspec',
+               project_id: @t1.id,
+               file_type: 'tree')
+
+        LibraryRelation.new.perform
+      end
+
+      it 'プロジェクトタイプが1(Project)となること' do
+        expect(Project.find(@t1.id).project_type_id).to eq 1
+      end
+    end
+
+    context 'プロジェクトが不完全(github_item_idがない)である場合' do
+      before do
+        @t1 = create(:project,
+                     id: 10,
+                     is_incomplete: true,
+                     github_item_id: nil,
+                     full_name: 'owner/parent_test',
+                     name: 'parent_test',
+                     project_type_id: 999)
+        @pd1 = create(:project_dependency,
+                      library_name: 'test',
+                      project_from_id: @t1.id,
+                      project_to_id: 999)
+        LibraryRelation.new.perform
+      end
+      it 'プロジェクトタイプが変わらないこと' do
+        expect(Project.find(@t1.id).project_type_id).to eq 999
+      end
+    end
+
+  end
 end
