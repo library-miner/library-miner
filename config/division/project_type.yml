@@ -1,0 +1,9 @@
+- id: 0
+  type: nothing
+  name: 未定義
+- id: 1
+  type: project
+  name: プロジェクト
+- id: 2
+  type: rubygem
+  name: RubyGem
