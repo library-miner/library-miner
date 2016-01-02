@@ -33,7 +33,7 @@ class Project < ActiveRecord::Base
   extend ActiveHash::Associations::ActiveRecordExtensions
   # Relations
   belongs_to_active_hash :project_type
-  has_many :project_dependencies, foreign_key: :project_from_id
+  has_many :project_dependencies, foreign_key: :project_from_id, dependent: :destroy
   has_many :projects, through: :project_dependencies, source: :project_to
   has_many :project_branches, dependent: :destroy
   has_many :project_trees, dependent: :destroy
