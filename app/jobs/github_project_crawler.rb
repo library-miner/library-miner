@@ -33,7 +33,7 @@ class GithubProjectCrawler < Base
       (date_from..date_to).each do |target_date|
         results = fetch_projects_created_at(target_date, language)
         save_projects(results, language)
-        InputProjectChecker.insert_crawl_date(date_from)
+        InputProjectChecker.insert_crawl_date(target_date)
       end
     else
       results = fetch_projects_updated_at(date_from, date_to, language)
