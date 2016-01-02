@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_index "input_libraries", ["input_project_id"], name: "input_libraries_input_project_id_fk", using: :btree
 
-  create_table "input_project_checker", force: :cascade do |t|
+  create_table "input_project_checkers", force: :cascade do |t|
     t.string   "crawl_date", limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false

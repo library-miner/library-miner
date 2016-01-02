@@ -121,7 +121,7 @@ create_table 'input_weekly_commit_counts', collate: 'utf8_bin', comment: '入力
   t.datetime :updated_at
 end
 
-create_table 'input_project_checker', collate: 'utf8_bin', comment: '入力元_プロジェクト_初回チェック用' do |t|
+create_table 'input_project_checkers', collate: 'utf8_bin', comment: '入力元_プロジェクト_初回チェック用' do |t|
   t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
 
   t.varchar :crawl_date, null: true
