@@ -49,6 +49,8 @@ class GithubRepositoryResponse
       r.rate_limit = header['x-ratelimit-limit'].to_i
       r.rate_limit_remaining = header['x-ratelimit-remaining'].to_i
       r.rate_limit_reset = header['x-ratelimit-reset']
+      r.current_page = 1
+      r.has_next_page = false
     end
   end
 end

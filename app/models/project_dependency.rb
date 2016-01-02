@@ -11,6 +11,6 @@
 #
 
 class ProjectDependency < ActiveRecord::Base
-  belongs_to :project_from, class_name: "Project"
-  belongs_to :project_to, class_name: "Project"
+  belongs_to :project_from, class_name: 'Project'
+  belongs_to :project_to, class_name: 'Project'
 end

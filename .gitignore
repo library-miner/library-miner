@@ -20,6 +20,8 @@
 # Ignore vendor assets
 /vendor/assets/bower_components
 
+# Ignore coverage
+/coverage
 
 config/dev_database.yml
 

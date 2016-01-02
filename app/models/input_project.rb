@@ -66,9 +66,9 @@ class InputProject < ActiveRecord::Base
   # 別クローラが同じプロジェクトを解析しない考慮あり
   def self.get_project_detail_crawl_target(max_count, client_node_id)
     targets = InputProject
-      .where(crawl_status: CrawlStatus::WAITING)
-      .order(:updated_at)
-      .limit(max_count)
+              .where(crawl_status: CrawlStatus::WAITING)
+              .order(:updated_at)
+              .limit(max_count)
 
     targets.each do |target|
       target.crawl_status = CrawlStatus::IN_PROGRESS
@@ -82,12 +82,10 @@ class InputProject < ActiveRecord::Base
     )
   end
 
-
   # Methods
 
   # TODO: FIXME なんかまずそう Gemfileは本当に一つ?
   def gemfile
-    self.input_contents.find_by(path: "Gemfile")
+    input_contents.find_by(path: 'Gemfile')
   end
-
 end

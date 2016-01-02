@@ -19,14 +19,13 @@ class GithubProjectCrawler < Base
   queue_as :github_project_crawler
 
   def perform(date_from, date_to, mode: 'CREATED')
-
     if mode == 'CREATED'
       mode = CrawlMode::CREATED
     else
       mode = CrawlMode::UPDATED
     end
-    date_from = DateTime.parse(date_from)
-    date_to = DateTime.parse(date_to)
+    date_from = Time.zone.parse(date_from)
+    date_to = Time.zone.parse(date_to)
 
     language = 'ruby'
 
@@ -36,8 +35,8 @@ class GithubProjectCrawler < Base
         save_projects(results, language)
       end
     else
-      results = fetch_projects_updated_at(date_from,date_to,language)
-      save_projects(results,language)
+      results = fetch_projects_updated_at(date_from, date_to, language)
+      save_projects(results, language)
     end
   end
 
@@ -133,7 +132,6 @@ class GithubProjectCrawler < Base
     end
   end
 
-
   # API制限を考慮してデータ取得　
   def fetch_projects_with_rate_limit(time_from, time_to, language, mode: CrawlMode::CREATED)
     results = []
@@ -172,9 +170,9 @@ class GithubProjectCrawler < Base
       end
       if res.rate_limit_remaining <= 1
         # rate limit解除時間まで待つ 3秒ほど余裕を持たせる
-        till_time = Time.at(res.rate_limit_reset.to_i)
+        till_time = Time.zone.at(res.rate_limit_reset.to_i)
         Rails.logger.warn("Rate limit exceeded. Waiting until #{till_time}")
-        sleep_time = (till_time - Time.now).ceil + 3
+        sleep_time = (till_time - Time.zone.now).ceil + 3
         sleep_time = 3 if sleep_time <= 0
         sleep sleep_time
       end

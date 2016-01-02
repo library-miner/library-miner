@@ -1,5 +1,5 @@
 # encoding: UTF-8
-version = File.read(File.expand_path("../../SPREE_VERSION", __FILE__)).strip
+version = File.read(File.expand_path('../../SPREE_VERSION', __FILE__)).strip
 
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.author      = 'Sean Schofield'
   s.email       = 'sean@spreecommerce.com'
   s.homepage    = 'http://spreecommerce.com'
-  s.license     = %q{BSD-3}
+  s.license     = 'BSD-3'
 
   s.files        = Dir['LICENSE', 'README.md', 'app/**/*', 'config/**/*', 'lib/**/*', 'db/**/*', 'vendor/**/*']
   s.require_path = 'lib'

@@ -12,7 +12,6 @@
 #
 
 class InputBranch < ActiveRecord::Base
-
   COPYABLE_ATTRIBUTES = %i(
     name sha url
   )
@@ -31,12 +30,10 @@ class InputBranch < ActiveRecord::Base
   # Methods
   def self.check_master_branch_is_update?(github_item_id, master_branch_sha)
     is_update = true
-    p = Project.where(github_item_id: github_item_id).first
+    p = Project.find_by(github_item_id: github_item_id)
     if p.present?
-      b = ProjectBranch.where(project_id: p.id, name: 'master').first
-      if b.sha == master_branch_sha
-        is_update = false
-      end
+      b = ProjectBranch.find_by(project_id: p.id, name: 'master')
+      is_update = false if b.sha == master_branch_sha
     end
     is_update
   end

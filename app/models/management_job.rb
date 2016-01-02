@@ -47,7 +47,7 @@ class ManagementJob < ActiveRecord::Base
       job_id: job_id,
       job_name: job_name,
       job_status: JobStatus::EXECUTING,
-      started_at: DateTime.now
+      started_at: Time.zone.now
     }
     job.save!
   end
@@ -60,7 +60,7 @@ class ManagementJob < ActiveRecord::Base
       job_id: job_id,
       job_name: job_name,
       job_status: JobStatus::COMPLETE,
-      ended_at: DateTime.now
+      ended_at: Time.zone.now
     }
     job.save!
   end
@@ -72,7 +72,7 @@ class ManagementJob < ActiveRecord::Base
     job.attributes = {
       job_id: job_id,
       job_status: JobStatus::ERROR,
-      ended_at: DateTime.now,
+      ended_at: Time.zone.now,
       error_message: message
     }
     job.save!

@@ -26,5 +26,4 @@ class RubyGemsClient
       req.url path
     end
   end
-
 end

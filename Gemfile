@@ -34,6 +34,7 @@ gem 'activerecord-import'
 gem 'parallel'
 gem 'rabl'
 gem 'handlebars_assets'
+gem 'sprockets-rails', '2.3.3'
 
 group :development do
   gem 'spring'
@@ -53,6 +54,8 @@ end
 
 group :test do
   gem 'rspec'
+  gem 'simplecov', require: false
+  gem 'webmock'
 end
 
 group :development, :test do

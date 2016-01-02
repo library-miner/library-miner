@@ -16,9 +16,7 @@ class ProjectAnalyzer < Base
           # FIXME: もっといい感じにする
           # gemspecの場合はrubygemsからの情報を持っているためgemfilesに加える
           InputDependencyLibrary.where(input_project_id: project.id).each do |lib|
-            if contents.nil?
-              contents = ""
-            end
+            contents = '' if contents.nil?
             contents += "\n gem '" + lib.name + "'"
           end
           GemfileParser.new.parse_gemfile(contents)
@@ -73,25 +71,31 @@ class ProjectAnalyzer < Base
   # 4.いずれにも該当しない場合、新規作成
   def copy_project(project)
     dup_project_attributes = project
-    .attributes
-    .slice(*InputProject::COPYABLE_ATTRIBUTES.map(&:to_s))
+                             .attributes
+                             .slice(*InputProject::COPYABLE_ATTRIBUTES.map(&:to_s))
 
     if Project.where(github_item_id: project.github_item_id).present?
       source_project = Project
-      .find_or_initialize_by(github_item_id: project.github_item_id)
-      .tap { |v| v.attributes = dup_project_attributes }
-    elsif Project.where(full_name: project.full_name).present?
+                       .find_or_initialize_by(github_item_id: project.github_item_id)
+                       .tap { |v| v.attributes = dup_project_attributes }
+    elsif Project.where(full_name: project.full_name,
+                        github_item_id: nil).present?
       source_project = Project
-      .find_or_initialize_by(full_name: project.full_name)
-      .tap { |v| v.attributes = dup_project_attributes }
-    elsif Project.where(name: project.name).present?
-       source_project = Project
-      .find_or_initialize_by(name: project.name)
-      .tap { |v| v.attributes = dup_project_attributes }
+                       .find_or_initialize_by(full_name: project.full_name,
+                                              github_item_id: nil)
+                       .tap { |v| v.attributes = dup_project_attributes }
+    elsif Project.where(name: project.name,
+                        full_name: nil,
+                        github_item_id: nil).present?
+      source_project = Project
+                       .find_or_initialize_by(name: project.name,
+                                              full_name: nil,
+                                              github_item_id: nil)
+                       .tap { |v| v.attributes = dup_project_attributes }
     else
       source_project = Project
-      .find_or_initialize_by(github_item_id: project.github_item_id)
-      .tap { |v| v.attributes = dup_project_attributes }
+                       .find_or_initialize_by(github_item_id: project.github_item_id)
+                       .tap { |v| v.attributes = dup_project_attributes }
     end
     source_project
   end
@@ -102,12 +106,12 @@ class ProjectAnalyzer < Base
 
     trees.each do |tree|
       dup_tree_attributes = tree
-      .attributes
-      .slice(*InputTree::COPYABLE_ATTRIBUTES.map(&:to_s))
+                            .attributes
+                            .slice(*InputTree::COPYABLE_ATTRIBUTES.map(&:to_s))
       source_tree = project
-      .project_trees
-      .build
-      .tap { |v| v.attributes = dup_tree_attributes }
+                    .project_trees
+                    .build
+                    .tap { |v| v.attributes = dup_tree_attributes }
       source_tree.save!
     end
   end
@@ -118,12 +122,12 @@ class ProjectAnalyzer < Base
 
     branches.each do |branch|
       dup_branch_attributes = branch
-      .attributes
-      .slice(*InputBranch::COPYABLE_ATTRIBUTES.map(&:to_s))
+                              .attributes
+                              .slice(*InputBranch::COPYABLE_ATTRIBUTES.map(&:to_s))
       source_branch = project
-      .project_branches
-      .build
-      .tap { |v| v.attributes = dup_branch_attributes }
+                      .project_branches
+                      .build
+                      .tap { |v| v.attributes = dup_branch_attributes }
       source_branch.save!
     end
   end
@@ -134,12 +138,12 @@ class ProjectAnalyzer < Base
 
     tags.each do |tag|
       dup_tag_attributes = tag
-      .attributes
-      .slice(*InputTag::COPYABLE_ATTRIBUTES.map(&:to_s))
+                           .attributes
+                           .slice(*InputTag::COPYABLE_ATTRIBUTES.map(&:to_s))
       source_tag = project
-      .project_tags
-      .build
-      .tap { |v| v.attributes = dup_tag_attributes }
+                   .project_tags
+                   .build
+                   .tap { |v| v.attributes = dup_tag_attributes }
       source_tag.save!
     end
   end
@@ -150,12 +154,12 @@ class ProjectAnalyzer < Base
 
     commits.each do |commit|
       dup_commit_attributes = commit
-      .attributes
-      .slice(*InputWeeklyCommitCount::COPYABLE_ATTRIBUTES.map(&:to_s))
+                              .attributes
+                              .slice(*InputWeeklyCommitCount::COPYABLE_ATTRIBUTES.map(&:to_s))
       source_commit = project
-      .project_weekly_commit_counts
-      .build
-      .tap { |v| v.attributes = dup_commit_attributes }
+                      .project_weekly_commit_counts
+                      .build
+                      .tap { |v| v.attributes = dup_commit_attributes }
       source_commit.save!
     end
   end
@@ -165,17 +169,15 @@ class ProjectAnalyzer < Base
     project.project_readmes.delete_all
 
     contents.each do |content|
-      if InputTree.is_readme?(content.path)
-        dup_content_attributes = content
-        .attributes
-        .slice(*InputContent::COPYABLE_ATTRIBUTES.map(&:to_s))
-        source_content = project
-        .project_readmes
-        .build
-        .tap { |v| v.attributes = dup_content_attributes }
-        source_content.save!
-      end
+      next unless InputTree.readme?(content.path)
+      dup_content_attributes = content
+                               .attributes
+                               .slice(*InputContent::COPYABLE_ATTRIBUTES.map(&:to_s))
+      source_content = project
+                       .project_readmes
+                       .build
+                       .tap { |v| v.attributes = dup_content_attributes }
+      source_content.save!
     end
   end
-
 end

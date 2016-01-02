@@ -8,29 +8,22 @@ class RubyGemResponse
 
   def self.parse(response)
     new.tap do |r|
-      if response.body != "This rubygem could not be found."
+      if response.body != 'This rubygem could not be found.'
         body = JSON.parse(response.body)
-        header = response.headers
         r.is_success = response.success?
         name = if body['name'].present?
                  body['name']
                else
-                 ""
+                 ''
                end
         version = if body['version'].present?
                     body['version']
                   else
-                    ""
+                    ''
                   end
-        homepage_uri = if body['homepage_uri'].present?
-                         body['homepage_uri']
-                       else
-                         nil
-                       end
+        homepage_uri = (body['homepage_uri'] if body['homepage_uri'].present?)
         source_code_uri = if body['source_code_uri'].present?
                             body['source_code_uri']
-                          else
-                            nil
                           end
         r.base_information = {
           name: name,
@@ -49,5 +42,4 @@ class RubyGemResponse
       end
     end
   end
-
 end

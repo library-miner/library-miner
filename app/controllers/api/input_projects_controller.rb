@@ -1,26 +1,29 @@
-class Api::InputProjectsController < ApplicationController
-  before_action :set_input_project, only: [:show]
+# WebAPI
+module Api
+  # Github収集/解析失敗の一覧を返すAPI
+  class InputProjectsController < ApplicationController
+    before_action :set_input_project, only: [:show]
 
-  def show
-    @gemfile = @input_project.gemfile.try(:content)
-  end
+    def show
+      @gemfile = @input_project.gemfile.try(:content)
+    end
 
-  # 収集失敗リスト
-  def crawl_errors
-    @input_projects = InputProject
-    .where(crawl_status: CrawlStatus::ERROR)
-  end
+    # 収集失敗リスト
+    def crawl_errors
+      @input_projects = InputProject
+                        .where(crawl_status: CrawlStatus::ERROR)
+    end
 
- # 解析失敗リスト
-  def analyze_errors
-    @input_projects = InputProject
-    .where(crawl_status: CrawlStatus::ANALYZE_ERROR)
-  end
+    # 解析失敗リスト
+    def analyze_errors
+      @input_projects = InputProject
+                        .where(crawl_status: CrawlStatus::ANALYZE_ERROR)
+    end
 
-  private
+    private
 
-  def set_input_project
-    @input_project = InputProject.find(params[:id])
+    def set_input_project
+      @input_project = InputProject.find(params[:id])
+    end
   end
 end
-
