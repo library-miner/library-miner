@@ -59,7 +59,7 @@ class GithubProjectDetailCrawler < Base
         analyze_target_update =
           InputTree.check_analyze_target_is_update?(target.github_item_id)
         if analyze_target_update
-          is_success = fetch_and_save_project_detail_contents(target.id)
+          fetch_and_save_project_detail_contents(target.id)
         end
       end
 
@@ -71,6 +71,7 @@ class GithubProjectDetailCrawler < Base
       target.attributes = {
         crawl_status: CrawlStatus::ERROR
       }
+      Rails.logger.error('GithubProjectDetailCrawler CrawlError:' + e.message)
     end
     target.save!
   end
@@ -190,7 +191,7 @@ class GithubProjectDetailCrawler < Base
       res
     end
 
-    results = fetch_projects_detail_with_rate_limit(
+    fetch_projects_detail_with_rate_limit(
       p
     ).flatten
   end
@@ -209,7 +210,7 @@ class GithubProjectDetailCrawler < Base
       res
     end
 
-    results = fetch_projects_detail_with_rate_limit(
+    fetch_projects_detail_with_rate_limit(
       p
     ).flatten
   end
@@ -229,7 +230,7 @@ class GithubProjectDetailCrawler < Base
       res
     end
 
-    results = fetch_projects_detail_with_rate_limit(
+    fetch_projects_detail_with_rate_limit(
       p
     ).flatten
   end
@@ -249,7 +250,7 @@ class GithubProjectDetailCrawler < Base
       res
     end
 
-    results = fetch_projects_detail_with_rate_limit(
+    fetch_projects_detail_with_rate_limit(
       p
     )
   end
@@ -257,7 +258,7 @@ class GithubProjectDetailCrawler < Base
   # 週間コミット数の取得と格納
   # 過去12週の間に更新されていない場合はコミット数0とする
   def fetch_and_save_project_detail_weekly_commit_counts(target_id, github_item_id, github_updated_at)
-    if github_updated_at > (Date.today - 3.months).to_s
+    if github_updated_at > (Time.zone.today - 3.months).to_s
       weekly_commit_results = fetch_projects_detail_weekly_commit_counts_by_project_id(github_item_id)
     else
       weekly_commit_results = []
@@ -285,7 +286,7 @@ class GithubProjectDetailCrawler < Base
       res
     end
 
-    results = fetch_projects_detail_with_rate_limit(
+    fetch_projects_detail_with_rate_limit(
       p
     ).flatten
   end
@@ -332,7 +333,7 @@ class GithubProjectDetailCrawler < Base
         else
           Rails.logger.info("rubygems not found #{project_information.name}")
         end
-              end
+      end
     end
 
     is_success
@@ -341,23 +342,21 @@ class GithubProjectDetailCrawler < Base
   # API制限,リトライを考慮してデータ取得　
   def fetch_projects_detail_with_rate_limit(get_repositories_proc)
     results = []
-    is_success = true
     retry_count = 0
     page_count = 1
-    has_next_page = false
 
-    begin
+    loop do
       res = get_repositories_proc.call(page_count)
 
       if res.rate_limit_remaining <= 1
         # rate limit解除時間まで待つ 3秒ほど余裕を持たせる
-        till_time = Time.at(res.rate_limit_reset.to_i)
+        till_time = Time.zone.at(res.rate_limit_reset.to_i)
         Rails.logger.info("Rate limit exceeded. Waiting until #{till_time}")
-        sleep_time = (till_time - Time.now).ceil + 3
+        sleep_time = (till_time - Time.zone.now).ceil + 3
         sleep_time = 3 if sleep_time <= 0
         sleep sleep_time
       end
-      unless res.is_success
+      if !res.is_success
         Rails.logger.info("fetch failed. Retry(retry count: #{retry_count})")
         if retry_count >= 5
           fail 'Retry Limit.'
@@ -372,12 +371,11 @@ class GithubProjectDetailCrawler < Base
         results << res.items
         if res.has_next_page
           page_count += 1
-          has_next_page = true
         else
-          has_next_page = false
+          break
         end
       end
-    end while has_next_page
+    end
 
     results
   end

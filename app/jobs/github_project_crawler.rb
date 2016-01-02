@@ -24,8 +24,8 @@ class GithubProjectCrawler < Base
     else
       mode = CrawlMode::UPDATED
     end
-    date_from = DateTime.parse(date_from)
-    date_to = DateTime.parse(date_to)
+    date_from = Time.zone.parse(date_from)
+    date_to = Time.zone.parse(date_to)
 
     language = 'ruby'
 
@@ -170,9 +170,9 @@ class GithubProjectCrawler < Base
       end
       if res.rate_limit_remaining <= 1
         # rate limit解除時間まで待つ 3秒ほど余裕を持たせる
-        till_time = Time.at(res.rate_limit_reset.to_i)
+        till_time = Time.zone.at(res.rate_limit_reset.to_i)
         Rails.logger.warn("Rate limit exceeded. Waiting until #{till_time}")
-        sleep_time = (till_time - Time.now).ceil + 3
+        sleep_time = (till_time - Time.zone.now).ceil + 3
         sleep_time = 3 if sleep_time <= 0
         sleep sleep_time
       end

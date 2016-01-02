@@ -15,3 +15,6 @@ MethodLength:
 # Use only ascii symbols in comments.
 AsciiComments:
   Enabled: false
+# Top Level Document missing ignore
+Documentation:
+  Enabled: false
