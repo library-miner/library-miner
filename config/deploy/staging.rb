@@ -4,12 +4,13 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 set :branch, 'master'
+set :rails_env, 'production'
 
 role :app, %w{vagrant@library-miner-monitor-local}
 role :db,  %w{vagrant@library-miner-db-local}
 
 set :ssh_options, {
-  keys: [File.expand_path('~/.ssh/insecure_private_key')],
+  keys: [File.expand_path('~/.ssh/miner/id_rsa')],
   forward_agent: true
 }
 
