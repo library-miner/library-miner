@@ -1,6 +1,6 @@
 # config valid only for Capistrano 3.1
 require 'rvm1/capistrano3'
-require 'whenever/capistrano'
+#require 'whenever/capistrano'
 
 lock '3.2.1'
 
@@ -39,7 +39,7 @@ set :rvm1_ruby_version, '2.2.0'
 set :unicorn_pid, "#{shared_path}/tmp/pids/unicorn.pid"
 
 # Whenever
-set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
+#set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
