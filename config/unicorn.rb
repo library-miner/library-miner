@@ -1,6 +1,6 @@
 worker_processes 2
 
-listen File.expand_path("/tmp/unicorn_miner.sock", ENV['MINER_APP_ROOT'])
+listen File.expand_path("/tmp/unicorn.sock", ENV['MINER_APP_ROOT'])
 pid File.expand_path("/tmp/unicorn.pid", ENV['MINER_APP_ROOT'])
 
 timeout 60
@@ -8,8 +8,7 @@ timeout 60
 preload_app true
 
 stdout_path File.expand_path("log/unicorn.stdout.log", ENV['MINER_APP_ROOT'])
-#stderr_path File.expand_path("log/unicorn.stderr.log", ENV['MINER_APP_ROOT'])
-stderr_path File.expand_path("log/unicorn.stderr2.log")
+stderr_path File.expand_path("log/unicorn.stderr.log", ENV['MINER_APP_ROOT'])
 
 GC.respond_to?(:copy_on_write_friendly=) and GC.copy_on_write_friendly = true
 
