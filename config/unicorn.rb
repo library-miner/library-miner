@@ -1,6 +1,6 @@
 worker_processes 2
 
-listen File.expand_path("/tmp/unicorn.sock", ENV['MINER_APP_ROOT'])
+listen File.expand_path("/tmp/unicorn_miner.sock", ENV['MINER_APP_ROOT'])
 pid File.expand_path("/tmp/unicorn.pid", ENV['MINER_APP_ROOT'])
 
 timeout 60
