@@ -36,6 +36,8 @@ gem 'rabl'
 gem 'handlebars_assets'
 gem 'sprockets-rails', '2.3.3'
 gem 'whenever', require: false
+#環境設定
+gem 'dotenv-rails'
 
 group :development do
   gem 'spring'

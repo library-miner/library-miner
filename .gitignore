@@ -31,3 +31,4 @@ public/assets
 
 config/database.yml
 config/settings.yml
+.env

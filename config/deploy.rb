@@ -28,7 +28,7 @@ set :log_level, :debug
 set :pty, true
 
 # Shared
-set :linked_files, %w{config/database.yml config/secrets.yml config/settings.yml}
+set :linked_files, %w{config/database.yml config/secrets.yml config/settings.yml .env}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 # RVM
@@ -64,6 +64,7 @@ namespace :deploy do
       upload!('config/database.yml',"#{shared_path}/config/database.yml")
       upload!('config/secrets.yml',"#{shared_path}/config/secrets.yml")
       upload!('config/settings.yml',"#{shared_path}/config/settings.yml")
+      upload!('.env',"#{shared_path}/.env")
     end
   end
 
