@@ -89,8 +89,8 @@ if [ -z $TO ]; then
 fi
 
 
-current=$(date -d "$FROM")
-end=$(date -d "$TO +1 days")
+current=$(date -d "$FROM" +%Y%m%d)
+end=$(date -d "$TO +1 days" +%Y%m%d)
 
 while [ "$end" != "$current" ]
 do
@@ -98,7 +98,7 @@ do
   arg=$(date -d "$current" +%Y%m%d)
   bundle exec rails runner "GithubProjectCrawler.perform_later(\"$arg\",\"$arg\")" -e $ARG_ENV
   echo "enqueue github_project_crawler $arg"
-  current=$( date -d "$current +1 days")
+  current=$( date -d "$current +1 days" +%Y%m%d)
 done
 
 

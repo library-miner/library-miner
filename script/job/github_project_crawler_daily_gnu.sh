@@ -108,14 +108,13 @@ if [ -z $RUN_TERM ]; then
   exit 1
 fi
 
-current=$(date -d "$CURRENT_DATE $CURRENT_TIME")
+current=$(date -d "$CURRENT_DATE $CURRENT_TIME:00:00" +%Y%m%d" "%H)
 for (( i=0; i < $RUN_TERM; i++ )); do
   # 起動処理
-  arg1=$(date -d "$current -1 hours" +%Y%m%d%H)
-  arg2=$(date -d "$current" +%Y%m%d%H)
+  arg1=`date -d "${current}:00:00 1 hours ago" "+%Y%m%d%H"`
+  arg2=`date -d "${current}:00:00" "+%Y%m%d%H"`
   bundle exec rails runner "GithubProjectCrawler.perform_later(\"$arg1\",\"$arg2\",mode: \"UPDATED\")" -e $ARG_ENV
-  echo "enqueue github_project_crawler $arg1 - $arg2"
-  current=$( date -d "$current -1 hours")
+  echo "enqueue github_project_crawler $arg1 $arg2"
+  current=`date -d "${current}:00:00 1 hours ago" +%Y%m%d" "%H`
 done
-
 
