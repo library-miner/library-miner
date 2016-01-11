@@ -75,7 +75,7 @@ namespace :deploy do
     end
   end
 
-  before :started, 'deploy:upload'
+  #before :started, 'deploy:upload'
   after :finishing, 'deploy:cleanup'
 end
 
