@@ -5,7 +5,9 @@ require 'whenever/capistrano'
 lock '3.2.1'
 
 set :application, 'library-miner'
-set :repo_url, 'git@bitbucket.org:library_miner/library-miner.git'
+set :repo_url, 'git@bitbucket-miner:library_miner/library-miner.git'
+# git clone の際にローカルの秘密鍵を使用する
+set :ssh_options, { forward_agent: true }
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
@@ -56,7 +58,9 @@ namespace :deploy do
   desc 'upload importabt files'
   task :upload do
     on roles(:app) do |host|
-      execute :mkdir, '-p', "#{shared_path}/config"
+      if test "[ ! -d #{shared_path}/config ]"
+        execute :mkdir, '-p', "#{shared_path}/config"
+      end
       upload!('config/database.yml',"#{shared_path}/config/database.yml")
       upload!('config/secrets.yml',"#{shared_path}/config/secrets.yml")
       upload!('config/settings.yml',"#{shared_path}/config/settings.yml")

@@ -6,8 +6,9 @@
 set :branch, 'master'
 set :rails_env, 'production'
 
-role :app, %w{vagrant@library-miner-monitor-local}
-role :db,  %w{vagrant@library-miner-db-local}
+role :app, %w{miner@library-miner-db-local}
+role :web, %w{miner@library-miner-db-local}
+role :db,  %w{miner@library-miner-db-local}
 
 set :ssh_options, {
   keys: [File.expand_path('~/.ssh/miner/id_rsa')],
