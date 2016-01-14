@@ -409,6 +409,7 @@ class GithubProjectDetailCrawler < Base
         end
       else
         retry_count = 0
+        base_information = res.base_information
         results << res.items
         break
       end
