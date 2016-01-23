@@ -384,6 +384,7 @@ class GithubProjectDetailCrawler < Base
     results = []
     is_success = true
     retry_count = 0
+    base_information = nil
 
     loop do
       client = RubyGemsClient.new
