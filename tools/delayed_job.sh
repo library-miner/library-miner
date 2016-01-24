@@ -12,6 +12,8 @@ usage() {
   echo
   exit 1
 }
+source /usr/local/rvm/scripts/rvm
+SCRIPT_DIR=$(cd $(dirname $(readlink $0 || echo $0));pwd)
 
 PROGNAME=$(basename $0)
 HELP_MSG="'$PROGNAME -h'と指定することでヘルプを見ることができます"
@@ -79,7 +81,7 @@ if [ -z $START_STOP_FLG ]; then
   exit 1
 fi
 
-
+cd ${SCRIPT_DIR}/../
 # 起動処理
 RAILS_ENV=$ARG_ENV bin/delayed_job -p github_project_detail_crawler -i 0 --queues=github_project_detail_crawler $START_STOP_FLG
 

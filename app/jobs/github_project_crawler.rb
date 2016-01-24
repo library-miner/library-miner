@@ -24,8 +24,8 @@ class GithubProjectCrawler < Base
     else
       mode = CrawlMode::UPDATED
     end
-    date_from = Date.parse(date_from)
-    date_to = Date.parse(date_to)
+    date_from = Time.zone.parse(date_from)
+    date_to = Time.zone.parse(date_to)
 
     language = 'ruby'
 
