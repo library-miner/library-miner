@@ -58,12 +58,6 @@ do
     shift 1
     ;;
 
-    # 詳細情報クローラのみ
-    '-o' )
-    FLG_ONLY=1
-    shift 1
-    ;;
-
 esac
 done
 
@@ -83,12 +77,5 @@ fi
 
 cd ${SCRIPT_DIR}/../
 # 起動処理
-RAILS_ENV=$ARG_ENV bin/delayed_job -p github_project_detail_crawler -i 0 --queues=github_project_detail_crawler $START_STOP_FLG
+RAILS_ENV=$ARG_ENV bin/delayed_job -p analyzer -i 2 --queues=analyzer $START_STOP_FLG
 
-# -o オプションがない場合
-if [ -z $FLG_ONLY ]; then
-
-  RAILS_ENV=$ARG_ENV bin/delayed_job -p github_project_crawler -i 1 --queues=github_project_crawler $START_STOP_FLG
-  RAILS_ENV=$ARG_ENV bin/delayed_job -p analyzer -i 2 --queues=analyzer $START_STOP_FLG
-
-fi
