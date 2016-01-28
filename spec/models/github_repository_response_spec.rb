@@ -116,7 +116,7 @@ RSpec.describe GithubRepositoryResponse, type: :model do
 
     it 'items (Tree情報) が取得できること' do
       expect(@result.items.count).to eq 3
-      expect(@result.items[0].path).to eq 'file.rb'
+      expect(@result.items[0].path).to eq 'Readme.md'
     end
   end
 

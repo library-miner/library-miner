@@ -109,15 +109,17 @@ class GithubProjectDetailCrawler < Base
   def save_project_detail_trees(target_id, results)
     InputTree.where(input_project_id: target_id).delete_all
     results.each do |result|
-      pj = InputTree.new(
-        path: result.path,
-        file_type: result.type,
-        sha: result.sha,
-        url: result.url,
-        size: result.size,
-        input_project_id: target_id
-      )
-      pj.save!
+      if InputTree.analyze_target?(result.path)
+        pj = InputTree.new(
+          path: result.path,
+          file_type: result.type,
+          sha: result.sha,
+          url: result.url,
+          size: result.size,
+          input_project_id: target_id
+        )
+        pj.save!
+      end
     end
   end
 

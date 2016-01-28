@@ -53,8 +53,8 @@ RSpec.describe GithubProjectDetailCrawler, type: :model do
         input_project_id: target_id
       )
 
-      expect(trees.count).to eq 3
-      expect(trees[2].path).to eq 'Gemfile'
+      expect(trees.count).to eq 2
+      expect(trees[1].path).to eq 'Gemfile'
     end
 
     it '収集対象の週間コミット数が格納されること' do
@@ -86,6 +86,48 @@ RSpec.describe GithubProjectDetailCrawler, type: :model do
     it 'InputProjectのクロールステータスが2(収集済み)となること' do
       expect(@targets[0].crawl_status_id).to eq 2
     end
+  end
+
+  context 'ツリー情報格納時' do
+    before :each do
+      create(:input_project,
+            id: 1)
+    end
+
+    it "解析対象の情報が格納されること" do
+      target_id = 1
+      res = GithubRepositoryResponse.new
+      res.items =
+        HashObject.new( path: "Gemfile",
+                       type: "blob",
+                       sha: "a",
+                       url: "test",
+                       size: 100
+                      )
+      results = []
+      results << res.items
+
+      GithubProjectDetailCrawler.new.save_project_detail_trees(target_id, results)
+      expect(InputTree.all.count).to eq 1
+    end
+
+    it "解析対象外の情報が格納されないこと" do
+      target_id = 1
+      res = GithubRepositoryResponse.new
+      res.items =
+        HashObject.new( path: "HogeHogePiyo",
+                       type: "blob",
+                       sha: "a",
+                       url: "test",
+                       size: 100
+                      )
+        results = []
+        results << res.items
+
+        GithubProjectDetailCrawler.new.save_project_detail_trees(target_id, results)
+        expect(InputTree.all.count).to eq 0
+    end
+
   end
 
   def dummy_faraday_response
