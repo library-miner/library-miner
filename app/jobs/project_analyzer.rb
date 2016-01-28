@@ -105,14 +105,17 @@ class ProjectAnalyzer < Base
     project.project_trees.delete_all
 
     trees.each do |tree|
-      dup_tree_attributes = tree
-                            .attributes
-                            .slice(*InputTree::COPYABLE_ATTRIBUTES.map(&:to_s))
-      source_tree = project
-                    .project_trees
-                    .build
-                    .tap { |v| v.attributes = dup_tree_attributes }
-      source_tree.save!
+      # 解析対象のみコピーする
+      if InputTree.analyze_target?(tree.path)
+        dup_tree_attributes = tree
+          .attributes
+          .slice(*InputTree::COPYABLE_ATTRIBUTES.map(&:to_s))
+        source_tree = project
+          .project_trees
+          .build
+          .tap { |v| v.attributes = dup_tree_attributes }
+        source_tree.save!
+      end
     end
   end
 
