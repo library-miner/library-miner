@@ -3,7 +3,7 @@
   "url": "https://api.github.com/repos/octocat/Hello-World/trees/9fb037999f264ba9a7fc6274d15fa3ae2ab98312",
   "tree": [
     {
-      "path": "file.rb",
+      "path": "Readme.md",
       "mode": "100644",
       "type": "blob",
       "size": 30,

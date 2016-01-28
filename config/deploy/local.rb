@@ -3,12 +3,12 @@
 # Supports bulk-adding hosts to roles, the primary server in each group
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
-set :branch, 'develop'
+set :branch, 'feature/20160105'
 set :rails_env, 'production'
 
-role :app, %w{miner@library-miner-db-staging miner@library-miner-monitor-staging miner@library-miner-app-staging}
-role :web, %w{miner@library-miner-db-staging}
-role :db,  %w{miner@library-miner-db-staging}
+role :app, %w{miner@library-miner-db-local miner@library-miner-monitor-local}
+role :web, %w{miner@library-miner-db-local}
+role :db,  %w{miner@library-miner-db-local}
 
 set :ssh_options, {
   keys: [File.expand_path('~/.ssh/miner/id_rsa')],

@@ -26,4 +26,6 @@ production:
   timeout: 5000
   username: root
   password:
+  host: 127.0.0.1
+  socket: /var/run/mysqld-default/mysqld.sock
   collation: utf8_bin

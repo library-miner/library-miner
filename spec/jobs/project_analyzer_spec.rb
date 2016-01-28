@@ -12,7 +12,9 @@ RSpec.describe ProjectAnalyzer, type: :model do
           crawl_status_id: 2
         )
         create(:input_tree,
-               input_project_id: i1.id)
+               input_project_id: i1.id,
+               path: "Gemfile"
+              )
         create(:input_branch,
                input_project_id: i1.id)
         create(:input_tag,
@@ -40,7 +42,7 @@ RSpec.describe ProjectAnalyzer, type: :model do
         results = ProjectTree.all
 
         expect(results.count).to eq 1
-        expect(results[0].path).to eq 'test'
+        expect(results[0].path).to eq 'Gemfile'
       end
 
       it 'ProjectBranchにInputBranchの内容がコピーされること' do
@@ -63,6 +65,30 @@ RSpec.describe ProjectAnalyzer, type: :model do
         expect(results.count).to eq 1
         expect(results[0].all_count).to eq 777
       end
+    end
+
+    context 'Tree情報に解析対象外のファイルが含まれる場合' do
+      before :each do
+        # Input Project に テストデータ投入
+        i1 = create(
+          :input_project,
+          full_name: 'test/full_name',
+          github_updated_at: Time.zone.today,
+          crawl_status_id: 2
+        )
+        create(:input_tree,
+               input_project_id: i1.id,
+               path: "NotAnalyzeTarget"
+              )
+        # テスト対象実行
+        ProjectAnalyzer.new.perform(analyze_count: 1)
+      end
+
+      it 'Tree情報が格納されないこと' do
+        results = ProjectTree.all
+        expect(results.count).to eq 0
+      end
+
     end
 
     context 'readme.mdファイルが含まれる場合' do
