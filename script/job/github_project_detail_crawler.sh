@@ -12,6 +12,7 @@ usage() {
   exit 1
 }
 
+source /usr/local/rvm/scripts/rvm
 PROGNAME=$(basename $0)
 HELP_MSG="'$PROGNAME -h'と指定することでヘルプを見ることができます"
 
