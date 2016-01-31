@@ -180,6 +180,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at",                  null: false
   end
 
+  add_index "project_dependencies", ["project_from_id"], name: "index_project_dependencies_on_project_from_id", using: :btree
+
   create_table "project_readmes", force: :cascade do |t|
     t.integer  "project_id", limit: 4,     null: false
     t.string   "path",       limit: 255,   null: false
