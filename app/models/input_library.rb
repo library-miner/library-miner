@@ -34,22 +34,32 @@ class InputLibrary < ActiveRecord::Base
 
   # gem名からfull_nameを取得する
   def self.get_full_name_from_gem_name(gem_name)
-    full_name = InputLibrary
-                .where(InputLibrary.arel_table[:homepage_uri].matches('%/github.com/%'))
-                .find_by(InputLibrary.arel_table[:homepage_uri].matches("%/#{gem_name}"))
-                .try(:homepage_uri)
+    input_library = InputLibrary
+      .find_by(name: gem_name)
 
-    if full_name.nil?
-      full_name = InputLibrary
-                  .where(InputLibrary.arel_table[:source_code_uri].matches('%/github.com/%'))
-                  .find_by(InputLibrary.arel_table[:source_code_uri].matches("%/#{gem_name}"))
-                  .try(:source_code_uri)
+    full_name = nil
+    if input_library.present?
+      # homepage_uriにgithubへのURLが記載されているか
+      if input_library.homepage_uri.present?
+        full_name = input_library.homepage_uri.match(/.+github.com.+/)
+      end
+
+      # homepage_uriにgithubへのURLが記載されているか
+      if full_name.nil? && input_library.source_code_uri.present?
+        full_name = input_library.source_code_uri.match(/.+github.com.+/)
+      end
     end
 
     if full_name.present?
+      full_name = full_name[0].to_s
+      # 先頭のURLは取り除く
       full_name = full_name
                   .gsub('http://github.com/', '')
                   .gsub('https://github.com/', '')
+      # full_nameの最後の/は取り除く
+      if full_name[full_name.length-1] == '/'
+        full_name = full_name[0..full_name.length-2]
+      end
     end
 
     full_name
