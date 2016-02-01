@@ -26,4 +26,20 @@ class ProjectTree < ActiveRecord::Base
   # Class Methods
 
   # Methods
+  # トップ階層にgemspecが存在するか
+  def self.include_gemspec?(project_id)
+    result = false
+    trees = ProjectTree
+      .where(ProjectTree.arel_table[:path].matches('%.gemspec'))
+      .where(project_id: project_id)
+
+    trees.each do |tree|
+      p = tree.path.split('/')
+      if tree.file_type == 'blob' && InputTree.gemspec?(p[0])
+        result = true
+      end
+    end
+    result
+  end
+
 end

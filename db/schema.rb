@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 0) do
   end
 
   add_index "input_libraries", ["input_project_id"], name: "input_libraries_input_project_id_fk", using: :btree
+  add_index "input_libraries", ["name"], name: "index_input_libraries_on_name", unique: true, using: :btree
 
   create_table "input_project_checkers", force: :cascade do |t|
     t.string   "crawl_date", limit: 255
@@ -180,6 +181,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at",                  null: false
   end
 
+  add_index "project_dependencies", ["project_from_id"], name: "index_project_dependencies_on_project_from_id", using: :btree
+
   create_table "project_readmes", force: :cascade do |t|
     t.integer  "project_id", limit: 4,     null: false
     t.string   "path",       limit: 255,   null: false
@@ -253,6 +256,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at",                                       null: false
   end
 
+  add_index "projects", ["full_name"], name: "index_projects_on_full_name", using: :btree
   add_index "projects", ["github_item_id"], name: "index_projects_on_github_item_id", unique: true, using: :btree
 
   add_foreign_key "input_branches", "input_projects", name: "input_branches_input_project_id_fk"

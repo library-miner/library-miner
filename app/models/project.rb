@@ -95,7 +95,7 @@ class Project < ActiveRecord::Base
   end
 
   def get_project_type
-    gem_include = InputTree.include_gemspec?(self.id)
+    gem_include = ProjectTree.include_gemspec?(self.id)
     if gem_include
       ProjectType::RUBYGEM
     else

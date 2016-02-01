@@ -113,16 +113,4 @@ class InputTree < ActiveRecord::Base
     is_update
   end
 
-  # トップ階層にgemspecが存在するか
-  def self.include_gemspec?(project_id)
-    result = false
-    trees = ProjectTree.where(ProjectTree.arel_table[:path].matches('%.gemspec'))
-    trees.each do |tree|
-      p = tree.path.split('/')
-      if tree.file_type == 'blob' && InputTree.gemspec?(p[0])
-        result = true
-      end
-    end
-    result
-  end
 end

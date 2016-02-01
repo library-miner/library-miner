@@ -321,6 +321,24 @@ RSpec.describe LibraryRelation, type: :model do
                path: 'test/parent_test.gemspec',
                project_id: @t1.id,
                file_type: 'blob')
+
+        # 関係のないプロジェクト情報を含めた場合でもうまくいくことを確認する
+        @t2 = create(:project,
+                     id: 11,
+                     is_incomplete: true,
+                     github_item_id: 100,
+                     full_name: 'owner/parent_test3',
+                     name: 'parent_test')
+        @pd1 = create(:project_dependency,
+                      library_name: 'test3',
+                      project_from_id: @t2.id,
+                      project_to_id: 1000)
+        create(:project_tree,
+               path: 'parent_test3.gemspec',
+               project_id: @t2.id,
+               file_type: 'blob')
+
+
         LibraryRelation.new.perform
       end
       it 'プロジェクトタイプが1(Project)となること' do
@@ -348,6 +366,22 @@ RSpec.describe LibraryRelation, type: :model do
                path: 'parent_test.gemspec',
                project_id: @t1.id,
                file_type: 'tree')
+
+        # 関係のないプロジェクト情報を含めた場合でもうまくいくことを確認する
+        @t2 = create(:project,
+                     id: 11,
+                     is_incomplete: true,
+                     github_item_id: 100,
+                     full_name: 'owner/parent_test3',
+                     name: 'parent_test')
+        @pd1 = create(:project_dependency,
+                      library_name: 'test3',
+                      project_from_id: @t2.id,
+                      project_to_id: 1000)
+        create(:project_tree,
+               path: 'parent_test3.gemspec',
+               project_id: @t2.id,
+               file_type: 'blob')
 
         LibraryRelation.new.perform
       end
