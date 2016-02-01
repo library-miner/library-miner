@@ -256,6 +256,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at",                                       null: false
   end
 
+  add_index "projects", ["full_name"], name: "index_projects_on_full_name", using: :btree
   add_index "projects", ["github_item_id"], name: "index_projects_on_github_item_id", unique: true, using: :btree
 
   add_foreign_key "input_branches", "input_projects", name: "input_branches_input_project_id_fk"
