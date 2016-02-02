@@ -6,7 +6,7 @@
 set :branch, 'master'
 set :rails_env, 'production'
 
-role :app, %w{miner@library-miner-db miner@library-miner-monitor}
+role :app, %w{miner@library-miner-db miner@library-miner-monitor miner@library-miner-app}
 role :web, %w{miner@library-miner-db}
 role :db,  %w{miner@library-miner-db}
 
