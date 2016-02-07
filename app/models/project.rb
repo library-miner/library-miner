@@ -25,6 +25,8 @@
 #  github_score       :string(255)      default(""), not null
 #  language           :string(255)      default(""), not null
 #  project_type_id    :integer          default(0), not null
+#  export_status      :integer          default(0), not null
+#  exported_at        :datetime         not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #
@@ -33,6 +35,7 @@ class Project < ActiveRecord::Base
   extend ActiveHash::Associations::ActiveRecordExtensions
   # Relations
   belongs_to_active_hash :project_type
+  belongs_to_active_hash :export_status
   has_many :project_dependencies, foreign_key: :project_from_id, dependent: :destroy
   has_many :projects, through: :project_dependencies, source: :project_to
   has_many :project_branches, dependent: :destroy

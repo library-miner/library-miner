@@ -1,0 +1,9 @@
+- id: 0
+  type: waiting
+  name: 未処理
+- id: 1
+  type: in_progress
+  name: 連携中
+- id: 2
+  type: done
+  name: 連携済み
