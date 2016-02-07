@@ -25,7 +25,7 @@
 #  github_score       :string(255)      default(""), not null
 #  language           :string(255)      default(""), not null
 #  project_type_id    :integer          default(0), not null
-#  export_status      :integer          default(0), not null
+#  export_status_id   :integer          default(0), not null
 #  exported_at        :datetime         not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
@@ -54,6 +54,15 @@ class Project < ActiveRecord::Base
   scope :completed, -> do
     where(is_incomplete: false)
   end
+
+  scope :in_progress_export, -> do
+    where(export_status: ExportStatus::IN_PROGRESS)
+  end
+
+  scope :wait_export, -> do
+    where(export_status: ExportStatus::WAITING)
+  end
+
   # Delegates
 
   # Class Methods
@@ -104,5 +113,24 @@ class Project < ActiveRecord::Base
     else
       ProjectType::PROJECT
     end
+  end
+
+  # Web連携準備
+  # Export Statusを1(連携中)にする
+  def self.export_ready(count)
+    count = 0 if count.nil?
+    Project.where(export_status: ExportStatus::WAITING)
+      .limit(count)
+      .update_all(export_status_id: ExportStatus::IN_PROGRESS)
+    Project.in_progress_export.count
+  end
+
+  # Web連携終了
+  # 連携中のステータスを2(連携済み)にする
+  def self.export_end
+    Project.where(export_status: ExportStatus::IN_PROGRESS)
+      .update_all(
+    export_status_id: ExportStatus::DONE,
+    exported_at: Time.zone.now)
   end
 end

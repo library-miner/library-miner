@@ -29,6 +29,8 @@ Rails.application.routes.draw do
 
     resources :project_export, only: [:index] do
       collection do
+        get 'export_ready'
+        get 'export_end'
       end
     end
 
