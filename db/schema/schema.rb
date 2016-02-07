@@ -156,7 +156,7 @@ create_table 'projects', collate: 'utf8_bin', comment: 'プロジェクト基本
   t.varchar :github_score, default: '', comment: 'Github上のスコア'
   t.varchar :language, default: ''
   t.int :project_type_id, default: 0, comment: '外部ライブラリかどうか判定用'
-  t.int :export_status, default: 0, comment: 'Web連携の判定用'
+  t.int :export_status_id, default: 0, comment: 'Web連携の判定用'
   t.datetime :exported_at
 
   t.datetime :created_at
