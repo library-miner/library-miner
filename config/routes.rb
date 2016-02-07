@@ -26,5 +26,11 @@ Rails.application.routes.draw do
         get 'job_search_lists'
       end
     end
+
+    resources :project_export, only: [:index] do
+      collection do
+      end
+    end
+
   end
 end
