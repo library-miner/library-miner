@@ -1,4 +1,4 @@
 object false
 
 node(:status) { "success" }
-node(:totalCount) { @total_count }
+node(:total_count) { @total_count }

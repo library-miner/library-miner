@@ -1,10 +1,23 @@
 attribute :id
-attribute :github_item_id => "githubItemId"
-attribute :full_name => "fullName"
+attribute :is_incomplete
+attribute :github_item_id
 attribute :name
-attribute :github_url => "githubUrl"
-attribute :github_description => "githubDescription"
-attribute :github_created_at => "githubCreatedAt"
-attribute :github_updated_at => "githubUpdatedAt"
-attribute :created_at => "createdAt"
-attribute :updated_at => "updatedAt"
+attribute :full_name
+attribute :owner_id
+attribute :owner_login_name
+attribute :owner_type
+attribute :github_url
+attribute :is_fork
+attribute :github_description
+attribute :github_created_at
+attribute :github_updated_at
+attribute :github_pushed_at
+attribute :homepage
+attribute :size
+attribute :stargazers_count
+attribute :watchers_count
+attribute :fork_count
+attribute :open_issue_count
+attribute :github_score
+attribute :language
+attribute :project_type_id

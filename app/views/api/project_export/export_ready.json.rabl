@@ -1,5 +1,5 @@
 object false
 
 node(:status) { "success" }
-node(:totalPage) { @total_page }
-node(:totalCount) { @total_count }
+node(:total_page) { @total_page }
+node(:total_count) { @total_count }
