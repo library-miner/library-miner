@@ -21,3 +21,9 @@ attribute :open_issue_count
 attribute :github_score
 attribute :language
 attribute :project_type_id
+child :project_readmes ,:object_root => false do
+  extends "api/project_export/read_me"
+end
+child :project_dependencies, :object_root => false do
+  extends "api/project_export/project_dependency"
+end
