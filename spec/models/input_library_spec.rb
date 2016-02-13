@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: input_libraries
+#
+#  id               :integer          not null, primary key
+#  input_project_id :integer
+#  name             :string(255)      not null
+#  version          :string(255)
+#  homepage_uri     :string(255)
+#  source_code_uri  :string(255)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 require 'rails_helper'
 
 RSpec.describe InputLibrary, type: :model do

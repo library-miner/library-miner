@@ -252,6 +252,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "github_score",       limit: 255,   default: "",    null: false
     t.string   "language",           limit: 255,   default: "",    null: false
     t.integer  "project_type_id",    limit: 4,     default: 0,     null: false
+    t.integer  "export_status_id",   limit: 4,     default: 0,     null: false
+    t.datetime "exported_at",                                      null: false
     t.datetime "created_at",                                       null: false
     t.datetime "updated_at",                                       null: false
   end
