@@ -271,6 +271,6 @@ ActiveRecord::Schema.define(version: 0) do
   add_foreign_key "project_branches", "projects", name: "project_branches_project_id_fk"
   add_foreign_key "project_readmes", "projects", name: "project_readmes_project_id_fk"
   add_foreign_key "project_tags", "projects", name: "project_tags_project_id_fk"
-  add_foreign_key "project_trees", "projects", column: "Project_id", name: "project_trees_Project_id_fk"
+  add_foreign_key "project_trees", "projects", name: "project_trees_Project_id_fk"
   add_foreign_key "project_weekly_commit_counts", "projects", name: "project_weekly_commit_counts_project_id_fk"
 end
