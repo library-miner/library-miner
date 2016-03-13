@@ -7,4 +7,4 @@ before_script:
   - cp config/database.travis.yml config/database.yml
   - bundle exec rake db:create db:migrate db:seed
 script:
-  - bundle exec rspec
+  - bundle exec rspec --exclude-pattern spec/jobs/github_project_detail_crawler_spec.rb
