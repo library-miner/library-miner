@@ -7,7 +7,7 @@ set :branch, 'develop'
 set :rails_env, 'production'
 
 role :app, %w{miner@library-miner-db-staging miner@library-miner-monitor-staging miner@library-miner-app-staging}
-role :web, %w{miner@library-miner-db-staging}
+role :web, %w{miner@library-miner-app-staging}
 role :db,  %w{miner@library-miner-db-staging}
 
 set :ssh_options, {
