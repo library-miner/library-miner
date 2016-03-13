@@ -172,13 +172,8 @@ RSpec.describe InputLibrary, type: :model do
                input_project_id: @t1.id,
                name: 'test',
                source_code_uri: 'http://github.com/owner/test',
+               homepage_uri: 'http://github2.com/owner/test',
               )
-        create(:input_library,
-               input_project_id: @t1.id,
-               name: 'test',
-               homepage_uri: 'http://github2.com/owner/test2',
-              )
-
       end
       it 'source_code_uriの/区切り最後から2つの文字列が取得できること' do
         expect(InputLibrary.get_full_name_from_gem_name('test')).to eq 'owner/test'
