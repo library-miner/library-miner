@@ -56,12 +56,12 @@ class GemfileParser
                    .split("\n")
                    .select { |v| v.include?('add_dependency') }
                    .map { |v| v.scan(/add_dependency\s+(.[^,)]*)/).flatten.first }
-                   .map { |v| v.delete("'").delete("\"").delete('(').delete(')') }
+                   .map { |v| v.delete("'").delete('"').delete('(').delete(')') }
     dev_dependencies = gemspec_contents
                        .split("\n")
                        .select { |v| v.include?('add_development_dependency') }
                        .map { |v| v.scan(/add_development_dependency\s+(.[^,)]*)/).flatten.first }
-                       .map { |v| v.delete("'").delete("\"").delete('(').delete(')') }
+                       .map { |v| v.delete("'").delete('"').delete('(').delete(')') }
 
     dependencies.concat(dev_dependencies)
   end

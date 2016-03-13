@@ -33,7 +33,7 @@ class GithubProjectDetailCrawler < Base
         input_project_id: target.id,
         name: 'master'
       ).first
-                          .try(:sha)
+                                     .try(:sha)
 
       # Masterブランチが更新されている場合に詳細情報を取得する
       if InputBranch.check_master_branch_is_update?(target.github_item_id, master_branch_sha)
@@ -109,17 +109,16 @@ class GithubProjectDetailCrawler < Base
   def save_project_detail_trees(target_id, results)
     InputTree.where(input_project_id: target_id).delete_all
     results.each do |result|
-      if InputTree.analyze_target?(result.path)
-        pj = InputTree.new(
-          path: result.path,
-          file_type: result.type,
-          sha: result.sha,
-          url: result.url,
-          size: result.size,
-          input_project_id: target_id
-        )
-        pj.save!
-      end
+      next unless InputTree.analyze_target?(result.path)
+      pj = InputTree.new(
+        path: result.path,
+        file_type: result.type,
+        sha: result.sha,
+        url: result.url,
+        size: result.size,
+        input_project_id: target_id
+      )
+      pj.save!
     end
   end
 

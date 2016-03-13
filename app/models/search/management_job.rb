@@ -7,7 +7,7 @@ module Search
       ended_at
       from
       to
-    )
+    ).freeze
     attr_accessor(*ATTRIBUTES)
 
     def matches

@@ -14,7 +14,7 @@
 class InputContent < ActiveRecord::Base
   COPYABLE_ATTRIBUTES = %i(
     path sha content
-  )
+  ).freeze
 
   # Relations
   belongs_to :input_project

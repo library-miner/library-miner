@@ -27,18 +27,18 @@ module GithubResponseSupport
       :get,
       url
     )
-      .with(
-        headers: {
-          'Accept' => /.*/,
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Authorization' => /token */,
-          'User-Agent' => /Faraday */
-        }
-      )
-      .to_return(
-        status: status,
-        body: read_json_file(body_file_name.to_s),
-        headers: read_response_header_file(header_file_name.to_s)
-      )
+           .with(
+             headers: {
+               'Accept' => /.*/,
+               'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+               'Authorization' => /token */,
+               'User-Agent' => /Faraday */
+             }
+           )
+           .to_return(
+             status: status,
+             body: read_json_file(body_file_name.to_s),
+             headers: read_response_header_file(header_file_name.to_s)
+           )
   end
 end

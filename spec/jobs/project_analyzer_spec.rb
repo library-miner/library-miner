@@ -13,7 +13,7 @@ RSpec.describe ProjectAnalyzer, type: :model do
         )
         create(:input_tree,
                input_project_id: i1.id,
-               path: "Gemfile"
+               path: 'Gemfile'
               )
         create(:input_branch,
                input_project_id: i1.id)
@@ -78,7 +78,7 @@ RSpec.describe ProjectAnalyzer, type: :model do
         )
         create(:input_tree,
                input_project_id: i1.id,
-               path: "NotAnalyzeTarget"
+               path: 'NotAnalyzeTarget'
               )
         # テスト対象実行
         ProjectAnalyzer.new.perform(analyze_count: 1)
@@ -88,7 +88,6 @@ RSpec.describe ProjectAnalyzer, type: :model do
         results = ProjectTree.all
         expect(results.count).to eq 0
       end
-
     end
 
     context 'readme.mdファイルが含まれる場合' do

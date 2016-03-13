@@ -35,7 +35,7 @@ class InputLibrary < ActiveRecord::Base
   # gem名からfull_nameを取得する
   def self.get_full_name_from_gem_name(gem_name)
     input_library = InputLibrary
-      .find_by(name: gem_name)
+                    .find_by(name: gem_name)
 
     full_name = nil
     if input_library.present?
@@ -57,8 +57,8 @@ class InputLibrary < ActiveRecord::Base
                   .gsub('http://github.com/', '')
                   .gsub('https://github.com/', '')
       # full_nameの最後の/は取り除く
-      if full_name[full_name.length-1] == '/'
-        full_name = full_name[0..full_name.length-2]
+      if full_name[full_name.length - 1] == '/'
+        full_name = full_name[0..full_name.length - 2]
       end
     end
 
