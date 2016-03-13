@@ -5,7 +5,7 @@ require 'rvm1/capistrano3'
 lock '3.2.1'
 
 set :application, 'library-miner'
-set :repo_url, 'http://github.com/library_miner/library-miner.git'
+set :repo_url, 'http://github.com/library-miner/library-miner.git'
 # git clone の際にローカルの秘密鍵を使用する
 # set :ssh_options, { forward_agent: true }
 
