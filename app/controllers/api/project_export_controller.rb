@@ -9,9 +9,9 @@ module Api
       @page = params[:page]
       @page = 1 if @page.nil?
       @projects = Project
-        .in_progress_export
-        .page(@page)
-        .per(PER_PAGE)
+                  .in_progress_export
+                  .page(@page)
+                  .per(PER_PAGE)
     end
 
     def export_ready
@@ -30,7 +30,7 @@ module Api
       total_count = Project.in_progress_export.count
       total_page = 0
       if total_count > 0
-        total_page = 1 + ( total_count / PER_PAGE).to_i
+        total_page = 1 + (total_count / PER_PAGE).to_i
       end
       total_page
     end

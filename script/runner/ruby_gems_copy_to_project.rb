@@ -11,15 +11,15 @@ libraries.each do |library|
   if library.homepage_uri.present? &&
      library.homepage_uri.include?('/github.com/')
     full_name = library.homepage_uri
-                .gsub('http://github.com/', '')
-                .gsub('https://github.com/', '')
+                       .gsub('http://github.com/', '')
+                       .gsub('https://github.com/', '')
   end
 
   if library.source_code_uri.present? &&
      library.source_code_uri.include?('/github.com/')
     full_name = library.source_code_uri
-                .gsub('http://github.com/', '')
-                .gsub('https://github.com/', '')
+                       .gsub('http://github.com/', '')
+                       .gsub('https://github.com/', '')
   end
 
   project = Project.new(

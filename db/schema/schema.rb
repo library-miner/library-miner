@@ -139,8 +139,8 @@ create_table 'projects', collate: 'utf8_bin', comment: 'プロジェクト基本
   t.varchar :name
   t.varchar :full_name, null: true
   t.bigint :owner_id, null: true
-  t.varchar :owner_login_name, default: ""
-  t.varchar :owner_type, limit: 30, default: ""
+  t.varchar :owner_login_name, default: ''
+  t.varchar :owner_type, limit: 30, default: ''
   t.varchar :github_url, null: true
   t.boolean :is_fork, default: false
   t.text :github_description, null: true
@@ -157,7 +157,7 @@ create_table 'projects', collate: 'utf8_bin', comment: 'プロジェクト基本
   t.varchar :language, default: ''
   t.int :project_type_id, default: 0, comment: '外部ライブラリかどうか判定用'
   t.int :export_status_id, default: 0, comment: 'Web連携の判定用'
-  t.datetime :exported_at
+  t.datetime :exported_at, null: true
 
   t.datetime :created_at
   t.datetime :updated_at
@@ -256,7 +256,7 @@ create_table 'library_relation_errors', collate: 'utf8_bin', comment: 'プロジ
   t.datetime :updated_at
 end
 
-create_table :delayed_jobs, comment: "Delayed Job" do |t|
+create_table :delayed_jobs, comment: 'Delayed Job' do |t|
   t.int :id, primary_key: true, extra: 'auto_increment'
   t.int :priority, default: 0, null: false
   t.int :attempts, default: 0, null: false
@@ -271,7 +271,7 @@ create_table :delayed_jobs, comment: "Delayed Job" do |t|
   t.datetime :created_at, null: true, comment: '作成日時'
   t.datetime :updated_at, null: true, comment: '更新日時'
 
-  t.index [:priority, :run_at], name: "delayed_jobs_priority"
+  t.index [:priority, :run_at], name: 'delayed_jobs_priority'
 end
 
 create_table :management_jobs, comment: "ジョブ管理" do |t|
@@ -286,7 +286,7 @@ create_table :management_jobs, comment: "ジョブ管理" do |t|
   t.datetime :created_at, null: true, comment: '作成日時'
   t.datetime :updated_at, null: true, comment: '更新日時'
 
-  t.index [:job_id], name: "management_jobs_job_id"
+  t.index [:job_id], name: 'management_jobs_job_id'
 end
 
 create_table 'schema_migrations', collate: 'utf8_bin', comment: '' do |t|

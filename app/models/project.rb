@@ -120,8 +120,8 @@ class Project < ActiveRecord::Base
   def self.export_ready(count)
     count = 0 if count.nil?
     Project.where(export_status: ExportStatus::WAITING)
-      .limit(count)
-      .update_all(export_status_id: ExportStatus::IN_PROGRESS)
+           .limit(count)
+           .update_all(export_status_id: ExportStatus::IN_PROGRESS)
     Project.in_progress_export.count
   end
 
@@ -129,8 +129,8 @@ class Project < ActiveRecord::Base
   # 連携中のステータスを2(連携済み)にする
   def self.export_end
     Project.where(export_status: ExportStatus::IN_PROGRESS)
-      .update_all(
-    export_status_id: ExportStatus::DONE,
-    exported_at: Time.zone.now)
+           .update_all(
+             export_status_id: ExportStatus::DONE,
+             exported_at: Time.zone.now)
   end
 end

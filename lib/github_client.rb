@@ -1,12 +1,12 @@
 class GithubClient
-  GITHUB_API_BASE_URL = 'https://api.github.com'
-  SEARCH_REPOSITORY_URL = '/search/repositories'
-  REPOSITORY_URL = '/repositories'
-  BRANCHES_URL = '/branches'
-  TAGS_URL = '/tags'
-  TREES_URL = '/git/trees'
-  BLOBS_URL = '/git/blobs'
-  WEEKLY_COMMIT_COUNTS_URL = '/stats/participation'
+  GITHUB_API_BASE_URL = 'https://api.github.com'.freeze
+  SEARCH_REPOSITORY_URL = '/search/repositories'.freeze
+  REPOSITORY_URL = '/repositories'.freeze
+  BRANCHES_URL = '/branches'.freeze
+  TAGS_URL = '/tags'.freeze
+  TREES_URL = '/git/trees'.freeze
+  BLOBS_URL = '/git/blobs'.freeze
+  WEEKLY_COMMIT_COUNTS_URL = '/stats/participation'.freeze
 
   # search_repository 1ページあたりに取得可能な最大件数
   GITHUB_SEARCH_REPOSITORY_MAX_PER = 100

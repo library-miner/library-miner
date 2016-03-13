@@ -38,7 +38,7 @@ class InputProject < ActiveRecord::Base
     github_updated_at github_pushed_at homepage
     size stargazers_count watchers_count fork_count open_issue_count
     github_score language
-  )
+  ).freeze
 
   # Relations
   belongs_to_active_hash :crawl_status

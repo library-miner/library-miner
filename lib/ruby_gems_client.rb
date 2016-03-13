@@ -1,6 +1,6 @@
 class RubyGemsClient
-  RUBY_GEMS_BASE_URL = 'https://rubygems.org'
-  GEM_API_URL = '/api/v1/gems'
+  RUBY_GEMS_BASE_URL = 'https://rubygems.org'.freeze
+  GEM_API_URL = '/api/v1/gems'.freeze
 
   # ex. get_ruby_gems_information_by_name('rails')
   def get_ruby_gems_information_by_name(name)
