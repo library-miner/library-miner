@@ -253,7 +253,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "language",           limit: 255,   default: "",    null: false
     t.integer  "project_type_id",    limit: 4,     default: 0,     null: false
     t.integer  "export_status_id",   limit: 4,     default: 0,     null: false
-    t.datetime "exported_at",                                      null: false
+    t.datetime "exported_at"
     t.datetime "created_at",                                       null: false
     t.datetime "updated_at",                                       null: false
   end
@@ -271,6 +271,6 @@ ActiveRecord::Schema.define(version: 0) do
   add_foreign_key "project_branches", "projects", name: "project_branches_project_id_fk"
   add_foreign_key "project_readmes", "projects", name: "project_readmes_project_id_fk"
   add_foreign_key "project_tags", "projects", name: "project_tags_project_id_fk"
-  add_foreign_key "project_trees", "projects", name: "project_trees_Project_id_fk"
+  add_foreign_key "project_trees", "projects", column: "Project_id", name: "project_trees_Project_id_fk"
   add_foreign_key "project_weekly_commit_counts", "projects", name: "project_weekly_commit_counts_project_id_fk"
 end

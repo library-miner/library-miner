@@ -30,8 +30,8 @@ class ProjectTree < ActiveRecord::Base
   def self.include_gemspec?(project_id)
     result = false
     trees = ProjectTree
-      .where(ProjectTree.arel_table[:path].matches('%.gemspec'))
-      .where(project_id: project_id)
+            .where(ProjectTree.arel_table[:path].matches('%.gemspec'))
+            .where(project_id: project_id)
 
     trees.each do |tree|
       p = tree.path.split('/')
@@ -41,5 +41,4 @@ class ProjectTree < ActiveRecord::Base
     end
     result
   end
-
 end
