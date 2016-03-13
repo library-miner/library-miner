@@ -74,29 +74,29 @@ class ProjectAnalyzer < Base
                              .attributes
                              .slice(*InputProject::COPYABLE_ATTRIBUTES.map(&:to_s))
 
-    if Project.where(github_item_id: project.github_item_id).present?
-      source_project = Project
-                       .find_or_initialize_by(github_item_id: project.github_item_id)
-                       .tap { |v| v.attributes = dup_project_attributes }
-    elsif Project.where(full_name: project.full_name,
-                        github_item_id: nil).present?
-      source_project = Project
-                       .find_or_initialize_by(full_name: project.full_name,
-                                              github_item_id: nil)
-                       .tap { |v| v.attributes = dup_project_attributes }
-    elsif Project.where(name: project.name,
-                        full_name: nil,
-                        github_item_id: nil).present?
-      source_project = Project
-                       .find_or_initialize_by(name: project.name,
-                                              full_name: nil,
-                                              github_item_id: nil)
-                       .tap { |v| v.attributes = dup_project_attributes }
-    else
-      source_project = Project
-                       .find_or_initialize_by(github_item_id: project.github_item_id)
-                       .tap { |v| v.attributes = dup_project_attributes }
-    end
+    source_project = if Project.where(github_item_id: project.github_item_id).present?
+                       Project
+                         .find_or_initialize_by(github_item_id: project.github_item_id)
+                         .tap { |v| v.attributes = dup_project_attributes }
+                     elsif Project.where(full_name: project.full_name,
+                                         github_item_id: nil).present?
+                       Project
+                         .find_or_initialize_by(full_name: project.full_name,
+                                                github_item_id: nil)
+                         .tap { |v| v.attributes = dup_project_attributes }
+                     elsif Project.where(name: project.name,
+                                         full_name: nil,
+                                         github_item_id: nil).present?
+                       Project
+                         .find_or_initialize_by(name: project.name,
+                                                full_name: nil,
+                                                github_item_id: nil)
+                         .tap { |v| v.attributes = dup_project_attributes }
+                     else
+                       Project
+                         .find_or_initialize_by(github_item_id: project.github_item_id)
+                         .tap { |v| v.attributes = dup_project_attributes }
+                     end
     source_project
   end
 
@@ -106,16 +106,15 @@ class ProjectAnalyzer < Base
 
     trees.each do |tree|
       # 解析対象のみコピーする
-      if InputTree.analyze_target?(tree.path)
-        dup_tree_attributes = tree
-          .attributes
-          .slice(*InputTree::COPYABLE_ATTRIBUTES.map(&:to_s))
-        source_tree = project
-          .project_trees
-          .build
-          .tap { |v| v.attributes = dup_tree_attributes }
-        source_tree.save!
-      end
+      next unless InputTree.analyze_target?(tree.path)
+      dup_tree_attributes = tree
+                            .attributes
+                            .slice(*InputTree::COPYABLE_ATTRIBUTES.map(&:to_s))
+      source_tree = project
+                    .project_trees
+                    .build
+                    .tap { |v| v.attributes = dup_tree_attributes }
+      source_tree.save!
     end
   end
 

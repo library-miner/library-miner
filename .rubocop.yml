@@ -1,20 +1,63 @@
+Rails:
+  Enabled: true
+
 AllCops:
-  Excludes:
-    - config/unicorn.rb
-    - db/**
-  RunRailsCops: true
-# Use UTF-8 as the source file encoding.
-Encoding:
+  TargetRubyVersion: 2.2
+  Exclude:
+    - bin/**/*
+    - db/schema.rb
+    - config/**/*
+    - lib/tasks/*.rake
+
+# Use &&/|| instead of and/or.
+AndOr:
   Enabled: false
-# Limit lines to 80 characters.
-LineLength:
-  Enabled: false
-# Avoid methods longer than 10 lines of code
-MethodLength:
-  Enabled: false
-# Use only ascii symbols in comments.
+
+# Use only ascii symbols in identifiers.
 AsciiComments:
   Enabled: false
-# Top Level Document missing ignore
+
+# Document classes and non-namespace modules.
 Documentation:
+  Enabled: false
+
+# Favor modifier if/unless usage when you have a single-line body.
+IfUnlessModifier:
+  Enabled: false
+
+# Use the lambda method for multi-line lambdas.
+Lambda:
+  Enabled: false
+
+# Limit lines to 79 characters.
+LineLength:
+  Max: 79
+  Enabled: false
+
+MethodLength:
+  Max: 30
+  Enabled: true
+
+# Don't use self where it's not needed.
+RedundantSelf:
+  Enabled: false
+
+# Checks for proper usage of fail and raise.
+SignalException:
+  Enabled: false
+
+# Align block ends correctly.
+BlockAlignment:
+  Enabled: false
+
+Attr:
+  Enabled: false
+
+ClassAndModuleChildren:
+  Enabled: false
+
+UnusedBlockArgument:
+  Enabled: false
+
+UnusedMethodArgument:
   Enabled: false

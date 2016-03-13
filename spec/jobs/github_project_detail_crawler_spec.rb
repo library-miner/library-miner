@@ -91,17 +91,17 @@ RSpec.describe GithubProjectDetailCrawler, type: :model do
   context 'ツリー情報格納時' do
     before :each do
       create(:input_project,
-            id: 1)
+             id: 1)
     end
 
     it "解析対象の情報が格納されること" do
       target_id = 1
       res = GithubRepositoryResponse.new
       res.items =
-        HashObject.new( path: "Gemfile",
-                       type: "blob",
-                       sha: "a",
-                       url: "test",
+        HashObject.new(path: 'Gemfile',
+                       type: 'blob',
+                       sha: 'a',
+                       url: 'test',
                        size: 100
                       )
       results = []
@@ -115,19 +115,18 @@ RSpec.describe GithubProjectDetailCrawler, type: :model do
       target_id = 1
       res = GithubRepositoryResponse.new
       res.items =
-        HashObject.new( path: "HogeHogePiyo",
-                       type: "blob",
-                       sha: "a",
-                       url: "test",
+        HashObject.new(path: 'HogeHogePiyo',
+                       type: 'blob',
+                       sha: 'a',
+                       url: 'test',
                        size: 100
                       )
-        results = []
-        results << res.items
+      results = []
+      results << res.items
 
-        GithubProjectDetailCrawler.new.save_project_detail_trees(target_id, results)
-        expect(InputTree.all.count).to eq 0
+      GithubProjectDetailCrawler.new.save_project_detail_trees(target_id, results)
+      expect(InputTree.all.count).to eq 0
     end
-
   end
 
   def dummy_faraday_response

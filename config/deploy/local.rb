@@ -7,7 +7,7 @@ set :branch, 'feature/20160105'
 set :rails_env, 'production'
 
 role :app, %w{miner@library-miner-db-local miner@library-miner-monitor-local}
-role :web, %w{miner@library-miner-db-local}
+role :web, %w{miner@library-miner-app-local}
 role :db,  %w{miner@library-miner-db-local}
 
 set :ssh_options, {

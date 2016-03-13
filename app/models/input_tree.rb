@@ -16,7 +16,7 @@
 class InputTree < ActiveRecord::Base
   COPYABLE_ATTRIBUTES = %i(
     path file_type sha url size
-  )
+  ).freeze
 
   # Relations
   belongs_to :input_project
@@ -56,7 +56,7 @@ class InputTree < ActiveRecord::Base
 
   def self.readme?(file_name)
     # readme.rdoc は整備率が低いため取得しない
-    file_name.downcase == 'readme.md'
+    file_name.casecmp('readme.md').zero?
   end
 
   def self.check_analyze_target_is_update?(github_item_id)
@@ -112,5 +112,4 @@ class InputTree < ActiveRecord::Base
 
     is_update
   end
-
 end

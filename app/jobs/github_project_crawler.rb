@@ -19,11 +19,11 @@ class GithubProjectCrawler < Base
   queue_as :github_project_crawler
 
   def perform(date_from, date_to, mode: 'CREATED')
-    if mode == 'CREATED'
-      mode = CrawlMode::CREATED
-    else
-      mode = CrawlMode::UPDATED
-    end
+    mode = if mode == 'CREATED'
+             CrawlMode::CREATED
+           else
+             CrawlMode::UPDATED
+           end
     date_from = DateTime.parse(date_from)
     date_to = DateTime.parse(date_to)
 
@@ -147,21 +147,21 @@ class GithubProjectCrawler < Base
       next if total_count.present? &&
               total_count <= ((page - 1) * GithubClient::GITHUB_SEARCH_REPOSITORY_MAX_PER)
 
-      if mode == CrawlMode::CREATED
-        res = client.search_repositories_by_created_at(
-          time_from.strftime('%Y-%m-%dT%H:%M:%SZ'),
-          time_to.strftime('%Y-%m-%dT%H:%M:%SZ'),
-          language: language,
-          page: page
-        )
-      else
-        res = client.search_repositories_by_updated_at(
-          time_from.strftime('%Y-%m-%dT%H:%M:%SZ'),
-          time_to.strftime('%Y-%m-%dT%H:%M:%SZ'),
-          language: language,
-          page: page
-        )
-      end
+      res = if mode == CrawlMode::CREATED
+              client.search_repositories_by_created_at(
+                time_from.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                time_to.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                language: language,
+                page: page
+              )
+            else
+              client.search_repositories_by_updated_at(
+                time_from.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                time_to.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                language: language,
+                page: page
+              )
+            end
       total_count ||= res.total_count
       Rails.logger.info("fetch #{time_from}-#{time_to}(page: #{page}, total: #{total_count})" \
                         " and results #{res.items.size}")

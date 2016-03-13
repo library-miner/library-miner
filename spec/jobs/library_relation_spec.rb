@@ -338,7 +338,6 @@ RSpec.describe LibraryRelation, type: :model do
                project_id: @t2.id,
                file_type: 'blob')
 
-
         LibraryRelation.new.perform
       end
       it 'プロジェクトタイプが1(Project)となること' do
@@ -410,6 +409,5 @@ RSpec.describe LibraryRelation, type: :model do
         expect(Project.find(@t1.id).project_type_id).to eq 999
       end
     end
-
   end
 end

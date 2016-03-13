@@ -5,9 +5,9 @@ require 'rvm1/capistrano3'
 lock '3.2.1'
 
 set :application, 'library-miner'
-set :repo_url, 'git@bitbucket-miner:library_miner/library-miner.git'
+set :repo_url, 'http://github.com/library-miner/library-miner.git'
 # git clone の際にローカルの秘密鍵を使用する
-set :ssh_options, { forward_agent: true }
+# set :ssh_options, { forward_agent: true }
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
@@ -33,7 +33,7 @@ set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/sys
 
 # RVM
 set :rvm_type, :system
-set :rvm1_ruby_version, '2.2.0'
+set :rvm1_ruby_version, '2.2.3'
 
 # Unicorn
 set :unicorn_pid, "#{shared_path}/tmp/pids/unicorn.pid"
