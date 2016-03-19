@@ -12,6 +12,8 @@
 #
 
 class ProjectReadme < ActiveRecord::Base
+  include AttributeScrubbable
+
   # Relations
   belongs_to :project
 
