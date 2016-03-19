@@ -1,3 +1,4 @@
+# AttributeScrubbable と組み合わせて使うこと
 module JsonScrubbable
   extend ActiveSupport::Concern
 
