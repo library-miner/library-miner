@@ -15,6 +15,8 @@ class ProjectReadme < ActiveRecord::Base
   include AttributeScrubbable
   include JsonScrubbable
 
+  scrub_attributes :content
+
   # Relations
   belongs_to :project
 

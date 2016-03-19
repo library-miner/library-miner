@@ -3,6 +3,16 @@
 module AttributeScrubbable
   extend ActiveSupport::Concern
 
+  module ClassMethods
+    def scrub_attributes(*scrub_attrs)
+      scrub_attrs.each do |at|
+        define_method(at) do
+          self.attributes[at.to_s]
+        end
+      end
+    end
+  end
+
   included do
     alias_method :original_attributes, :attributes
 
