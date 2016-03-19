@@ -13,6 +13,7 @@
 
 class ProjectReadme < ActiveRecord::Base
   include AttributeScrubbable
+  include JsonScrubbable
 
   # Relations
   belongs_to :project
