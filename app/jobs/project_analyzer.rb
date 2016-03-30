@@ -97,6 +97,8 @@ class ProjectAnalyzer < Base
                          .find_or_initialize_by(github_item_id: project.github_item_id)
                          .tap { |v| v.attributes = dup_project_attributes }
                      end
+
+    source_project.export_status = ExportStatus::WAITING
     source_project
   end
 
