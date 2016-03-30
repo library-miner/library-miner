@@ -221,7 +221,7 @@ RSpec.describe LibraryRelation, type: :model do
       end
 
       it 'Web連携フラグが0(未連携)となること' do
-        export(Project.find(@t1.id).export_status_id).to eq 0
+        expect(Project.find(@t1.id).export_status_id).to eq 0
       end
     end
 
