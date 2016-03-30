@@ -32,11 +32,11 @@ RSpec.describe ProjectAnalyzer, type: :model do
         expect(results[0].full_name).to eq 'test/full_name'
       end
 
-      it '初回作成後はweb連携フラグが-1(連携前解析待ち)となること' do
+      it '初回作成後はweb連携フラグが0(未連携)となること' do
         results = Project.all
 
         expect(results.count).to eq 1
-        expect(results[0].export_status_id).to eq '-1'
+        expect(results[0].export_status_id).to eq '0'
       end
 
       it '解析完了後はInputProject のステータスが 3(解析済み)となること' do
@@ -298,8 +298,8 @@ RSpec.describe ProjectAnalyzer, type: :model do
         expect(Project.find(@i2.id).size).to eq 999
       end
 
-      it 'InputProjectのgithub_item_idと合致するProjectの情報のWeb連携フラグが-1(連携前解析待ち)となること' do
-        expect(Project.find(@i2.id).export_status_id).to eq "-1"
+      it 'InputProjectのgithub_item_idと合致するProjectの情報のWeb連携フラグが0(未連携)となること' do
+        expect(Project.find(@i2.id).export_status_id).to eq 0
       end
 
       it 'InputProjectのgithub_item_idと合致しないProjectの情報が更新されないこと' do
