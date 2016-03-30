@@ -208,7 +208,8 @@ RSpec.describe LibraryRelation, type: :model do
                      is_incomplete: true,
                      github_item_id: 99,
                      full_name: 'owner/parent_test',
-                     name: 'parent_test')
+                     name: 'parent_test',
+                     export_status_id: 2)
         @pd1 = create(:project_dependency,
                       library_name: 'test',
                       project_from_id: @t1.id,
@@ -217,6 +218,10 @@ RSpec.describe LibraryRelation, type: :model do
       end
       it 'プロジェクト不完全フラグが0(完全)となること' do
         expect(Project.find(@t1.id).is_incomplete).to eq false
+      end
+
+      it 'Web連携フラグが0(未連携)となること' do
+        export(Project.find(@t1.id).export_status_id).to eq 0
       end
     end
 
@@ -227,7 +232,8 @@ RSpec.describe LibraryRelation, type: :model do
                      is_incomplete: true,
                      github_item_id: nil,
                      full_name: 'owner/parent_test',
-                     name: 'parent_test')
+                     name: 'parent_test',
+                     export_status_id: 2)
         @pd1 = create(:project_dependency,
                       library_name: 'test',
                       project_from_id: @t1.id,
@@ -237,6 +243,10 @@ RSpec.describe LibraryRelation, type: :model do
 
       it 'プロジェクト不完全フラグが1(不完全)であること' do
         expect(Project.find(@t1.id).is_incomplete).to eq true
+      end
+
+      it '不完全な場合はWeb側でも見えないのでexport_status_idは以前のまま(なんでも良い)' do
+        expect(Project.find(@t1.id).export_status_id).to eq 2
       end
     end
 
