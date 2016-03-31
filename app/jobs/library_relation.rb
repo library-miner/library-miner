@@ -61,7 +61,8 @@ class LibraryRelation < Base
       pt = project.get_project_type
       project.attributes = {
         is_incomplete: false,
-        project_type: pt
+        project_type: pt,
+        export_status: ExportStatus::WAITING
       }
       project.save
     end
