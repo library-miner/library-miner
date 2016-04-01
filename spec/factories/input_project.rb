@@ -18,5 +18,6 @@ FactoryGirl.define do
     fork_count 456
     open_issue_count 789
     language 'ruby'
+    default_branch 'master'
   end
 end
