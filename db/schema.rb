@@ -231,33 +231,33 @@ ActiveRecord::Schema.define(version: 0) do
   add_index "project_weekly_commit_counts", ["project_id"], name: "project_weekly_commit_counts_project_id_fk", using: :btree
 
   create_table "projects", force: :cascade do |t|
-    t.boolean  "is_incomplete",                    default: true,  null: false
+    t.boolean  "is_incomplete",                    default: true,     null: false
     t.integer  "github_item_id",     limit: 8
-    t.string   "name",               limit: 255,                   null: false
+    t.string   "name",               limit: 255,                      null: false
     t.string   "full_name",          limit: 255
     t.integer  "owner_id",           limit: 8
-    t.string   "owner_login_name",   limit: 255,   default: "",    null: false
-    t.string   "owner_type",         limit: 30,    default: "",    null: false
+    t.string   "owner_login_name",   limit: 255,   default: "",       null: false
+    t.string   "owner_type",         limit: 30,    default: "",       null: false
     t.string   "github_url",         limit: 255
-    t.boolean  "is_fork",                          default: false, null: false
+    t.boolean  "is_fork",                          default: false,    null: false
     t.text     "github_description", limit: 65535
     t.datetime "github_created_at"
     t.datetime "github_updated_at"
     t.datetime "github_pushed_at"
     t.text     "homepage",           limit: 65535
-    t.integer  "size",               limit: 8,     default: 0,     null: false
-    t.integer  "stargazers_count",   limit: 8,     default: 0,     null: false
-    t.integer  "watchers_count",     limit: 8,     default: 0,     null: false
-    t.integer  "fork_count",         limit: 8,     default: 0,     null: false
-    t.integer  "open_issue_count",   limit: 8,     default: 0,     null: false
-    t.string   "github_score",       limit: 255,   default: "",    null: false
-    t.string   "language",           limit: 255,   default: "",    null: false
-    t.string   "default_branch",     limit: 255,                   null: false
-    t.integer  "project_type_id",    limit: 4,     default: 0,     null: false
-    t.integer  "export_status_id",   limit: 4,     default: 0,     null: false
+    t.integer  "size",               limit: 8,     default: 0,        null: false
+    t.integer  "stargazers_count",   limit: 8,     default: 0,        null: false
+    t.integer  "watchers_count",     limit: 8,     default: 0,        null: false
+    t.integer  "fork_count",         limit: 8,     default: 0,        null: false
+    t.integer  "open_issue_count",   limit: 8,     default: 0,        null: false
+    t.string   "github_score",       limit: 255,   default: "",       null: false
+    t.string   "language",           limit: 255,   default: "",       null: false
+    t.string   "default_branch",     limit: 255,   default: "master", null: false
+    t.integer  "project_type_id",    limit: 4,     default: 0,        null: false
+    t.integer  "export_status_id",   limit: 4,     default: 0,        null: false
     t.datetime "exported_at"
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
   end
 
   add_index "projects", ["full_name"], name: "index_projects_on_full_name", using: :btree
