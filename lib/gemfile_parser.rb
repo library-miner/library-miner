@@ -12,11 +12,8 @@ class GemfileParser
   def parse_gemfile(rubygems_contents)
     # gemfile がない場合は飛ばす
     if rubygems_contents.present?
-      # gemspec を参照している場合、その行は無視する
-      gem_lines = rubygems_contents
-                  .split("\n")
-                  .map(&:strip)
-                  .select { |v| v.start_with?('gem') && !v.start_with?('gemspec') }
+      gem_lines = analyze_gem_lines(rubygems_contents)
+
       file = Tempfile.new('TemporaryGem')
 
       is_success = false
@@ -41,6 +38,20 @@ class GemfileParser
       error = nil
     end
     [is_success, gems, error]
+  end
+
+  # gemfileから解析対象のみ抽出する その際以下の考慮を行う
+  # 1.gemspec を参照している場合、その行は無視する
+  # 2.You cannnot specify the same gem twice coming from different sources
+  #   エラーに対応し、異なるグループ等で重複して定義されている場合はどちらか片方を採用する
+  def analyze_gem_lines(rubygems_contents)
+    gem_lines = rubygems_contents
+      .split(/[\n,]/)
+      .map(&:strip)
+      .select { |v| v.start_with?('gem ') && !v.start_with?('gemspec') }
+      .uniq
+
+    gem_lines
   end
 
   # Gemspecの中からadd_dependency, add_development_dependencyの行だけ抽出
