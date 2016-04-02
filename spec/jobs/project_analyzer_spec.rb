@@ -566,4 +566,53 @@ RSpec.describe ProjectAnalyzer, type: :model do
       end
     end
   end
+
+  describe 'Gemfile解析テスト' do
+    context '条件によって使用するGemのVersionが異なる記載している場合(Rails/Railsなど)' do
+      before :each do
+        # Input Project に テストデータ投入
+        i1 = create(
+          :input_project,
+          full_name: 'test/full_name',
+          github_updated_at: Time.zone.today,
+          crawl_status_id: 2
+        )
+        c = File.read('spec/fixtures/gemfile_rails_rails.txt')
+        # Gemfile
+        create(
+          :input_content,
+          input_project_id: i1.id,
+          path: 'Gemfile',
+          content: c.to_s
+        )
+        create(:input_tree,
+               input_project_id: i1.id,
+               path: 'Gemfile'
+              )
+        create(:input_branch,
+               input_project_id: i1.id)
+        create(:input_tag,
+               input_project_id: i1.id)
+        create(:input_weekly_commit_count,
+               input_project_id: i1.id)
+        # テスト対象実行
+        ProjectAnalyzer.new.perform(analyze_count: 1)
+      end
+
+      it 'Gemfileの内容が解析され ProjectDependencyに 外部ライブラリ情報が格納されること' do
+        results = ProjectDependency.all
+
+        expect(results.count).to eq 49
+        expect(results[1].library_name).to eq 'mocha'
+      end
+
+      it '解析完了後はInputProject のステータスが 3(解析済み)となること' do
+        results = InputProject.all
+
+        expect(results[0].crawl_status_id).to eq 3
+      end
+
+    end
+  end
+
 end
