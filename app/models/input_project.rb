@@ -37,7 +37,7 @@ class InputProject < ActiveRecord::Base
     github_url is_fork github_description github_created_at
     github_updated_at github_pushed_at homepage
     size stargazers_count watchers_count fork_count open_issue_count
-    github_score language
+    github_score language default_branch
   ).freeze
 
   # Relations

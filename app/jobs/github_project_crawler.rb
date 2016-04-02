@@ -67,7 +67,8 @@ class GithubProjectCrawler < Base
         fork_count: result.forks_count,
         open_issue_count: result.open_issues_count,
         github_score: result.score,
-        language: result.language || language
+        language: result.language || language,
+        default_branch: result.default_branch
       }
       pj.save!
     end

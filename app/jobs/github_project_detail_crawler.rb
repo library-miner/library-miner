@@ -31,7 +31,7 @@ class GithubProjectDetailCrawler < Base
       save_project_detail_branches(target.id, branch_results)
       master_branch_sha = InputBranch.where(
         input_project_id: target.id,
-        name: 'master'
+        name: target.default_branch
       ).first
                                      .try(:sha)
 
