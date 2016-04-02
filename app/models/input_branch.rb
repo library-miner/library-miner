@@ -28,11 +28,11 @@ class InputBranch < ActiveRecord::Base
   # Class Methods
 
   # Methods
-  def self.check_master_branch_is_update?(github_item_id, master_branch_sha)
+  def self.check_master_branch_is_update?(github_item_id, master_branch_sha, default_branch)
     is_update = true
     p = Project.find_by(github_item_id: github_item_id)
     if p.present?
-      b = ProjectBranch.find_by(project_id: p.id, name: 'master')
+      b = ProjectBranch.find_by(project_id: p.id, name: default_branch)
       is_update = false if b.sha == master_branch_sha
     end
     is_update

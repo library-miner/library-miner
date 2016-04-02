@@ -35,8 +35,8 @@ class GithubProjectDetailCrawler < Base
       ).first
                                      .try(:sha)
 
-      # Masterブランチが更新されている場合に詳細情報を取得する
-      if InputBranch.check_master_branch_is_update?(target.github_item_id, master_branch_sha)
+      # Defaultブランチが更新されている場合に詳細情報を取得する
+      if InputBranch.check_master_branch_is_update?(target.github_item_id, master_branch_sha, target.default_branch)
         # タグ情報
         tag_results = fetch_projects_detail_tags_by_project_id(target.github_item_id)
         save_project_detail_tags(target.id, tag_results)
