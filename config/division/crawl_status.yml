@@ -16,3 +16,9 @@
 - id: 10
   type: analyze_error
   name: 解析失敗
+- id: 90
+  type: recovery
+  name: リカバリ
+- id: 99
+  type: blacklist
+  name: 収集しない
