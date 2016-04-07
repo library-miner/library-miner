@@ -72,6 +72,13 @@ class GithubClient
     GithubRepositoryResponse.parse_blob(get_request_blob_to(path))
   end
 
+  def get_repository_by_project_id(project_id, page: 1)
+    path = "#{REPOSITORY_URL}/#{project_id}"
+    Rails.logger.info("GithubClient Access to #{path} - page: #{page}")
+
+    GithubRepositoryResponse.parse(get_request_to(path, page: page), page)
+  end
+
   private
 
   def build_api_connection
