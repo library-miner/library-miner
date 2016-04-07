@@ -82,6 +82,13 @@ class InputProject < ActiveRecord::Base
     )
   end
 
+  # リカバリ対象プロジェクト抽出
+  def self.get_recovery_target(max_count)
+    targets = InputProject
+              .where(crawl_status: CrawlStatus::RECOVERY)
+              .limit(max_count)
+    targets
+  end
   # Methods
 
   # TODO: FIXME なんかまずそう Gemfileは本当に一つ?
