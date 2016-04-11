@@ -56,7 +56,7 @@ class LibraryRelation < Base
     # 不完全なプロジェクトを対象に、プロジェクトが完全であるか確認し
     # in_complete フラグを更新する
     projects = Project.incompleted
-    projects.each do |project|
+    projects.find_each do |project|
       next unless project.check_completed?
       pt = project.get_project_type
       project.attributes = {
