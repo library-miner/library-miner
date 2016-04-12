@@ -16,6 +16,18 @@ class LibraryRelation < Base
       return
     end
 
+    # 紐付けされていない依存ライブラリをプロジェクトIDと紐付ける
+    associate_library_and_project
+
+    # 不完全なプロジェクトを対象に、プロジェクトが完全であるか確認し
+    # in_complete フラグを更新する
+    check_and_update_incomplete_project
+  end
+
+  private
+
+  # 紐付けされていない依存ライブラリをプロジェクトIDと紐付ける
+  def associate_library_and_project
     dependencies = ProjectDependency.where(project_to_id: nil)
     dependencies.find_each do |dependency|
       # rubygems から github_item_id を求め紐付ける
@@ -55,9 +67,11 @@ class LibraryRelation < Base
         dependency.save
       end
     end
+  end
 
-    # 不完全なプロジェクトを対象に、プロジェクトが完全であるか確認し
-    # in_complete フラグを更新する
+  # 不完全なプロジェクトを対象に、プロジェクトが完全であるか確認し
+  # in_complete フラグを更新する
+  def check_and_update_incomplete_project
     projects = Project.incompleted
     projects.find_each do |project|
       next unless project.check_completed?
@@ -70,8 +84,6 @@ class LibraryRelation < Base
       project.save
     end
   end
-
-  private
 
   # 依存ライブラリとプロジェクトIDの関連を削除する
   # プロジェクトは全て不完全とする
