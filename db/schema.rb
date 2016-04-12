@@ -163,6 +163,17 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_index "management_jobs", ["job_id"], name: "management_jobs_job_id", using: :btree
 
+  create_table "master_libraries", force: :cascade do |t|
+    t.integer  "project_to_id", limit: 4
+    t.string   "library_name",  limit: 255,              null: false
+    t.integer  "status_id",     limit: 4,   default: 10, null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
+
+  add_index "master_libraries", ["library_name"], name: "index_master_libraries_on_library_name", unique: true, using: :btree
+  add_index "master_libraries", ["project_to_id"], name: "index_master_libraries_on_project_to_id", unique: true, using: :btree
+
   create_table "project_branches", force: :cascade do |t|
     t.integer  "project_id", limit: 4,   null: false
     t.string   "name",       limit: 255, null: false
@@ -273,6 +284,6 @@ ActiveRecord::Schema.define(version: 0) do
   add_foreign_key "project_branches", "projects", name: "project_branches_project_id_fk"
   add_foreign_key "project_readmes", "projects", name: "project_readmes_project_id_fk"
   add_foreign_key "project_tags", "projects", name: "project_tags_project_id_fk"
-  add_foreign_key "project_trees", "projects", column: "Project_id", name: "project_trees_Project_id_fk"
+  add_foreign_key "project_trees", "projects", name: "project_trees_Project_id_fk"
   add_foreign_key "project_weekly_commit_counts", "projects", name: "project_weekly_commit_counts_project_id_fk"
 end
