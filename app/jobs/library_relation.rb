@@ -14,7 +14,7 @@ class LibraryRelation < Base
     remove_library_relation if mode == 'all'
 
     dependencies = ProjectDependency.where(project_to_id: nil)
-    dependencies.each do |dependency|
+    dependencies.find_each do |dependency|
       # rubygems から github_item_id を求め紐付ける
       github_item_id = InputLibrary.get_github_item_id_from_gem_name(
         dependency.library_name
