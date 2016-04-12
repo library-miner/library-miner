@@ -24,38 +24,45 @@ class LibraryRelation < Base
     check_and_update_incomplete_project
   end
 
+  protected
+  # ライブラリ名でプロジェクトIDを求める
+  def find_project_id_based_on_library_name(library_name)
+    project_to = nil
+    # rubygems から github_item_id を求め紐付ける
+    github_item_id = InputLibrary.get_github_item_id_from_gem_name(
+      library_name
+    )
+    if github_item_id.present?
+      project_to = Project.where(github_item_id: github_item_id).first
+    end
+
+    # 上記失敗の場合、rubygemsからfull_nameを求め紐付ける
+    if project_to.nil?
+      full_name = InputLibrary.get_full_name_from_gem_name(
+        library_name
+      )
+      if full_name.present?
+        project_to = Project.where(full_name: full_name).first
+      end
+    end
+
+    # 上記失敗の場合、nameからproject_idを求める(Starが一番多いもの)
+    if project_to.nil?
+      project_to = Project
+                   .where(name: library_name)
+                   .order(stargazers_count: :desc)
+                   .first
+    end
+    project_to
+  end
+
   private
 
   # 紐付けされていない依存ライブラリをプロジェクトIDと紐付ける
   def associate_library_and_project
     dependencies = ProjectDependency.where(project_to_id: nil)
     dependencies.find_each do |dependency|
-      # rubygems から github_item_id を求め紐付ける
-      github_item_id = InputLibrary.get_github_item_id_from_gem_name(
-        dependency.library_name
-      )
-      if github_item_id.present?
-        project_to = Project.where(github_item_id: github_item_id).first
-      end
-
-      # 上記失敗の場合、rubygemsからfull_nameを求め紐付ける
-      if project_to.nil?
-        full_name = InputLibrary.get_full_name_from_gem_name(
-          dependency.library_name
-        )
-        if full_name.present?
-          project_to = Project.where(full_name: full_name).first
-        end
-      end
-
-      # 上記失敗の場合、nameからproject_idを求める(Starが一番多いもの)
-      if project_to.nil?
-        project_to = Project
-                     .where(name: dependency.library_name)
-                     .order(stargazers_count: :desc)
-                     .first
-      end
-
+      project_to = find_project_id_based_on_library_name(dependency.library_name)
       # 全て失敗した場合はエラーリストに格納する(基本的に発生しない)
       if project_to.nil?
         LibraryRelationError.count_up_error_library(
