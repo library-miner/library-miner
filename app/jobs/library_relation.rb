@@ -10,8 +10,11 @@ class LibraryRelation < Base
     # ライブラリ紐付け失敗テーブルの初期化
     LibraryRelationError.delete_all
 
-    # 全件入れ替えモードの場合、紐付けを初期化
-    remove_library_relation if mode == 'all'
+    # クリアモードの場合、紐付けを初期化して終了
+    if mode == 'clear'
+      remove_library_relation
+      return
+    end
 
     dependencies = ProjectDependency.where(project_to_id: nil)
     dependencies.find_each do |dependency|
