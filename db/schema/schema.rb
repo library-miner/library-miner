@@ -166,6 +166,7 @@ create_table 'projects', collate: 'utf8_bin', comment: 'プロジェクト基本
 
   t.index :github_item_id, unique: true
   t.index :full_name, unique: false
+  t.index :name, unique: false
 end
 
 create_table 'project_dependencies', collate: 'utf8_bin', comment: 'プロジェクト依存関係' do |t|

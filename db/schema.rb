@@ -273,6 +273,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_index "projects", ["full_name"], name: "index_projects_on_full_name", using: :btree
   add_index "projects", ["github_item_id"], name: "index_projects_on_github_item_id", unique: true, using: :btree
+  add_index "projects", ["name"], name: "index_projects_on_name", using: :btree
 
   add_foreign_key "input_branches", "input_projects", name: "input_branches_input_project_id_fk"
   add_foreign_key "input_contents", "input_projects", name: "input_contents_input_project_id_fk"
@@ -284,6 +285,6 @@ ActiveRecord::Schema.define(version: 0) do
   add_foreign_key "project_branches", "projects", name: "project_branches_project_id_fk"
   add_foreign_key "project_readmes", "projects", name: "project_readmes_project_id_fk"
   add_foreign_key "project_tags", "projects", name: "project_tags_project_id_fk"
-  add_foreign_key "project_trees", "projects", name: "project_trees_Project_id_fk"
+  add_foreign_key "project_trees", "projects", column: "Project_id", name: "project_trees_Project_id_fk"
   add_foreign_key "project_weekly_commit_counts", "projects", name: "project_weekly_commit_counts_project_id_fk"
 end
