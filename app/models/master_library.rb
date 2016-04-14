@@ -11,7 +11,8 @@
 #
 
 class MasterLibrary < ActiveRecord::Base
-  extend ActiveHash::Associations::ActiveRecordExtension
+  extend ActiveHash::Associations::ActiveRecordExtensions
+
   # Relations
   belongs_to_active_hash :general_status
   belongs_to :project_to, class_name: 'Project'
