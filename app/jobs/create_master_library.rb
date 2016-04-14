@@ -23,11 +23,11 @@ class CreateMasterLibrary < LibraryRelation
 
   def create_master_libraries
     results = []
-    i = 0
     # 依存ライブラリからライブラリ名一覧を取得し、マスタライブラリに格納する
-    library_lists.each do |library|
+    library_lists.each_with_index do |library, i|
       # 1000件ごとにコミット
-      if (i + 1) % 1000 == 0
+      if i % 1000 == 0
+        binding.pry
         MasterLibrary.import results
         results = []
       end
@@ -38,7 +38,8 @@ class CreateMasterLibrary < LibraryRelation
       if project_to.present?
         results << MasterLibrary.new(project_to_id: project_to.id,
                                      library_name: library.library_name)
-        i = i + 1
+      else
+        results << MasterLibrary.new(library_name: library.library_name)
       end
     end
 
