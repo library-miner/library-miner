@@ -56,6 +56,22 @@ class LibraryRelation < Base
     project_to
   end
 
+  # 不完全なプロジェクトを対象に、プロジェクトが完全であるか確認し
+  # in_complete フラグを更新する
+  def check_and_update_incomplete_project
+    projects = Project.incompleted
+    projects.find_each do |project|
+      next unless project.check_completed?
+      pt = project.get_project_type
+      project.attributes = {
+        is_incomplete: false,
+        project_type: pt,
+        export_status: ExportStatus::WAITING
+      }
+      project.save
+    end
+  end
+
   private
 
   # 紐付けされていない依存ライブラリをプロジェクトIDと紐付ける
@@ -73,22 +89,6 @@ class LibraryRelation < Base
         dependency.project_to = project_to
         dependency.save
       end
-    end
-  end
-
-  # 不完全なプロジェクトを対象に、プロジェクトが完全であるか確認し
-  # in_complete フラグを更新する
-  def check_and_update_incomplete_project
-    projects = Project.incompleted
-    projects.find_each do |project|
-      next unless project.check_completed?
-      pt = project.get_project_type
-      project.attributes = {
-        is_incomplete: false,
-        project_type: pt,
-        export_status: ExportStatus::WAITING
-      }
-      project.save
     end
   end
 
