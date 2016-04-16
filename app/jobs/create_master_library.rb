@@ -27,7 +27,6 @@ class CreateMasterLibrary < LibraryRelation
     library_lists.each_with_index do |library, i|
       # 1000件ごとにコミット
       if i % 1000 == 0
-        binding.pry
         MasterLibrary.import results
         results = []
       end
