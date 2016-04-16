@@ -177,6 +177,7 @@ create_table 'project_dependencies', collate: 'utf8_bin', comment: 'プロジェ
   t.varchar :library_name
 
   t.index :project_from_id, unique: false
+  t.index :library_name, unique: false
 
   t.datetime :created_at
   t.datetime :updated_at
