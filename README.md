@@ -7,7 +7,7 @@ http://lminer.net で稼働中です。
 Library Minerは下記のリポジトリから構成されています。
 
 - [library-miner](https://github.com/library-miner/library-miner) 
-- [library-miner-infra](https://github.com/library-miner/library-infra)
+- [library-miner-infra](https://github.com/library-miner/library-miner-infra)
 - [library-miner-web-api](https://github.com/library-miner/library-miner-web-api)	
 - [library-miner-frontyard]	(https://github.com/library-miner/library-miner-frontyard)	
 - [library-miner-zabbix-template]	(https://github.com/library-miner/library-miner-zabbix-template)
