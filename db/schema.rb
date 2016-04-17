@@ -172,7 +172,7 @@ ActiveRecord::Schema.define(version: 0) do
   end
 
   add_index "master_libraries", ["library_name"], name: "index_master_libraries_on_library_name", unique: true, using: :btree
-  add_index "master_libraries", ["project_to_id"], name: "index_master_libraries_on_project_to_id", unique: true, using: :btree
+  add_index "master_libraries", ["project_to_id"], name: "index_master_libraries_on_project_to_id", using: :btree
 
   create_table "project_branches", force: :cascade do |t|
     t.integer  "project_id", limit: 4,   null: false

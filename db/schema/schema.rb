@@ -267,7 +267,7 @@ create_table 'master_libraries', collate: 'utf8_bin', comment: 'ライブラリ�
   t.varchar :library_name
   t.int :status_id, default: 10, comment: '反映管理用ステータス'
 
-  t.index :project_to_id, unique: true
+  t.index :project_to_id, unique: false
   t.index :library_name, unique: true
 
   t.datetime :created_at
