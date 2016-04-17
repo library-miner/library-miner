@@ -24,7 +24,6 @@ class LibraryRelation < Base
     check_and_update_incomplete_project
   end
 
-  protected
   # ライブラリ名でプロジェクトIDを求める
   def find_project_id_based_on_library_name(library_name)
     project_to = nil
@@ -55,6 +54,8 @@ class LibraryRelation < Base
     end
     project_to
   end
+
+  protected
 
   # 不完全なプロジェクトを対象に、プロジェクトが完全であるか確認し
   # in_complete フラグを更新する
