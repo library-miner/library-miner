@@ -30,6 +30,11 @@ class LibraryRelationRecovery < LibraryRelation
         project_to_id: library.project_to_id,
         updated_at: Time.zone.now
       )
+      library.attributes = {
+        status_id: GeneralStatus::DONE.id
+      }
+      library.save!
+      Rails.logger.info("recovery relation #{library.library_name}")
     end
   end
 end
