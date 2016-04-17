@@ -20,13 +20,13 @@ class GithubProjectRecoveryCrawler < GithubProjectDetailCrawler
     begin
       # 基本情報収集
       results = fetch_project_by_project_id(target.github_item_id)
-      save_projects(target, results)
+      save_projects(target.clone, results)
     rescue => e
       target.attributes = {
         crawl_status: CrawlStatus::ERROR
       }
       target.save!
-      Rails.logger.error('GithubProjectRecoveryCrawler CrawlError:' + e.message)
+      Rails.logger.warn('GithubProjectRecoveryCrawler Warning:' + e.message)
     end
   end
 
@@ -74,7 +74,11 @@ class GithubProjectRecoveryCrawler < GithubProjectDetailCrawler
         language: result["language"],
         default_branch: result["default_branch"]
       }
-      target.save!
+      if result.has_key?('language') && result['language'] != ''
+        target.save!
+      else
+        raise "language is blank"
+      end
     end
   end
 

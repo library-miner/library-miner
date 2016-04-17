@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe LibraryRelation, type: :model do
-  describe '全件/差分モード確認' do
-    context '全件モードの場合' do
+  describe '全件/クリア/差分モード確認' do
+    context 'クリアモードの場合' do
       before do
         t1 = create(:project,
                     is_incomplete: false)
@@ -10,7 +10,7 @@ RSpec.describe LibraryRelation, type: :model do
                library_name: 'test_not_relation',
                project_from_id: t1.id,
                project_to_id: 1000)
-        LibraryRelation.new.perform(mode: 'all')
+        LibraryRelation.new.perform(mode: 'clear')
       end
 
       it '紐付けテーブルの内容が初期化されること' do

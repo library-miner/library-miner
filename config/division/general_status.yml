@@ -1,0 +1,9 @@
+- id: 0
+  type: waiting
+  name: 待ち
+- id: 2
+  type: done
+  name: 済
+- id: 10
+  type: nontarget
+  name: 対象外

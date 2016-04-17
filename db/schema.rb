@@ -163,6 +163,17 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_index "management_jobs", ["job_id"], name: "management_jobs_job_id", using: :btree
 
+  create_table "master_libraries", force: :cascade do |t|
+    t.integer  "project_to_id", limit: 4
+    t.string   "library_name",  limit: 255,              null: false
+    t.integer  "status_id",     limit: 4,   default: 10, null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
+
+  add_index "master_libraries", ["library_name"], name: "index_master_libraries_on_library_name", unique: true, using: :btree
+  add_index "master_libraries", ["project_to_id"], name: "index_master_libraries_on_project_to_id", using: :btree
+
   create_table "project_branches", force: :cascade do |t|
     t.integer  "project_id", limit: 4,   null: false
     t.string   "name",       limit: 255, null: false
@@ -182,6 +193,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at",                  null: false
   end
 
+  add_index "project_dependencies", ["library_name"], name: "index_project_dependencies_on_library_name", using: :btree
   add_index "project_dependencies", ["project_from_id"], name: "index_project_dependencies_on_project_from_id", using: :btree
 
   create_table "project_readmes", force: :cascade do |t|
@@ -262,6 +274,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_index "projects", ["full_name"], name: "index_projects_on_full_name", using: :btree
   add_index "projects", ["github_item_id"], name: "index_projects_on_github_item_id", unique: true, using: :btree
+  add_index "projects", ["name"], name: "index_projects_on_name", using: :btree
 
   add_foreign_key "input_branches", "input_projects", name: "input_branches_input_project_id_fk"
   add_foreign_key "input_contents", "input_projects", name: "input_contents_input_project_id_fk"

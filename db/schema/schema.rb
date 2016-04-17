@@ -166,6 +166,7 @@ create_table 'projects', collate: 'utf8_bin', comment: 'プロジェクト基本
 
   t.index :github_item_id, unique: true
   t.index :full_name, unique: false
+  t.index :name, unique: false
 end
 
 create_table 'project_dependencies', collate: 'utf8_bin', comment: 'プロジェクト依存関係' do |t|
@@ -176,6 +177,7 @@ create_table 'project_dependencies', collate: 'utf8_bin', comment: 'プロジェ
   t.varchar :library_name
 
   t.index :project_from_id, unique: false
+  t.index :library_name, unique: false
 
   t.datetime :created_at
   t.datetime :updated_at
@@ -257,6 +259,21 @@ create_table 'library_relation_errors', collate: 'utf8_bin', comment: 'プロジ
   t.datetime :created_at
   t.datetime :updated_at
 end
+
+create_table 'master_libraries', collate: 'utf8_bin', comment: 'ライブラリ紐付けチェック用マスタ' do |t|
+  t.int :id, comment: 'Id', primary_key: true, extra: :auto_increment
+
+  t.int :project_to_id, null: true
+  t.varchar :library_name
+  t.int :status_id, default: 10, comment: '反映管理用ステータス'
+
+  t.index :project_to_id, unique: false
+  t.index :library_name, unique: true
+
+  t.datetime :created_at
+  t.datetime :updated_at
+end
+
 
 create_table :delayed_jobs, comment: 'Delayed Job' do |t|
   t.int :id, primary_key: true, extra: 'auto_increment'

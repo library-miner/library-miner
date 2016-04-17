@@ -24,9 +24,10 @@
 #  open_issue_count   :integer          default(0), not null
 #  github_score       :string(255)      default(""), not null
 #  language           :string(255)      default(""), not null
+#  default_branch     :string(255)      default("master"), not null
 #  project_type_id    :integer          default(0), not null
 #  export_status_id   :integer          default(0), not null
-#  exported_at        :datetime         not null
+#  exported_at        :datetime
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #
