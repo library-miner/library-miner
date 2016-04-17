@@ -20,7 +20,8 @@ Library Minerは下記のリポジトリから構成されています。
 - 解析状況・Job実行状況の閲覧
 
 ***DEMO:***
-
+![2016-04-17 20 45 01](https://cloud.githubusercontent.com/assets/3175028/14586778/54312134-04de-11e6-9a02-1c02fb99b8ac.png)
+![2016-04-17 20 46 11](https://cloud.githubusercontent.com/assets/3175028/14586780/56053446-04de-11e6-806e-e19312378c10.png)
 
 ## Requirement
 - Rails 4
@@ -62,8 +63,8 @@ production:
 ```
 
 * .env
-  -- MINER_APP_ROOT : 配置先を設定
-  -- LIBRARY_MINER_SECRET_KEY : secret key を設定
+  - MINER_APP_ROOT : 配置先を設定
+  - LIBRARY_MINER_SECRET_KEY : secret key を設定
 
 ***SAMPLE:***
 ```
