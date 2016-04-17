@@ -18,27 +18,26 @@ class CreateMasterLibrary < LibraryRelation
 
   # ライブラリ一覧を取得
   def library_lists
-    ProjectDependency.where.not(library_name: '').select(:library_name).uniq
+    ProjectDependency.where.not(library_name: '').group(:library_name).pluck(:library_name)
   end
 
   def create_master_libraries
     results = []
     # 依存ライブラリからライブラリ名一覧を取得し、マスタライブラリに格納する
-    library_lists.each_with_index do |library, i|
+    library_lists.each_with_index do |library_name, i|
       # 1000件ごとにコミット
       if i % 1000 == 0
         MasterLibrary.import results
         results = []
       end
-
       # ライブラリ名からProjectIdを求める(手法はLibraryRelationと同様)
-      project_to = find_project_id_based_on_library_name(library.library_name)
+      project_to = find_project_id_based_on_library_name(library_name)
 
       if project_to.present?
         results << MasterLibrary.new(project_to_id: project_to.id,
-                                     library_name: library.library_name)
+                                     library_name: library_name)
       else
-        results << MasterLibrary.new(library_name: library.library_name)
+        results << MasterLibrary.new(library_name: library_name)
       end
     end
 
